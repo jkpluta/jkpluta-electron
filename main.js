@@ -29,7 +29,7 @@ function createWindow () {
 
   global.sharedObj = { loadURL: loadURL, addServer: addServer, removeServer: removeServer }
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 900, height: 620, title: 'jkp', icon: path.join(__dirname, 'JkpGuardViewer.ico')})
+  mainWindow = new BrowserWindow({width: 900, height: 620, title: 'jkp', icon: path.join(__dirname, 'icon.ico')})
 
   loadPage('index', null, null)
 
@@ -87,29 +87,15 @@ function createWindow () {
         {
           label: 'Główna',
           click () { loadURL('#main') }
+        },
+        {
+          label: 'Informacje',
+          click () { loadURL('#info') }
+        },
+        {
+          label: 'Zakładki',
+          click () { loadURL('#bookmarks') }
         }
-        /*,
-        {
-          label: 'Zadania',
-          click () { loadURL('#guard-items') }
-        },
-        {
-          label: 'Usługi',
-          click () { loadURL('#service-items') }
-        },
-        {
-          label: 'Błędy i ostrzeżenia',
-          click () { loadURL('#warn-items') }
-        },
-        {
-          label: 'Dzienniki',
-          click () { loadURL('#log-items') }
-        },
-        {
-          label: 'Serwery',
-          click () { loadURL('#server-items') }
-        }
-        */
       ]
     },
     {
