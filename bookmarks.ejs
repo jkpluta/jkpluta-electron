@@ -1,0 +1,17 @@
+<html>
+<% include head.ejs %>
+<body>
+<div class="container">
+  <% include title.ejs %>
+  <div class="row">
+    <div id="bookmarks" class="col">
+    </div>
+  </div>
+</div>
+</body>
+<script>
+$(document).ready(function() {
+  runAjax("#bookmarks", "http://jkpluta.github.io", "/bookmarks.html")
+});
+</script>
+</html>

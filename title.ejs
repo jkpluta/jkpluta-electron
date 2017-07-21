@@ -2,13 +2,13 @@
         <nav>
           <ul class="nav nav-pills float-right">
             <li class="nav-item">
-              <a class="nav-link active" href="#main">Główna</a>
+              <a class="nav-link <%if (title==='Jan K. Pluta') { %>active<% }%>" href="#main">Główna</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#info">Informacje</a>
+              <a class="nav-link <%if (title==='Jan K. Pluta | Informacje') { %>active<% }%>" href="#info">Informacje</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#bookmarks">Zakładki</a>
+              <a class="nav-link <%if (title==='Jan K. Pluta | Zakładki') { %>active<% }%>" href="#bookmarks">Zakładki</a>
             </li>
           </ul>
         </nav>
