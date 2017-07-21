@@ -87,7 +87,8 @@ function createWindow () {
         {
           label: 'Główna',
           click () { loadURL('#main') }
-        },
+        }
+        /*,
         {
           label: 'Zadania',
           click () { loadURL('#guard-items') }
@@ -108,6 +109,7 @@ function createWindow () {
           label: 'Serwery',
           click () { loadURL('#server-items') }
         }
+        */
       ]
     },
     {
