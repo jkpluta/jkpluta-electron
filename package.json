@@ -1,0 +1,26 @@
+{
+  "name": "jkpluta-electron",
+  "version": "0.1.0",
+  "main": "main.js",
+  "description": "Eksperymentalna strona startowa",
+  "author": "Jan K. Pluta",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jkpluta/jkpluta-electron.git"
+  },
+  "scripts": {
+    "start": "electron .",
+    "pack": "build --dir",
+    "dist": "build"
+  },
+  "dependencies": {
+    "ejs": "^2.5.6",
+    "ejs-electron": "^2.0.0",
+    "electron-json-storage": "^3.0.5",
+    "jquery": "^3.2.1"
+  },
+  "devDependencies": {
+    "electron": "^1.6.11"
+  }
+}

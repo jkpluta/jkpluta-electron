@@ -1,0 +1,28 @@
+<html>
+<% include head.ejs %>
+<body class="win-close" style="background-color:khaki">
+<div class="container">
+  <div style="float:left;">
+    <img src="./img/logo.png">
+  </div>
+  <h2 style="text-align: center;"><%= title %></h2>
+  <div style="text-align: center;">
+    Wersja <b><script>document.write(electron.remote.app.getVersion())</script></b>
+    (<i>Node.js <script>document.write(process.versions.node)</script></i>,
+    <i>Chromium <script>document.write(process.versions.chrome)</script></i>,
+    <i>Electron <script>document.write(process.versions.electron)</script></i>)
+  </div>
+</div>
+</body>
+<script>
+$(document).ready(function() {
+  $(document).keydown(function(e) {
+    if (e.which == 27)
+      electron.remote.getCurrentWindow().close()
+  });
+  $(document).click(function(e) {
+    electron.remote.getCurrentWindow().close()
+  });
+});
+</script>
+</html>
