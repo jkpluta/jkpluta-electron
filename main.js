@@ -27,7 +27,7 @@ storage.get('settings', function(error, data) {
 
 function createWindow () {
 
-  global.sharedObj = { loadURL: loadURL, addServer: addServer, removeServer: removeServer }
+  global.sharedObj = { loadURL: loadURL }
   // Create the browser window.
   mainWindow = new BrowserWindow({width: 900, height: 620, title: 'jkp', icon: path.join(__dirname, 'icon.ico')})
 
@@ -162,7 +162,11 @@ function renderPage(browserWindow, template, title, data)
     data: data,
     servers: settings.servers
   })
-  browserWindow.loadURL(path.join(__dirname, template + '.ejs'))
+  browserWindow.loadURL(url.format({
+    pathname: path.join(__dirname, template + '.ejs'),
+    protocol: 'file:',
+    slashes: true
+  }))
 }
 
 function getTitle() {
@@ -197,25 +201,4 @@ function loadURL(url) {
     showAbout()
   else
     mainWindow.loadURL(url)
-}
-
-function addServer(host, port) {
-  settings.servers.push({ host: host, port: port })
-  storage.set('settings', settings, function(error) {
-    if (error) throw error;
-  });
-}
-
-function removeServer(host, port) {
-  for(var i = 0; i < settings.servers.length; i++) {
-    server = settings.servers[i]
-    if (server.host === host && server.port === port)
-    {
-      settings.servers.splice(i, 1)
-      break;
-    }
-  }
-  storage.set('settings', settings, function(error) {
-    if (error) throw error;
-  });
 }
