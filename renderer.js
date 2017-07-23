@@ -18,6 +18,21 @@ module.exports.runAjax = runAjax = function(sel, base, href) {
   })
 }
 
+module.exports.runAjax2 = runAjax2 = function(sel, spnr, base, href) {
+  $(spnr).html('<img src="./img/spinner.gif">')
+  $.ajax({
+    url: base + href,
+    cache: false,
+    success: function(html) {
+      $(spnr).html('')
+      updateAjax(sel, base, html)
+    },
+    error: function(xhr, status, error) {
+      $(spnr).html('<img src="./img/error.png"> <b>' + status + '</b> <i>' + error + "</i>")
+    }
+  })
+}
+
 module.exports.updateAjax = updateAjax = function(sel, base, html) {
   $(sel).html(html);
   $(sel).find('a').click(function() {

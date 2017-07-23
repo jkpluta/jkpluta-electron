@@ -4,14 +4,16 @@
 <div class="container">
   <% include title.ejs %>
   <div class="row">
-    <div id="main" class="col">
+    <div id="spnr" class="col">
     </div>
   </div>
+</div>
+<div id="main">
 </div>
 </body>
 <script>
 $(document).ready(function() {
-  runAjax("#main", "http://jkpluta.github.io", "/index.html")
+  runAjax2("#main", "#spnr", "http://jkpluta.github.io", "/index.html")
 });
 </script>
 </html>
