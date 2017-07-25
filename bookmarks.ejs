@@ -13,5 +13,38 @@
 $(document).ready(function() {
   runAjax("#bookmarks", "http://jkpluta.github.io", "/bookmarks.html")
 });
+
+require('./jquery-ui')
+  $('a').draggable({
+    revert: true
+  })
+  // $('a').parent().css('border-style', 'solid').css('border-color', 'red')
+  // $('a').parent().parent().css('border-style', 'solid').css('border-color', 'green')
+  $('a').parent().droppable({
+    accept: 'a',
+    greedy: true,
+    drop: handleDrop
+  })
+  $('a').parent().parent().droppable({
+    accept: 'a',
+    greedy: true,
+    drop: handleDrop2
+  })
+
+function handleDrop( event, ui ) {
+  //ui.draggable.parent().insertBefore($(this))
+  $(this).before(ui.draggable.parent())
+  ui.draggable.draggable('option', 'revert', false)
+  ui.draggable.css('left', '')
+  ui.draggable.css('top', '')
+}
+
+function handleDrop2( event, ui ) {
+  $(this).children().last().before(ui.draggable.parent())
+  ui.draggable.draggable('option', 'revert', false)
+  ui.draggable.css('left', '')
+  ui.draggable.css('top', '')
+}
+
 </script>
 </html>

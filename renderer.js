@@ -4,6 +4,8 @@
 const $ = require('jquery')
 const electron = require('electron')
 
+window.jQuery = window.$ = $
+
 module.exports.runAjax = runAjax = function(sel, base, href) {
   $(sel).html('<img src="./img/spinner.gif">')
   $.ajax({
