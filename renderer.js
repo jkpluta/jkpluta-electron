@@ -60,6 +60,7 @@ module.exports.updateBookmarks = updateBookmarks = function(sel, base, html) {
   }
   $('h1').after('<button id="save">Zapisz</button>')
   $('#save').click(function() {
+    $('#myModal').modal({})
     var fs = require('fs');
     try { 
       fs.writeFileSync('c:\\temp\\temp-icons.html', document.documentElement.outerHTML, 'utf-8')
