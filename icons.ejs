@@ -4,7 +4,7 @@
 <div class="container">
   <% include title.ejs %>
   <div class="row">
-    <div id="icons" class="col">
+    <div id="bookmarks" class="col">
     </div>
   </div>
 </div>
@@ -12,7 +12,7 @@
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
 <script>
 $(document).ready(function() {
-  startAjax("#icons", "#icons", "http://jkpluta.github.io", "/icons.html", updateIcons)
+  startAjax("#bookmarks", "#bookmarks", "http://jkpluta.github.io", "/icons.html", updateBookmarks)
 });
 </script>
 </html>
