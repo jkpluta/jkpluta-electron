@@ -43,6 +43,70 @@ module.exports.updateAjax = updateAjax = function(sel, base, html) {
   })
 }
 
+
+module.exports.startAjax = startAjax = function(sel, spnr, base, href, func) {
+  $(spnr).html('<img src="./img/spinner.gif">')
+  $.ajax({
+    url: base + href,
+    cache: false,
+    success: function(html) {
+      $(spnr).html('')
+      func(sel, base, html)
+    },
+    error: function(xhr, status, error) {
+      $(spnr).html('<img src="./img/error.png"> <b>' + status + '</b> <i>' + error + "</i>")
+    }
+  })
+}
+
+module.exports.updateBookmarks = updateBookmarks = function(sel, base, html) {
+  $(sel).html(html);
+  $(sel).find('a').click(function() {
+    // loadURL($(this).attr('href'))
+    return false
+  })
+
+  $('#bookmarks a').draggable({
+    revert: true
+  })
+  $('#bookmarks h3').draggable({
+    revert: true
+  })
+  
+  $('#bookmarks a').parent().droppable({
+    accept: 'a, h3',
+    greedy: true,
+    drop: dropOnItem
+  })
+  $('#bookmarks a').parent().parent().parent().droppable({
+    accept: 'a, h3',
+    greedy: true,
+    drop: dropOnItems
+  })
+
+  // $('#bookmarks a').parent().css('border-style', 'solid').css('border-color', 'red')
+  // $('#bookmarks a').parent().parent().parent().css('border-style', 'solid').css('border-color', 'green') 
+}
+
+function dropOnItem( event, ui ) {
+  $(this).before(ui.draggable.parent())
+  ui.draggable.draggable('option', 'revert', false)
+  ui.draggable.css('left', '')
+  ui.draggable.css('top', '')
+}
+
+function dropOnItems( event, ui ) {
+  if (ui.draggable.prop('tagName') === 'A') {
+    $(this).children('dl').first().children('dt').last().after(ui.draggable.parent())
+  }
+  if (ui.draggable.prop('tagName') === 'H3') {
+    $(this).before(ui.draggable.parent())
+  }
+  ui.draggable.draggable('option', 'revert', false)
+  ui.draggable.css('left', '')
+  ui.draggable.css('top', '')
+}
+
 module.exports.loadURL = loadURL = function(url) {
   electron.remote.getGlobal('sharedObj').loadURL(url)
   return false
