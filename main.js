@@ -93,6 +93,10 @@ function createWindow () {
           click () { loadURL('#info') }
         },
         {
+          label: 'Ikony',
+          click () { loadURL('#icons') }
+        },
+        {
           label: 'Zakładki',
           click () { loadURL('#bookmarks') }
         }
@@ -195,6 +199,8 @@ function loadURL(url) {
     loadPage('index', null, null)
   else if (url === '#info')
     loadPage('info', 'Informacje', null)
+  else if (url === '#icons')
+    loadPage('icons', 'Ikony', null)
   else if (url === '#bookmarks')
     loadPage('bookmarks', 'Zakładki', null)
   else if (url === '#about')

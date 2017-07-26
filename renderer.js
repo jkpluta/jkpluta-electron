@@ -84,8 +84,46 @@ module.exports.updateBookmarks = updateBookmarks = function(sel, base, html) {
     drop: dropOnItems
   })
 
+  var links = $('#icons[icon]')
+  for (var i = 0; i < links.length; i++) {
+    var link = links.eq(i)
+    link.html('<img src="' + link.attr('ICON') + '" alt="' + link.text() + '" title="' + link.text() + '">' + link.text())
+  }
+}
+
+module.exports.updateIcons = updateIcons = function(sel, base, html) {
+  $(sel).html(html);
+  $(sel).find('a').click(function() {
+    // loadURL($(this).attr('href'))
+    return false
+  })
+
+  $('#icons a').draggable({
+    revert: true
+  })
+  $('#icons h3').draggable({
+    revert: true
+  })
+  
+  $('#icons a').parent().droppable({
+    accept: 'a, h3',
+    greedy: true,
+    drop: dropOnItem
+  })
+  $('#icons a').parent().parent().parent().droppable({
+    accept: 'a, h3',
+    greedy: true,
+    drop: dropOnItems
+  })
+
   // $('#bookmarks a').parent().css('border-style', 'solid').css('border-color', 'red')
   // $('#bookmarks a').parent().parent().parent().css('border-style', 'solid').css('border-color', 'green') 
+
+  var links = $('#icons a[icon]')
+  for (var i = 0; i < links.length; i++) {
+    var link = links.eq(i)
+    link.html('<img src="' + link.attr('ICON') + '" alt="' + link.text() + '" title="' + link.text() + '"><span> </span>' + link.text())
+  }
 }
 
 function dropOnItem( event, ui ) {
