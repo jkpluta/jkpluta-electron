@@ -3,37 +3,7 @@
 // All of the Node.js APIs are available in this process.
 const $ = require('jquery')
 const electron = require('electron')
-
 window.jQuery = window.$ = $
-
-module.exports.runAjax = runAjax = function(sel, base, href) {
-  $(sel).html('<img src="./img/spinner.gif">')
-  $.ajax({
-    url: base + href,
-    cache: false,
-    success: function(html) {
-      updateAjax(sel, base, html)
-    },
-    error: function(xhr, status, error) {
-      $(sel).html('<img src="./img/error.png"> <b>' + status + '</b> <i>' + error + "</i>")
-    }
-  })
-}
-
-module.exports.runAjax2 = runAjax2 = function(sel, spnr, base, href) {
-  $(spnr).html('<img src="./img/spinner.gif">')
-  $.ajax({
-    url: base + href,
-    cache: false,
-    success: function(html) {
-      $(spnr).html('')
-      updateAjax(sel, base, html)
-    },
-    error: function(xhr, status, error) {
-      $(spnr).html('<img src="./img/error.png"> <b>' + status + '</b> <i>' + error + "</i>")
-    }
-  })
-}
 
 module.exports.updateAjax = updateAjax = function(sel, base, html) {
   $(sel).html(html);
@@ -42,7 +12,6 @@ module.exports.updateAjax = updateAjax = function(sel, base, html) {
     return false
   })
 }
-
 
 module.exports.startAjax = startAjax = function(sel, spnr, base, href, func) {
   $(spnr).html('<img src="./img/spinner.gif">')
@@ -124,6 +93,16 @@ module.exports.updateIcons = updateIcons = function(sel, base, html) {
     var link = links.eq(i)
     link.html('<img src="' + link.attr('ICON') + '" alt="' + link.text() + '" title="' + link.text() + '"><span> </span>' + link.text())
   }
+  $('h1').after('<button id="save">Zapisz</button>')
+  $('#save').click(function() {
+    var fs = require('fs');
+    try { 
+      fs.writeFileSync('c:\\temp\\temp-icons.html', document.documentElement.outerHTML, 'utf-8')
+    }
+    catch(e) { 
+      alert('Błąd zapisu do pliku!')
+    }
+  })
 }
 
 function dropOnItem( event, ui ) {
