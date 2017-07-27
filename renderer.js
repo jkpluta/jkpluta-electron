@@ -58,11 +58,11 @@ module.exports.updateBookmarks = updateBookmarks = function(sel, base, html) {
     var link = links.eq(i)
     link.html('<img src="' + link.attr('ICON') + '" alt="' + link.text() + '" title="' + link.text() + '"><span> </span>' + link.text())
   }
-  $('#bookmarks h1, h3').append(' <button id="edit-folder" title="Zmień..." class="btn btn-sm"><span class="fa fa-edit"></span></button><button id="remove-folder" title="Usuń" class="btn btn-sm"><span class="fa fa-remove"></span></button> <button id="create-folder" title="Utwórz folder..." class="btn btn-sm"><span class="fa fa-plus"></span></button>')
+  $('#bookmarks h1, h3').append(' <button id="edit-folder" title="Zmień..." class="btn btn-sm btn-info"><span class="fa fa-edit"></span></button> <button id="remove-folder" title="Usuń" class="btn btn-sm btn-danger"><span class="fa fa-remove"></span></button> <button id="create-folder" title="Utwórz folder..." class="btn btn-sm btn-success"><span class="fa fa-plus"></span></button>')
   $('#save').click(function() {
     $('#myModal').modal({})
   })
-  $('#bookmarks a').after(' <button id="edit-folder" title="Zmień..." class="btn btn-sm"><span class="fa fa-edit"></span></button><button id="remove-folder" title="Usuń" class="btn btn-sm"><span class="fa fa-remove"></span></button> <button id="create-folder" title="Utwórz folder..." class="btn btn-sm"><span class="fa fa-plus"></span></button>')
+  $('#bookmarks a').after(' <button id="edit-folder" title="Zmień..." class="btn btn-sm btn-info"><span class="fa fa-edit"></span></button> <button id="remove-folder" title="Usuń" class="btn btn-sm btn-danger"><span class="fa fa-remove"></span></button> <button id="create-folder" title="Utwórz folder..." class="btn btn-sm btn-success"><span class="fa fa-plus"></span></button>')
   $('#save').click(function() {
     $('#myModal').modal({})
   })
