@@ -7,12 +7,29 @@
     <div id="bookmarks" class="col">
     </div>
   </div>
+  <div class="row">
+    <div class="col">
+      <hr>
+      <p class="text-right">
+        <button id="save"><span class="fa fa-save"></span> Zapisz</button>
+      </p>
+    </div>
+  </div>
 </div>
 </body>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
 <script>
 $(document).ready(function() {
-  startAjax("#bookmarks", "#bookmarks", "http://jkpluta.github.io", "/bookmarks.html", updateBookmarks)
+  startAjax("#bookmarks", "#bookmarks", "http://jkpluta.github.io", "/<%- data %>", updateBookmarks)
 });
+  $('#save').click(function() {
+    var fs = require('fs');
+    try { 
+      fs.writeFileSync('c:\\temp\\<%- data %>', document.documentElement.outerHTML, 'utf-8')
+    }
+    catch(e) { 
+      alert('Błąd zapisu do pliku!')
+    }
+  })
 </script>
 </html>

@@ -200,9 +200,9 @@ function loadURL(url) {
   else if (url === '#info')
     loadPage('info', 'Informacje', null)
   else if (url === '#icons')
-    loadPage('icons', 'Ikony', null)
+    loadPage('bookmarks', 'Ikony', 'icons.html')
   else if (url === '#bookmarks')
-    loadPage('bookmarks', 'Zakładki', null)
+    loadPage('bookmarks', 'Zakładki', 'bookmarks.html')
   else if (url === '#about')
     showAbout()
   else
