@@ -58,13 +58,27 @@ module.exports.updateBookmarks = updateBookmarks = function(sel, base, html) {
     var link = links.eq(i)
     link.html('<img src="' + link.attr('ICON') + '" alt="' + link.text() + '" title="' + link.text() + '"><span> </span>' + link.text())
   }
-  $('#bookmarks h1, h3').append(' <button title="Zmień..." class="jkp edit-folder btn btn-sm btn-outline-primary"><span class="fa fa-pencil-square-o"></span></button> <button title="Usuń folder" class="jkp remove-folder btn btn-sm btn-outline-danger"><span class="fa fa-times-rectangle-o"></span></button> <button title="Dodaj folder..." class="jkp create-folder btn btn-sm btn-outline-success"><span class="fa fa-plus-square-o"></span></button>')
+  $('#bookmarks h1, h3').after('<button title="Zmień..." class="jkp edit-folder btn btn-sm btn-outline-primary"><span class="fa fa-pencil-square-o"></span></button> <button title="Usuń folder" class="jkp remove-folder btn btn-sm btn-outline-danger"><span class="fa fa-times-rectangle-o"></span></button> <button title="Dodaj folder..." class="jkp create-folder btn btn-sm btn-outline-success"><span class="fa fa-plus-square-o"></span></button>')
   $('.edit-folder').click(function() {
-    var folder = $(this).parent()
+    var folder = $(this).siblings('h1, h3').first()
     $('#folder-name').val(folder.text())
     $('#folder-edit').modal({})
     $('#folder-apply').click(function() {
       folder.text($('#folder-name').val())
+      $('#folder-apply').off()
+      return true
+    })
+  })
+  $('.remove-folder').click(function() {
+    var folder = $(this).siblings('h1, h3').first()
+    folder.parent().remove()
+  })
+  $('.create-folder').click(function() {
+    var folder = $(this).siblings('h1, h3').first()
+    $('#folder-name').val('')
+    $('#folder-edit').modal({})
+    $('#folder-apply').click(function() {
+      folder.parent().before('<dt><h3>' + $('#folder-name').val() + '</h3><dl><p></dl><p>')
       $('#folder-apply').off()
       return true
     })
