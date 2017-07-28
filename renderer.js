@@ -60,10 +60,15 @@ module.exports.updateBookmarks = updateBookmarks = function(sel, base, html) {
   }
   $('#bookmarks h1, h3').append(' <button title="Zmień..." class="jkp edit-folder btn btn-sm btn-outline-primary"><span class="fa fa-pencil-square-o"></span></button> <button title="Usuń folder" class="jkp remove-folder btn btn-sm btn-outline-danger"><span class="fa fa-times-rectangle-o"></span></button> <button title="Dodaj folder..." class="jkp create-folder btn btn-sm btn-outline-success"><span class="fa fa-plus-square-o"></span></button>')
   $('.edit-folder').click(function() {
+    var folder = $(this).parent()
+    $('#folder-name').val(folder.text())
     $('#folder-edit').modal({})
   })
   $('#bookmarks a').after(' <button title="Zmień..." class="jkp edit-link btn btn-sm btn-outline-primary"><span class="fa fa-pencil"></span></button> <button title="Usuń zakładkę" class="jkp remove-link btn btn-sm btn-outline-danger"><span class="fa fa-times"></span></button> <button title="Dodaj zakładkę..." class="jkp create-link btn btn-sm btn-outline-success"><span class="fa fa-plus"></span></button>')
   $('.edit-link').click(function() {
+    var link = $(this).siblings('a').first()
+    $('#link-name').val(link.text())
+    $('#link-address').val(link.attr('href'))
     $('#link-edit').modal({})
   })
 }
