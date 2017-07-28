@@ -63,6 +63,11 @@ module.exports.updateBookmarks = updateBookmarks = function(sel, base, html) {
     var folder = $(this).parent()
     $('#folder-name').val(folder.text())
     $('#folder-edit').modal({})
+    $('#folder-apply').click(function() {
+      folder.text($('#folder-name').val())
+      $('#folder-apply').off()
+      return true
+    })
   })
   $('#bookmarks a').after(' <button title="Zmień..." class="jkp edit-link btn btn-sm btn-outline-primary"><span class="fa fa-pencil"></span></button> <button title="Usuń zakładkę" class="jkp remove-link btn btn-sm btn-outline-danger"><span class="fa fa-times"></span></button> <button title="Dodaj zakładkę..." class="jkp create-link btn btn-sm btn-outline-success"><span class="fa fa-plus"></span></button>')
   $('.edit-link').click(function() {
@@ -70,6 +75,12 @@ module.exports.updateBookmarks = updateBookmarks = function(sel, base, html) {
     $('#link-name').val(link.text())
     $('#link-address').val(link.attr('href'))
     $('#link-edit').modal({})
+    $('#link-apply').click(function() {
+      link.text($('#link-name').val())
+      link.attr('href', $('#link-address').val())
+      $('#link-apply').off()
+      return true
+    })
   })
 }
 
