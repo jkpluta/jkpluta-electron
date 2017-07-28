@@ -29,37 +29,41 @@ module.exports.startAjax = startAjax = function(sel, spnr, base, href, func) {
 }
 
 module.exports.updateBookmarks = updateBookmarks = function(sel, base, html) {
-  $(sel).html(html);
-  $(sel).find('a').click(function() {
+  $(sel).html(html)
+  prepareBookmarks($(sel))
+}
+
+module.exports.prepareBookmarks = prepareBookmarks = function(element) {
+  element.find('a').click(function() {
     // loadURL($(this).attr('href'))
     return false
   })
 
-  $('#bookmarks a').draggable({
+  element.find('a').draggable({
     revert: true
   })
-  $('#bookmarks h3').draggable({
+  element.find('h3').draggable({
     revert: true
   })
   
-  $('#bookmarks a').parent().droppable({
+  element.find('a').parent().droppable({
     accept: 'a, h3',
     greedy: true,
     drop: dropOnItem
   })
-  $('#bookmarks a').parent().parent().parent().droppable({
+  element.find('dl').parent().droppable({
     accept: 'a, h3',
     greedy: true,
     drop: dropOnItems
   })
 
-  var links = $('#icons a[icon]')
+  var links = element.find('#bookmarks a[icon]')
   for (var i = 0; i < links.length; i++) {
     var link = links.eq(i)
     link.html('<img src="' + link.attr('ICON') + '" alt="' + link.text() + '" title="' + link.text() + '"><span> </span>' + link.text())
   }
-  $('#bookmarks h1, h3').after('<button title="Zmień..." class="jkp edit-folder btn btn-sm btn-outline-primary"><span class="fa fa-pencil-square-o"></span></button> <button title="Usuń folder" class="jkp remove-folder btn btn-sm btn-outline-danger"><span class="fa fa-times-rectangle-o"></span></button> <button title="Dodaj folder..." class="jkp create-folder btn btn-sm btn-outline-success"><span class="fa fa-plus-square-o"></span></button>')
-  $('.edit-folder').click(function() {
+  element.find('h1, h3').after('<button title="Zmień..." class="jkp edit-folder btn btn-sm btn-outline-primary"><span class="fa fa-pencil-square-o"></span></button> <button title="Usuń folder" class="jkp remove-folder btn btn-sm btn-outline-danger"><span class="fa fa-times-rectangle-o"></span></button> <button title="Dodaj folder..." class="jkp create-folder btn btn-sm btn-outline-success"><span class="fa fa-plus-square-o"></span></button>')
+  element.find('.edit-folder').click(function() {
     var folder = $(this).siblings('h1, h3').first()
     $('#folder-name').val(folder.text())
     $('#folder-edit').modal({})
@@ -69,22 +73,23 @@ module.exports.updateBookmarks = updateBookmarks = function(sel, base, html) {
       return true
     })
   })
-  $('.remove-folder').click(function() {
+  element.find('.remove-folder').click(function() {
     var folder = $(this).siblings('h1, h3').first()
     folder.parent().remove()
   })
-  $('.create-folder').click(function() {
+  element.find('.create-folder').click(function() {
     var folder = $(this).siblings('h1, h3').first()
     $('#folder-name').val('')
     $('#folder-edit').modal({})
     $('#folder-apply').click(function() {
-      folder.parent().before('<dt><h3>' + $('#folder-name').val() + '</h3><dl><p></dl><p>')
+      folder.parent().before('<dt><h3>' + $('#folder-name').val() + '</h3><dl><p></dl><p></dt>')
       $('#folder-apply').off()
+      prepareBookmarks(folder.parent().prev())
       return true
     })
   })
-  $('#bookmarks a').after(' <button title="Zmień..." class="jkp edit-link btn btn-sm btn-outline-primary"><span class="fa fa-pencil"></span></button> <button title="Usuń zakładkę" class="jkp remove-link btn btn-sm btn-outline-danger"><span class="fa fa-times"></span></button> <button title="Dodaj zakładkę..." class="jkp create-link btn btn-sm btn-outline-success"><span class="fa fa-plus"></span></button>')
-  $('.edit-link').click(function() {
+  element.find('a').after(' <button title="Zmień..." class="jkp edit-link btn btn-sm btn-outline-primary"><span class="fa fa-pencil"></span></button> <button title="Usuń zakładkę" class="jkp remove-link btn btn-sm btn-outline-danger"><span class="fa fa-times"></span></button> <button title="Dodaj zakładkę..." class="jkp create-link btn btn-sm btn-outline-success"><span class="fa fa-plus"></span></button>')
+  element.find('.edit-link').click(function() {
     var link = $(this).siblings('a').first()
     $('#link-name').val(link.text())
     $('#link-address').val(link.attr('href'))
@@ -93,6 +98,22 @@ module.exports.updateBookmarks = updateBookmarks = function(sel, base, html) {
       link.text($('#link-name').val())
       link.attr('href', $('#link-address').val())
       $('#link-apply').off()
+      return true
+    })
+  })
+  element.find('.remove-link').click(function() {
+    var link = $(this).siblings('a').first()
+    link.parent().remove()
+  })
+  element.find('.create-link').click(function() {
+    var link = $(this).siblings('a').first()
+    $('#link-name').val('')
+    $('#link-address').val('')
+    $('#link-edit').modal({})
+    $('#link-apply').click(function() {
+      link.parent().before('<dt><a href="' + $('#link-address').val() + '">' + $('#link-name').val() + '</a>')
+      $('#link-apply').off()
+      prepareBookmarks(link.parent().prev())
       return true
     })
   })
