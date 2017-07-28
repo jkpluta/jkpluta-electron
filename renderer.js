@@ -58,13 +58,13 @@ module.exports.updateBookmarks = updateBookmarks = function(sel, base, html) {
     var link = links.eq(i)
     link.html('<img src="' + link.attr('ICON') + '" alt="' + link.text() + '" title="' + link.text() + '"><span> </span>' + link.text())
   }
-  $('#bookmarks h1, h3').append(' <button id="edit-folder" title="Zmień..." class="btn btn-sm btn-info"><span class="fa fa-edit"></span></button> <button id="remove-folder" title="Usuń" class="btn btn-sm btn-danger"><span class="fa fa-remove"></span></button> <button id="create-folder" title="Utwórz folder..." class="btn btn-sm btn-success"><span class="fa fa-plus"></span></button>')
-  $('#save').click(function() {
-    $('#myModal').modal({})
+  $('#bookmarks h1, h3').append(' <button title="Zmień..." class="jkp edit-folder btn btn-sm btn-outline-primary"><span class="fa fa-pencil-square-o"></span></button> <button title="Usuń folder" class="jkp remove-folder btn btn-sm btn-outline-danger"><span class="fa fa-times-rectangle-o"></span></button> <button title="Dodaj folder..." class="jkp create-folder btn btn-sm btn-outline-success"><span class="fa fa-plus-square-o"></span></button>')
+  $('.edit-folder').click(function() {
+    $('#folder-edit').modal({})
   })
-  $('#bookmarks a').after(' <button id="edit-folder" title="Zmień..." class="btn btn-sm btn-info"><span class="fa fa-edit"></span></button> <button id="remove-folder" title="Usuń" class="btn btn-sm btn-danger"><span class="fa fa-remove"></span></button> <button id="create-folder" title="Utwórz folder..." class="btn btn-sm btn-success"><span class="fa fa-plus"></span></button>')
-  $('#save').click(function() {
-    $('#myModal').modal({})
+  $('#bookmarks a').after(' <button title="Zmień..." class="jkp edit-link btn btn-sm btn-outline-primary"><span class="fa fa-pencil"></span></button> <button title="Usuń zakładkę" class="jkp remove-link btn btn-sm btn-outline-danger"><span class="fa fa-times"></span></button> <button title="Dodaj zakładkę..." class="jkp create-link btn btn-sm btn-outline-success"><span class="fa fa-plus"></span></button>')
+  $('.edit-link').click(function() {
+    $('#link-edit').modal({})
   })
 }
 
