@@ -295,17 +295,18 @@ try {
             author: {
               "name": "Jan K. Pluta",
               "email": "jkpluta@gmail.com",
-              "date": "2008-07-09T16:13:30+12:00"
+              "date": new Date().toISOString()
             },
           },
           function(err, res) {
             var SHA_NEW_COMMIT = res.data.sha
             console.log('SHA_NEW_COMMIT: ', SHA_NEW_COMMIT)
-            github.gitdata.createReference({
+            github.gitdata.updateReference({
               owner: "jkpluta",
               repo: "jkpluta.github.io",
-              ref: "refs/heads/master",
-              sha: SHA_NEW_COMMIT
+              ref: "heads/master",
+              sha: SHA_NEW_COMMIT,
+              force: true
             },
             function(err, res) {
             })
