@@ -143,6 +143,11 @@ module.exports.loadURL = loadURL = function(url) {
   return false
 }
 
+module.exports.commit = commit = function() {
+  electron.remote.getGlobal('sharedObj').commit()
+  return false
+}
+
 $(document).ready(function() {
   $("a").click(function() {
     loadURL($(this).attr('href'))

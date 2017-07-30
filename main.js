@@ -27,7 +27,10 @@ storage.get('settings', function(error, data) {
 
 function createWindow () {
 
-  global.sharedObj = { loadURL: loadURL }
+  global.sharedObj = { 
+    loadURL: loadURL, 
+    commit: commit 
+  }
   // Create the browser window.
   mainWindow = new BrowserWindow({width: 900, height: 620, title: 'jkp', icon: path.join(__dirname, 'icon.ico')})
 
@@ -207,4 +210,131 @@ function loadURL(url) {
     showAbout()
   else
     mainWindow.loadURL(url)
+}
+
+function commit() {
+
+
+var fs = require('fs');
+try { 
+  var content = fs.readFileSync('/home/jkp/GitHub/jkpluta.github.io/test.md', 'utf-8')
+  console.log(content)
+}
+catch(e) { 
+  alert('Błąd odczytu z pliku!')
+}
+
+var GitHubApi = require("github");
+
+console.log('A')
+
+try {
+  var github = new GitHubApi({
+    // optional 
+    debug: true,
+    protocol: "https",
+    host: "api.github.com", // should be api.github.com for GitHub 
+    pathPrefix: null, // for some GHEs; none for GitHub 
+    headers: {
+        "user-agent": "jkpluta" // GitHub is happy with a unique user agent 
+    },
+    Promise: require('bluebird'),
+    followRedirects: false, // default: true; there's currently an issue with non-get redirects, so allow ability to disable follow-redirects 
+    timeout: 5000
+  })
+
+  console.log('B')
+ 
+  // TODO: optional authentication here depending on desired endpoints. See below in README. 
+  github.authenticate({
+    type: "oauth",
+    token: process.env.GITHUB_TOKEN
+  });
+  
+  console.log('C')
+
+    github.gitdata.getReference({
+      owner: "jkpluta",
+      repo: "jkpluta.github.io",
+      ref: "heads/master"
+    },
+    function(err, res) {
+      var SHA_LATEST_COMMIT = res.data.object.sha
+      console.log('SHA_LATEST_COMMIT: ', SHA_LATEST_COMMIT)
+      github.gitdata.getCommit({
+        owner: "jkpluta",
+        repo: "jkpluta.github.io",
+        sha: SHA_LATEST_COMMIT
+      },
+      function(err, res) {
+        var SHA_BASE_TREE = res.data.tree.sha
+        console.log('SHA_BASE_TREE: ', SHA_BASE_TREE)
+        github.gitdata.createTree({
+          owner: "jkpluta",
+          repo: "jkpluta.github.io",
+          tree: [
+            {
+              "path": "test.md",
+              "mode": "100644",
+              "type": "blob",
+              "content": content
+            }
+          ],
+          base_tree: SHA_BASE_TREE
+        },
+        function(err, res) {
+          var SHA_NEW_TREE = res.data.sha
+          console.log('SHA_NEW_TREE: ', SHA_NEW_TREE)
+
+          github.gitdata.createCommit({
+            owner: "jkpluta",
+            repo: "jkpluta.github.io",
+            message: "API Test",
+            tree: SHA_NEW_TREE,
+            parents: [ SHA_LATEST_COMMIT ],
+            author: {
+              "name": "Jan K. Pluta",
+              "email": "jkpluta@gmail.com",
+              "date": "2008-07-09T16:13:30+12:00"
+            },
+          },
+          function(err, res) {
+            var SHA_NEW_COMMIT = res.data.sha
+            console.log('SHA_NEW_COMMIT: ', SHA_NEW_COMMIT)
+            github.gitdata.createReference({
+              owner: "jkpluta",
+              repo: "jkpluta.github.io",
+              ref: "refs/heads/master",
+              sha: SHA_NEW_COMMIT
+            },
+            function(err, res) {
+            })
+          })
+        })
+      })
+    })
+
+  /*
+  github.gitdata.createCommit({
+    owner: "jkpluta",
+    repo: "jkpluta.github.io",
+    message: "API Test",
+    tree: "String",
+    parents: "Array",
+    author: "Json",
+    committer: "Json"
+  },
+  function(err, res) {
+      console.error(err)
+      console.log(JSON.stringify(res))
+  })
+  */
+
+  console.log('D')
+
+}
+catch(err) {
+  console.error(err)
+}
+  
 }

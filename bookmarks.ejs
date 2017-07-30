@@ -84,6 +84,7 @@ $(document).ready(function() {
 });
   $('#save').click(function() {
     $('.jkp').remove()
+    commit()
     var fs = require('fs');
     try { 
       fs.writeFileSync('c:\\temp\\<%- data %>', document.documentElement.outerHTML, 'utf-8')
