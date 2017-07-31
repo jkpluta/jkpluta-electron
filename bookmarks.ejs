@@ -114,9 +114,9 @@ $(document).ready(function() {
   startAjax("#bookmarks", "#bookmarks", "http://jkpluta.github.io", "/<%- data %>", updateBookmarks)
 });
   $('#save').click(function() {
-    var html = $('#bookmarks').html()
-    $('.jkp', html).remove()
-    commit(html, 'temp-<%- data %>')
+    var bookmarks = $('#bookmarks').clone()
+    $('.jkp', bookmarks).remove()
+    commit(bookmarks.html(), 'temp-<%- data %>')
   })
 </script>
 </html>
