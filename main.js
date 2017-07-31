@@ -251,23 +251,46 @@ function commit(content, name, func) {
           "X-GitHub-OTP": "two-factor-code"
         }
       }, function(err, res) {
-        console.error(err)
-        console.log(res)
-        if (res != null && res.data != null && res.data.token != null) {
-          settings.auth_token = res.data.token
-          storage.set('settings', settings, function(error) {
-            if (error) throw error;
-          })
+        if (err != null) {
+          commit(content, name, func)
+        } else {
+          if (res != null && res.data != null && res.data.token != null) {
+            settings.auth_token = res.data.token
+            storage.set('settings', settings, function(error) {
+              if (error) throw error;
+            })
 
-          console.log(settings.auth_token)
-          //save and use res.token as in the Oauth process above from now on 
-          gitHubCommit(content, name, settings.auth_token)
+            console.log(settings.auth_token)
+            //save and use res.token as in the Oauth process above from now on 
+            // gitHubCommit(content, name, settings.auth_token)
+
+            commit(content, name, func)
+          }
         }
       })
     })
   }
   else {
-    gitHubCommit(content, name, settings.auth_token)
+    github.authenticate({
+      type: "oauth",
+      token: settings.auth_token
+    });
+  
+    github.users.get(
+    {}, function(err, res) {
+      if (err != null) {
+        settings.auth_token = null
+        storage.set('settings', settings, function(error) {
+          if (error) throw error;
+        })
+        commit(content, name, func)
+      } else {
+        if (res != null) {
+          console.log('OK')
+        }
+      }
+    })
+//        gitHubCommit(content, name, settings.auth_token)
   }  
 }
 
@@ -282,18 +305,12 @@ catch(e) {
 }
 */
 
-function gitHubCommit(content, name, auth_token) {
+function gitHubCommit(content, name) {
 
 console.log('A')
 
 console.log('B')
 
-  // TODO: optional authentication here depending on desired endpoints. See below in README. 
-  github.authenticate({
-    type: "oauth",
-    token: auth_token
-  });
-  
 console.log('C')
 
   github.gitdata.getReference({
