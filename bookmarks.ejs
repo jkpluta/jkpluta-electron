@@ -114,17 +114,9 @@ $(document).ready(function() {
   startAjax("#bookmarks", "#bookmarks", "http://jkpluta.github.io", "/<%- data %>", updateBookmarks)
 });
   $('#save').click(function() {
-    $('.jkp').remove()
-    commit(document.documentElement.outerHTML, 'temp-<%- data %>')
-    /*
-    var fs = require('fs');
-    try { 
-      fs.writeFileSync('c:\\temp\\<%- data %>', document.documentElement.outerHTML, 'utf-8')
-    }
-    catch(e) { 
-      alert('Błąd zapisu do pliku!')
-    }
-    */
+    var html = $('#bookmarks').html()
+    $('.jkp', html).remove()
+    commit(html, 'temp-<%- data %>')
   })
 </script>
 </html>

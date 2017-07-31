@@ -232,21 +232,15 @@ function commit(content, name, func) {
   if (settings.auth_token == null) {
     func(function(username, password) {
 
-      console.log(username)
-
       github.authenticate({
         type: "basic",
         username: username,
         password: password
       })
 
-      console.log(username)
-      var note = "jkpluta-electron-".concat(new Date().toISOString())
-      console.log(note)
-
       github.authorization.create({
         scopes: ["user", "repo", "gist"],
-        note: note,
+        note: "jkpluta-electron-".concat(new Date().toISOString()),
         headers: {
           "X-GitHub-OTP": "two-factor-code"
         }
@@ -259,11 +253,6 @@ function commit(content, name, func) {
             storage.set('settings', settings, function(error) {
               if (error) throw error;
             })
-
-            console.log(settings.auth_token)
-            //save and use res.token as in the Oauth process above from now on 
-            // gitHubCommit(content, name, settings.auth_token)
-
             commit(content, name, func)
           }
         }
@@ -276,8 +265,8 @@ function commit(content, name, func) {
       token: settings.auth_token
     });
   
-    github.users.get(
-    {}, function(err, res) {
+    github.users.get({
+    }, function(err, res) {
       if (err != null) {
         settings.auth_token = null
         storage.set('settings', settings, function(error) {
@@ -286,32 +275,14 @@ function commit(content, name, func) {
         commit(content, name, func)
       } else {
         if (res != null) {
-          console.log('OK')
+          gitHubCommit(content, name)
         }
       }
     })
-//        gitHubCommit(content, name, settings.auth_token)
   }  
 }
 
-/*
-var fs = require('fs');
-try { 
-  var content = fs.readFileSync('/home/jkp/GitHub/jkpluta.github.io/test.md', 'utf-8')
-  console.log(content)
-}
-catch(e) { 
-  alert('Błąd odczytu z pliku!')
-}
-*/
-
 function gitHubCommit(content, name) {
-
-console.log('A')
-
-console.log('B')
-
-console.log('C')
 
   github.gitdata.getReference({
     owner: "jkpluta",
@@ -320,7 +291,6 @@ console.log('C')
   },
   function(err, res) {
     var SHA_LATEST_COMMIT = res.data.object.sha
-    console.log('SHA_LATEST_COMMIT: ', SHA_LATEST_COMMIT)
     github.gitdata.getCommit({
       owner: "jkpluta",
       repo: "jkpluta.github.io",
@@ -328,7 +298,6 @@ console.log('C')
     },
     function(err, res) {
       var SHA_BASE_TREE = res.data.tree.sha
-      console.log('SHA_BASE_TREE: ', SHA_BASE_TREE)
       github.gitdata.createTree({
         owner: "jkpluta",
         repo: "jkpluta.github.io",
@@ -344,8 +313,6 @@ console.log('C')
       },
       function(err, res) {
         var SHA_NEW_TREE = res.data.sha
-        console.log('SHA_NEW_TREE: ', SHA_NEW_TREE)
-
         github.gitdata.createCommit({
           owner: "jkpluta",
           repo: "jkpluta.github.io",
@@ -360,7 +327,6 @@ console.log('C')
         },
         function(err, res) {
           var SHA_NEW_COMMIT = res.data.sha
-          console.log('SHA_NEW_COMMIT: ', SHA_NEW_COMMIT)
           github.gitdata.updateReference({
             owner: "jkpluta",
             repo: "jkpluta.github.io",
@@ -374,7 +340,4 @@ console.log('C')
       })
     })
   })
-
-  console.log('D')
-  
 }
