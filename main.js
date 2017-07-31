@@ -14,15 +14,15 @@ const ejse = require('ejs-electron')
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 let settings = {
-  servers: []
+  auth_token: null
 }
 
 ejse.options({ root: __dirname })
 
 storage.get('settings', function(error, data) {
   if (error) throw error;
-  if (typeof data.servers !== "undefined")
-    settings.servers = data.servers
+  if (typeof data.auth_token !== "undefined")
+    settings.auth_token = data.auth_token
 });
 
 function createWindow () {
@@ -166,8 +166,7 @@ function renderPage(browserWindow, template, title, data)
 {
   ejse.data({
     title: title,
-    data: data,
-    servers: settings.servers
+    data: data
   })
   browserWindow.loadURL(url.format({
     pathname: path.join(__dirname, template + '.ejs'),
@@ -212,7 +211,17 @@ function loadURL(url) {
     mainWindow.loadURL(url)
 }
 
-function commit(content, name) {
+function commit(content, name, func) {
+
+  if (settings.auth_token == null) {
+    func(function(username, password) {
+      gitHubCommit(content, name, username, password)
+    })
+  }
+  else {
+    gitHubCommit(content, name, null, null)
+  }  
+}
 
 /*
 var fs = require('fs');
@@ -224,6 +233,11 @@ catch(e) {
   alert('Błąd odczytu z pliku!')
 }
 */
+
+function gitHubCommit(content, name, username, password) {
+console.log(name)
+console.log(username)
+console.log(password)
 
   var GitHubApi = require("github");
 
@@ -243,15 +257,38 @@ console.log('A')
     timeout: 5000
   })
 
-  console.log('B')
- 
+console.log('B')
+
+  if (username != null && password != null) {
+
+    github.authenticate({
+      type: "basic",
+      username: username,
+      password: password
+    })
+
+    github.authorization.create({
+      scopes: ["user", "repo", "gist"],
+      note: "Test Token",
+      note_url: "http://url-to-this-auth-app",
+      headers: {
+        "X-GitHub-OTP": "two-factor-code"
+      }
+    }, function(err, res) {
+      if (res.token) {
+        log.console(res.token)
+        //save and use res.token as in the Oauth process above from now on 
+      }
+    })
+  }
+return
   // TODO: optional authentication here depending on desired endpoints. See below in README. 
   github.authenticate({
     type: "oauth",
     token: process.env.GITHUB_TOKEN
   });
   
-  console.log('C')
+console.log('C')
 
     github.gitdata.getReference({
       owner: "jkpluta",

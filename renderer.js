@@ -144,8 +144,14 @@ module.exports.loadURL = loadURL = function(url) {
 }
 
 module.exports.commit = commit = function(content, name) {
-  electron.remote.getGlobal('sharedObj').commit(content, name)
-  return false
+  electron.remote.getGlobal('sharedObj').commit(content, name, function(func) {
+    $('#auth-edit').modal({})
+    $('#auth-apply').click(function() {
+      func($('#auth-username').val(), $('#auth-password').val())
+      $('#auth-apply').off()
+      return true
+    })
+  })
 }
 
 $(document).ready(function() {
