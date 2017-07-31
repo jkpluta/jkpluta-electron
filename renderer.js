@@ -143,8 +143,8 @@ module.exports.loadURL = loadURL = function(url) {
   return false
 }
 
-module.exports.commit = commit = function() {
-  electron.remote.getGlobal('sharedObj').commit()
+module.exports.commit = commit = function(content, name) {
+  electron.remote.getGlobal('sharedObj').commit(content, name)
   return false
 }
 

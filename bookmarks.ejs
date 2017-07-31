@@ -84,7 +84,8 @@ $(document).ready(function() {
 });
   $('#save').click(function() {
     $('.jkp').remove()
-    commit()
+    commit(document.documentElement.outerHTML, 'temp-<%- data %>')
+    /*
     var fs = require('fs');
     try { 
       fs.writeFileSync('c:\\temp\\<%- data %>', document.documentElement.outerHTML, 'utf-8')
@@ -92,6 +93,7 @@ $(document).ready(function() {
     catch(e) { 
       alert('Błąd zapisu do pliku!')
     }
+    */
   })
 </script>
 </html>

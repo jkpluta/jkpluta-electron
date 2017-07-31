@@ -212,9 +212,9 @@ function loadURL(url) {
     mainWindow.loadURL(url)
 }
 
-function commit() {
+function commit(content, name) {
 
-
+/*
 var fs = require('fs');
 try { 
   var content = fs.readFileSync('/home/jkp/GitHub/jkpluta.github.io/test.md', 'utf-8')
@@ -223,12 +223,12 @@ try {
 catch(e) { 
   alert('Błąd odczytu z pliku!')
 }
+*/
 
-var GitHubApi = require("github");
+  var GitHubApi = require("github");
 
 console.log('A')
 
-try {
   var github = new GitHubApi({
     // optional 
     debug: true,
@@ -274,7 +274,7 @@ try {
           repo: "jkpluta.github.io",
           tree: [
             {
-              "path": "test.md",
+              "path": name,
               "mode": "100644",
               "type": "blob",
               "content": content
@@ -315,27 +315,6 @@ try {
       })
     })
 
-  /*
-  github.gitdata.createCommit({
-    owner: "jkpluta",
-    repo: "jkpluta.github.io",
-    message: "API Test",
-    tree: "String",
-    parents: "Array",
-    author: "Json",
-    committer: "Json"
-  },
-  function(err, res) {
-      console.error(err)
-      console.log(JSON.stringify(res))
-  })
-  */
-
   console.log('D')
-
-}
-catch(err) {
-  console.error(err)
-}
   
 }
