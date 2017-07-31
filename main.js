@@ -10,12 +10,14 @@ const ejs = require('ejs')
 const fs = require('fs')
 const storage = require('electron-json-storage')
 const ejse = require('ejs-electron')
+const GitHubApi = require("github");
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 let settings = {
   auth_token: null
 }
+let github
 
 ejse.options({ root: __dirname })
 
@@ -213,13 +215,59 @@ function loadURL(url) {
 
 function commit(content, name, func) {
 
+  github = new GitHubApi({
+    // optional 
+    debug: false,
+    protocol: "https",
+    host: "api.github.com", // should be api.github.com for GitHub 
+    pathPrefix: null, // for some GHEs; none for GitHub 
+    headers: {
+        "user-agent": "jkpluta" // GitHub is happy with a unique user agent 
+    },
+    Promise: require('bluebird'),
+    followRedirects: false, // default: true; there's currently an issue with non-get redirects, so allow ability to disable follow-redirects 
+    timeout: 5000
+  })
+
   if (settings.auth_token == null) {
     func(function(username, password) {
-      gitHubCommit(content, name, username, password)
+
+      console.log(username)
+
+      github.authenticate({
+        type: "basic",
+        username: username,
+        password: password
+      })
+
+      console.log(username)
+      var note = "jkpluta-electron-".concat(new Date().toISOString())
+      console.log(note)
+
+      github.authorization.create({
+        scopes: ["user", "repo", "gist"],
+        note: note,
+        headers: {
+          "X-GitHub-OTP": "two-factor-code"
+        }
+      }, function(err, res) {
+        console.error(err)
+        console.log(res)
+        if (res != null && res.data != null && res.data.token != null) {
+          settings.auth_token = res.data.token
+          storage.set('settings', settings, function(error) {
+            if (error) throw error;
+          })
+
+          console.log(settings.auth_token)
+          //save and use res.token as in the Oauth process above from now on 
+          gitHubCommit(content, name, settings.auth_token)
+        }
+      })
     })
   }
   else {
-    gitHubCommit(content, name, null, null)
+    gitHubCommit(content, name, settings.auth_token)
   }  
 }
 
@@ -234,123 +282,81 @@ catch(e) {
 }
 */
 
-function gitHubCommit(content, name, username, password) {
-console.log(name)
-console.log(username)
-console.log(password)
-
-  var GitHubApi = require("github");
+function gitHubCommit(content, name, auth_token) {
 
 console.log('A')
 
-  var github = new GitHubApi({
-    // optional 
-    debug: true,
-    protocol: "https",
-    host: "api.github.com", // should be api.github.com for GitHub 
-    pathPrefix: null, // for some GHEs; none for GitHub 
-    headers: {
-        "user-agent": "jkpluta" // GitHub is happy with a unique user agent 
-    },
-    Promise: require('bluebird'),
-    followRedirects: false, // default: true; there's currently an issue with non-get redirects, so allow ability to disable follow-redirects 
-    timeout: 5000
-  })
-
 console.log('B')
 
-  if (username != null && password != null) {
-
-    github.authenticate({
-      type: "basic",
-      username: username,
-      password: password
-    })
-
-    github.authorization.create({
-      scopes: ["user", "repo", "gist"],
-      note: "Test Token",
-      note_url: "http://url-to-this-auth-app",
-      headers: {
-        "X-GitHub-OTP": "two-factor-code"
-      }
-    }, function(err, res) {
-      if (res.token) {
-        log.console(res.token)
-        //save and use res.token as in the Oauth process above from now on 
-      }
-    })
-  }
-return
   // TODO: optional authentication here depending on desired endpoints. See below in README. 
   github.authenticate({
     type: "oauth",
-    token: process.env.GITHUB_TOKEN
+    token: auth_token
   });
   
 console.log('C')
 
-    github.gitdata.getReference({
+  github.gitdata.getReference({
+    owner: "jkpluta",
+    repo: "jkpluta.github.io",
+    ref: "heads/master"
+  },
+  function(err, res) {
+    var SHA_LATEST_COMMIT = res.data.object.sha
+    console.log('SHA_LATEST_COMMIT: ', SHA_LATEST_COMMIT)
+    github.gitdata.getCommit({
       owner: "jkpluta",
       repo: "jkpluta.github.io",
-      ref: "heads/master"
+      sha: SHA_LATEST_COMMIT
     },
     function(err, res) {
-      var SHA_LATEST_COMMIT = res.data.object.sha
-      console.log('SHA_LATEST_COMMIT: ', SHA_LATEST_COMMIT)
-      github.gitdata.getCommit({
+      var SHA_BASE_TREE = res.data.tree.sha
+      console.log('SHA_BASE_TREE: ', SHA_BASE_TREE)
+      github.gitdata.createTree({
         owner: "jkpluta",
         repo: "jkpluta.github.io",
-        sha: SHA_LATEST_COMMIT
+        tree: [
+          {
+            "path": name,
+            "mode": "100644",
+            "type": "blob",
+            "content": content
+          }
+        ],
+        base_tree: SHA_BASE_TREE
       },
       function(err, res) {
-        var SHA_BASE_TREE = res.data.tree.sha
-        console.log('SHA_BASE_TREE: ', SHA_BASE_TREE)
-        github.gitdata.createTree({
+        var SHA_NEW_TREE = res.data.sha
+        console.log('SHA_NEW_TREE: ', SHA_NEW_TREE)
+
+        github.gitdata.createCommit({
           owner: "jkpluta",
           repo: "jkpluta.github.io",
-          tree: [
-            {
-              "path": name,
-              "mode": "100644",
-              "type": "blob",
-              "content": content
-            }
-          ],
-          base_tree: SHA_BASE_TREE
+          message: "jkpluta-electron",
+          tree: SHA_NEW_TREE,
+          parents: [ SHA_LATEST_COMMIT ],
+          author: {
+            "name": "Jan K. Pluta",
+            "email": "jkpluta@gmail.com",
+            "date": new Date().toISOString()
+          },
         },
         function(err, res) {
-          var SHA_NEW_TREE = res.data.sha
-          console.log('SHA_NEW_TREE: ', SHA_NEW_TREE)
-
-          github.gitdata.createCommit({
+          var SHA_NEW_COMMIT = res.data.sha
+          console.log('SHA_NEW_COMMIT: ', SHA_NEW_COMMIT)
+          github.gitdata.updateReference({
             owner: "jkpluta",
             repo: "jkpluta.github.io",
-            message: "API Test",
-            tree: SHA_NEW_TREE,
-            parents: [ SHA_LATEST_COMMIT ],
-            author: {
-              "name": "Jan K. Pluta",
-              "email": "jkpluta@gmail.com",
-              "date": new Date().toISOString()
-            },
+            ref: "heads/master",
+            sha: SHA_NEW_COMMIT,
+            force: true
           },
           function(err, res) {
-            var SHA_NEW_COMMIT = res.data.sha
-            console.log('SHA_NEW_COMMIT: ', SHA_NEW_COMMIT)
-            github.gitdata.updateReference({
-              owner: "jkpluta",
-              repo: "jkpluta.github.io",
-              ref: "heads/master",
-              sha: SHA_NEW_COMMIT,
-              force: true
-            },
-            function(err, res) {
-            })
           })
         })
       })
     })
+  })
 
   console.log('D')
   
