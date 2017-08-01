@@ -40,10 +40,12 @@ module.exports.prepareBookmarks = prepareBookmarks = function(element) {
   })
 
   element.find('a').draggable({
-    revert: true
+    revert: 'invalid',
+    cursor: "move"
   })
   element.find('h3').draggable({
-    revert: true
+    revert: 'invalid',
+    cursor: "move"
   })
   
   element.find('a').parent().droppable({
@@ -150,7 +152,6 @@ module.exports.prepareBookmarks = prepareBookmarks = function(element) {
 
 function dropOnItem( event, ui ) {
   $(this).before(ui.draggable.parent())
-  ui.draggable.draggable('option', 'revert', false)
   ui.draggable.css('left', '')
   ui.draggable.css('top', '')
 }
@@ -162,7 +163,6 @@ function dropOnItems( event, ui ) {
   if (ui.draggable.prop('tagName') === 'H3') {
     $(this).before(ui.draggable.parent())
   }
-  ui.draggable.draggable('option', 'revert', false)
   ui.draggable.css('left', '')
   ui.draggable.css('top', '')
 }
