@@ -1,5 +1,6 @@
 <html>
 <% include head.ejs %>
+<link href="https://cdn.quilljs.com/1.3.0/quill.snow.css" rel="stylesheet">
 <body>
 <div class="container">
   <% include title.ejs %>
@@ -7,11 +8,46 @@
     <div id="info" class="col">
     </div>
   </div>
+  <div class="row">
+    <!-- Create the editor container -->
+    <div class="col">
+      <div id="editor" style="height: 300px;">
+      </div>
+      <div id="info">
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <hr>
+      <p class="text-right">
+        <button id="save"><span class="fa fa-save"></span> Zapisz</button>
+        <button id="refresh"><span class="fa fa-refresh"></span> Odśwież</button>
+      </p>
+    </div>
+  </div>
 </div>
 </body>
+<script src="https://cdn.quilljs.com/1.3.0/quill.js"></script>
 <script>
 $(document).ready(function() {
-  startAjax("#info", "#info", "http://jkpluta.github.io", "/info.html", updateAjax)
-});
+  startAjax("#editor", "#info", "http://jkpluta.github.io", "/info.html", updateQuill)
+})
+var quill = new Quill('#editor', {
+  theme: 'snow'
+})
+
+function updateQuill(sel, base, html) {
+  quill.setText('')
+  quill.clipboard.dangerouslyPasteHTML(0, html)
+}
+
+$('#save').click(function() {
+  var info = quill.root.innerHTML
+  commit(info, 'temp-info.html')
+})
+$('#refresh').click(function() {
+  startAjax("#editor", "#info", "http://jkpluta.github.io", "/info.html", updateQuill)
+})
 </script>
 </html>
