@@ -44,7 +44,7 @@ function updateQuill(sel, base, html) {
 
 $('#save').click(function() {
   var info = quill.root.innerHTML
-  commit(info, 'temp-info.html')
+  commit(info, 'info.html')
 })
 $('#refresh').click(function() {
   startAjax("#editor", "#info", "http://jkpluta.github.io", "/info.html", updateQuill)
