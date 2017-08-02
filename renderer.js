@@ -176,13 +176,28 @@ module.exports.findFavicon = findFavicon = function(sel, spnnr, href) {
 
 module.exports.updateFavicon = updateFavicon = function(sel, base, html) {
   var dom = $.parseHTML(html, null, false)
-  for(i = 0; i < dom.length; i++) {
-    if (dom[i].nodeName === 'LINK') {
-      if (dom[i].rel === "shortcut icon") {
-        $(sel).attr('src', base.concat(dom[i].getAttribute('href')))
-        $(sel).show()
+  var src = null
+  if (src == null) {
+    for(i = 0; i < dom.length; i++) {
+      if (dom[i].nodeName.toUpperCase() === 'LINK') {
+        if (dom[i].rel.toLowerCase() === "shortcut icon") {
+          src = dom[i].getAttribute('href')
+        }
       }
     }
+  }
+  if (src == null) {
+    src = '/favicon.ico'
+  }
+  if (src != null) {
+    if (src.indexOf('//') >= 0) {
+      if(src.startsWith('//')) {
+        src = (new URL(base)).protocol.concat(src)
+      }
+    } else
+      src = base.concat(src)
+    $(sel).attr('src', src)
+    $(sel).show()
   }
 }
 
