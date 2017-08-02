@@ -85,22 +85,25 @@
 </div>
 </body>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
-<script>
-$(document).ready(function() {
-  startAjax("#bookmarks", "#bookmarks", "http://jkpluta.github.io", "/<%- data %>", updateBookmarks)
-});
-$('#save').click(function() {
-  var bookmarks = $('#bookmarks').clone()
-  $('.jkp', bookmarks).remove()
-  commit(bookmarks.html(), 'temp-<%- data %>')
-})
-$('#refresh').click(function() {
-  startAjax("#bookmarks", "#bookmarks", "http://jkpluta.github.io", "/<%- data %>", updateBookmarks)
-})
-</script>
 <script type="text/javascript">
+  <% if (data === 'icons.html') { %>
+  init(true)
+  <% } else { %>
+  init(false)
+  <% } %>
+  $(document).ready(function() {
+    startAjax("#bookmarks", "#bookmarks", "http://jkpluta.github.io", "/<%- data %>", updateBookmarks)
+  });
+  $('#save').click(function() {
+    var bookmarks = $('#bookmarks').clone()
+    $('.jkp', bookmarks).remove()
+    commit(bookmarks.html(), 'temp-<%- data %>')
+  })
+  $('#refresh').click(function() {
+    startAjax("#bookmarks", "#bookmarks", "http://jkpluta.github.io", "/<%- data %>", updateBookmarks)
+  })
   $('#link-edit').on('show.bs.modal', function () {
-    $('#link-favicon').attr('src', '')
+    $('#link-favicon').removeAttr('src')
     $('#link-favicon').hide()
   })
   $('#link-edit').on('shown.bs.modal', function () {
