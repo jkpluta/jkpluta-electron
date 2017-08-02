@@ -72,7 +72,8 @@
           </form>        
         </div>
         <div class="modal-footer">
-          <img id="favicon" width="32" height="32" src="" alt="Ikona strony" class="mr-auto">
+          <img id="link-favicon" width="32" height="32" alt="Ikona strony" class="mr-auto">
+          <div id="link-spinner" class="mr-auto"></div>
           <button id="link-apply" type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
         </div>
@@ -100,26 +101,15 @@ $('#refresh').click(function() {
 </script>
 <script type="text/javascript">
   var favicon = new Favicon()
-  $('.modal').on('shown.bs.modal', function () {
-    $(this).find('[autofocus]').focus();
-  })
   $('#link-edit').on('show.bs.modal', function () {
-    $('#favicon').attr('src', '')
-    $('#favicon').hide()
+    $('#link-favicon').attr('src', '')
+    $('#link-favicon').hide()
   })
   $('#link-edit').on('shown.bs.modal', function () {
-    $('#favicon').hide()
-    favicon.get($('#link-address').val(), function(url) {
-      $('#favicon').attr('src', url)
-      $('#favicon').show()
-    })
+    findFavicon('#link-favicon','#link-spinner', $('#link-address').val())
   })
   $('#link-address').on('blur', function () {
-    $('#favicon').hide()
-    favicon.get($('#link-address').val(), function(url) {
-      $('#favicon').attr('src', url)
-      $('#favicon').show()
-    })
+    findFavicon('#link-favicon','#link-spinner', $('#link-address').val())
   })
 </script>
 </html>

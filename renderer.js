@@ -3,6 +3,7 @@
 // All of the Node.js APIs are available in this process.
 const $ = require('jquery')
 const electron = require('electron')
+const url = require('url')
 window.jQuery = window.$ = $
 
 module.exports.updateAjax = updateAjax = function(sel, base, html) {
@@ -167,6 +168,24 @@ function dropOnItems( event, ui ) {
   ui.draggable.css('top', '')
 }
 
+module.exports.findFavicon = findFavicon = function(sel, spnnr, href) {
+  $(sel).hide()
+  var url = new URL(href)
+  startAjax(sel, spnnr, url.origin, '', updateFavicon)
+}
+
+module.exports.updateFavicon = updateFavicon = function(sel, base, html) {
+  var dom = $.parseHTML(html, null, false)
+  for(i = 0; i < dom.length; i++) {
+    if (dom[i].nodeName === 'LINK') {
+      if (dom[i].rel === "shortcut icon") {
+        $(sel).attr('src', base.concat(dom[i].getAttribute('href')))
+        $(sel).show()
+      }
+    }
+  }
+}
+
 module.exports.loadURL = loadURL = function(url) {
   electron.remote.getGlobal('sharedObj').loadURL(url)
   return false
@@ -187,5 +206,8 @@ $(document).ready(function() {
   $("a").click(function() {
     loadURL($(this).attr('href'))
     return false
+  })
+  $('.modal').on('shown.bs.modal', function () {
+    $(this).find('[autofocus]').focus();
   })
 })
