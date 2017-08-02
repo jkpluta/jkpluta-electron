@@ -124,6 +124,9 @@ module.exports.prepareBookmarks = prepareBookmarks = function(element) {
     $('#link-apply').click(function() {
       link.text($('#link-name').val())
       link.attr('href', $('#link-address').val())
+      if ($("#link-favicon").is(":visible")) {
+        link.attr('icon_uri', $('#link-favicon').attr('src'))
+      }
       $('#link-apply').off()
       return true
     })
