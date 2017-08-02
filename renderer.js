@@ -171,7 +171,7 @@ function dropOnItems( event, ui ) {
 module.exports.findFavicon = findFavicon = function(sel, spnnr, href) {
   $(sel).hide()
   var url = new URL(href)
-  startAjax(sel, spnnr, url.origin, '', updateFavicon)
+  startAjax(sel, spnnr, url.origin, url.pathname, updateFavicon)
 }
 
 module.exports.updateFavicon = updateFavicon = function(sel, base, html) {
@@ -187,6 +187,15 @@ module.exports.updateFavicon = updateFavicon = function(sel, base, html) {
     }
   }
   if (src == null) {
+    for(i = 0; i < dom.length; i++) {
+      if (dom[i].nodeName.toUpperCase() === 'LINK') {
+        if (dom[i].rel.toLowerCase() === "icon") {
+          src = dom[i].getAttribute('href')
+        }
+      }
+    }
+  }
+  if (src == null) {
     src = '/favicon.ico'
   }
   if (src != null) {
@@ -194,8 +203,12 @@ module.exports.updateFavicon = updateFavicon = function(sel, base, html) {
       if(src.startsWith('//')) {
         src = (new URL(base)).protocol.concat(src)
       }
-    } else
-      src = base.concat(src)
+    } else {
+      if (src.startsWith('/'))
+        src = base.concat(src)
+      else
+        src = base.concat('/').concat(src)
+    }
     $(sel).attr('src', src)
     $(sel).show()
   }
