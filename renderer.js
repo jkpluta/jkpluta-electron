@@ -17,7 +17,8 @@ module.exports.updateAjax = updateAjax = function(sel, base, html) {
 }
 
 module.exports.startAjax = startAjax = function(sel, spnr, base, href, func) {
-  $(spnr).html('<img src="./img/spinner.gif">')
+  if (spnr != null)
+    $(spnr).html('<img src="./img/spinner.gif">')
   $.ajax({
     url: base + href,
     cache: false,
@@ -26,7 +27,8 @@ module.exports.startAjax = startAjax = function(sel, spnr, base, href, func) {
       func(sel, base, html)
     },
     error: function(xhr, status, error) {
-      $(spnr).html('<img src="./img/error.png"> <b>' + status + '</b> <i>' + error + "</i>")
+      if (spnr != null) 
+        $(spnr).html('<img src="./img/error.png"> <b>' + status + '</b> <i>' + error + "</i>")
     }
   })
 }
@@ -79,7 +81,7 @@ module.exports.prepareBookmarks = prepareBookmarks = function(element) {
     prepareBookmark($(this))
   })
   element.find('h1').after('<button title="Zmień..." class="jkp edit-folder btn btn-sm btn-outline-primary"><span class="fa fa-pencil-square-o"></span></button> <button title="Dodaj folder..." class="jkp add-folder btn btn-sm btn-outline-success"><span class="fa fa-plus-square-o"></span></button>')
-  element.find('h3').after('<button title="Zmień..." class="jkp edit-folder btn btn-sm btn-outline-primary"><span class="fa fa-pencil-square-o"></span></button> <button title="Usuń folder" class="jkp remove-folder btn btn-sm btn-outline-danger"><span class="fa fa-times-rectangle-o"></span></button> <button title="Dodaj folder..." class="jkp create-folder btn btn-sm btn-outline-success"><span class="fa fa-plus-square-o"></span></button> <button title="Dodaj zakładkę..." class="jkp add-link btn btn-sm btn-outline-success"><span class="fa fa-plus"></span></button>')
+  element.find('h3').after('<button title="Zmień..." class="jkp edit-folder btn btn-sm btn-outline-primary"><span class="fa fa-pencil-square-o"></span></button> <button title="Usuń folder" class="jkp remove-folder btn btn-sm btn-outline-danger"><span class="fa fa-times-rectangle-o"></span></button> <button title="Dodaj folder..." class="jkp create-folder btn btn-sm btn-outline-success"><span class="fa fa-plus-square-o"></span></button><button title="Odśwież folder..." class="jkp refresh-folder btn btn-sm btn-outline-warning"><span class="fa fa-check-square-o"></span></button> <button title="Dodaj zakładkę..." class="jkp add-link btn btn-sm btn-outline-success"><span class="fa fa-plus"></span></button>')
   element.find('.edit-folder').click(function() {
     var folder = $(this).siblings('h1, h3').first()
     $('#folder-name').val(folder.text())
@@ -102,12 +104,19 @@ module.exports.prepareBookmarks = prepareBookmarks = function(element) {
     $('#folder-apply').off()
     $('#folder-apply').click(function() {
       $('#folder-apply').off()
-      // folder.parent().before('<dt><h3>' + $('#folder-name').val() + '</h3><dl><p></dl><p></dt>')
       exfolder.parent().before('<dt><h3></h3><dl><p></dl><p></dt>')
       var folder = exfolder.parent().prev().children('h3').first()
       folder.text($('#folder-name').val())
       prepareBookmarks(folder.parent())
       return true
+    })
+  })
+  element.find('.refresh-folder').click(function() {
+    var folder = $(this).siblings('h3').first()
+    folder.parent().children('dl').first().children('dt').each(function() {
+      var link = $(this).children('a').first()
+      if (link != null)
+        findFavicon(link, null, link.attr('href'))
     })
   })
   element.find('.add-folder').click(function() {
@@ -117,7 +126,6 @@ module.exports.prepareBookmarks = prepareBookmarks = function(element) {
     $('#folder-apply').off()
     $('#folder-apply').click(function() {
       $('#folder-apply').off()
-      // folder.parent().children('dl').first().append('<dt><h3>' + $('#folder-name').val() + '</h3><dl><p></dl><p></dt>')
       exfolder.parent().children('dl').first().append('<dt><h3></h3><dl><p></dl><p></dt>')
       var folder = exfolder.parent().children('dl').first().children('dt').last().children('h3').first()
       folder.text($('#folder-name').val())
@@ -133,7 +141,6 @@ module.exports.prepareBookmarks = prepareBookmarks = function(element) {
     $('#link-apply').off()
     $('#link-apply').click(function() {
       $('#link-apply').off()
-      // folder.parent().children('dl').first().append('<dt><a href="' + $('#link-address').val() + '">' + $('#link-name').val() + '</a>')
       folder.parent().children('dl').first().append('<dt><a></a>')
       var link = folder.parent().children('dl').first().children('dt').last().children('a').first()
       link.attr('href', $('#link-address').val())
@@ -208,7 +215,9 @@ function dropOnItems( event, ui ) {
 }
 
 module.exports.findFavicon = findFavicon = function(sel, spnnr, href) {
-  $(sel).hide()
+  if ($(sel).prop('tagName') == 'IMG')
+    $(sel).hide()
+
   var url = new URL(href)
   startAjax(sel, spnnr, url.origin, url.pathname, updateFavicon)
 }
@@ -248,8 +257,14 @@ module.exports.updateFavicon = updateFavicon = function(sel, base, html) {
       else
         src = base.concat('/').concat(src)
     }
-    $(sel).attr('src', src)
-    $(sel).show()
+    if ($(sel).prop('tagName') == 'IMG') {
+      $(sel).attr('src', src)
+      $(sel).show()
+    }
+    if ($(sel).prop('tagName') == 'A') {
+      $(sel).attr('ICON_URI', src)
+      prepareBookmark($(sel))
+    }
   }
 }
 
