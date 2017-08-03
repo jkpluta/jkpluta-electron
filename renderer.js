@@ -57,40 +57,6 @@ module.exports.prepareBookmarks = prepareBookmarks = function(element) {
     return false
   })
 
-        $('#drag-file').css('border', 'solid 1px orange')
-
-        $('#drag-file').on('dragover', () => {
-            return false;
-        })
-
-        $('#drag-file').on('dragleave', () => {
-            return false;
-        })
-
-        $('#drag-file').on('dragend', () => {
-            return false;
-        })
-
-        $('#drag-file').on('drop', function(e) {
-
-
-            alert(typeof e.originalEvent)
-
-            e.preventDefault();
-
-            var data = e.originalEvent.dataTransfer.items
-            for(var i = 0; i < data.length; i++) {
-              alert (data[i].type)
-              if (data[i].type === 'text/uri-list') {
-                data[i].getAsString(function(s) {
-                  alert(s)
-                })
-              }
-            }
-
-            return false;
-        })
-        
   $('dt').on('dragover', function(e) {
     return false;
   })
@@ -138,28 +104,6 @@ module.exports.prepareBookmarks = prepareBookmarks = function(element) {
 
   let draggable = null
   
-/*
-  element.find('a').draggable({
-    revert: 'invalid',
-    cursor: "move"
-  })
-  element.find('h3').draggable({
-    revert: 'invalid',
-    cursor: "move"
-  })
-  
-  element.find('a').parent().droppable({
-    accept: 'a, h3',
-    greedy: true,
-    drop: dropOnItem
-  })
-  element.find('dl').parent().droppable({
-    accept: 'a, h3',
-    greedy: true,
-    drop: dropOnItems
-  })
-*/
-
   element.find('a[icon_uri], a[icon]').each(function() {
     prepareBookmark($(this))
   })
@@ -278,23 +222,6 @@ module.exports.prepareBookmarks = prepareBookmarks = function(element) {
     $(this).prev().remove()
     $(this).remove()
   })
-}
-
-function dropOnItem( event, ui ) {
-  $(this).before(ui.draggable.parent())
-  ui.draggable.css('left', '')
-  ui.draggable.css('top', '')
-}
-
-function dropOnItems( event, ui ) {
-  if (ui.draggable.prop('tagName') === 'A') {
-    $(this).children('dl').first().append(ui.draggable.parent())
-  }
-  if (ui.draggable.prop('tagName') === 'H3') {
-    $(this).before(ui.draggable.parent())
-  }
-  ui.draggable.css('left', '')
-  ui.draggable.css('top', '')
 }
 
 module.exports.findFavicon = findFavicon = function(sel, spnnr, href) {
