@@ -6,7 +6,7 @@ const electron = require('electron')
 const url = require('url')
 window.jQuery = window.$ = $
 
-let allowIcon = false
+let iconSize = 16
 
 module.exports.updateAjax = updateAjax = function(sel, base, html) {
   $(sel).html(html);
@@ -37,17 +37,16 @@ module.exports.updateBookmarks = updateBookmarks = function(sel, base, html) {
 }
 
 module.exports.prepareBookmark = prepareBookmark = function(element) {
-    if (allowIcon) {
-      if (element.attr('ICON_URI') != null)
-        element.html('<img src="' + element.attr('ICON_URI') + '" width="32" height="32"> ' + element.text())
-      else
-        element.html('<img src="' + element.attr('ICON') + '" width="32" height="32"> ' + element.text())
-    } else {
-      if (element.attr('ICON_URI') != null)
-        element.html('<img src="' + element.attr('ICON_URI') + '" width="16" height="16"> ' + element.text())
-      else
-        element.html('<img src="' + element.attr('ICON') + '" width="16" height="16"> ' + element.text())
-    }
+  var src = null
+  var text = element.text()
+  if (element.attr('ICON_URI') != null)
+    src = element.attr('ICON_URI')
+  else
+    if (element.attr('ICON') != null)
+      src = element.attr('ICON')
+  if (src != null) {
+    element.html('<img src="' + src + '" width="' + iconSize.toString() + '" height="' + iconSize.toString() + '" alt="' + text + '" class="jkp"><span class="jkp"> </span>' + text)
+  }
 }
 
 module.exports.prepareBookmarks = prepareBookmarks = function(element) {
@@ -270,8 +269,8 @@ module.exports.commit = commit = function(content, name) {
   })
 }
 
-module.exports.init = init = function(icon) {
-  allowIcon = icon
+module.exports.init = init = function(size) {
+  iconSize = size
 }
 
 $(document).ready(function() {
