@@ -33,20 +33,21 @@ module.exports.startAjax = startAjax = function(sel, spnr, base, href, func) {
 
 module.exports.updateBookmarks = updateBookmarks = function(sel, base, html) {
   $(sel).html(html)
-  $(sel).find('a[icon_uri], a[icon]').each(function() {
-    if (allowIcon) {
-      if ($(this).attr('ICON_URI') != null)
-        $(this).html('<img src="' + $(this).attr('ICON_URI') + '" width="32" height="32"> ' + $(this).text())
-      else
-        $(this).html('<img src="' + $(this).attr('ICON') + '" width="32" height="32"> ' + $(this).text())
-    } else {
-      if ($(this).attr('ICON_URI') != null)
-        $(this).html('<img src="' + $(this).attr('ICON_URI') + '" width="16" height="16"> ' + $(this).text())
-      else
-        $(this).html('<img src="' + $(this).attr('ICON') + '" width="16" height="16"> ' + $(this).text())
-    }
-  })
   prepareBookmarks($(sel))
+}
+
+module.exports.prepareBookmark = prepareBookmark = function(element) {
+    if (allowIcon) {
+      if (element.attr('ICON_URI') != null)
+        element.html('<img src="' + element.attr('ICON_URI') + '" width="32" height="32"> ' + element.text())
+      else
+        element.html('<img src="' + element.attr('ICON') + '" width="32" height="32"> ' + element.text())
+    } else {
+      if (element.attr('ICON_URI') != null)
+        element.html('<img src="' + element.attr('ICON_URI') + '" width="16" height="16"> ' + element.text())
+      else
+        element.html('<img src="' + element.attr('ICON') + '" width="16" height="16"> ' + element.text())
+    }
 }
 
 module.exports.prepareBookmarks = prepareBookmarks = function(element) {
@@ -75,11 +76,9 @@ module.exports.prepareBookmarks = prepareBookmarks = function(element) {
     drop: dropOnItems
   })
 
-  var links = element.find('#bookmarks a[icon]')
-  for (var i = 0; i < links.length; i++) {
-    var link = links.eq(i)
-    link.html('<img src="' + link.attr('ICON') + '" alt="' + link.text() + '" title="' + link.text() + '"><span> </span>' + link.text())
-  }
+  element.find('a[icon_uri], a[icon]').each(function() {
+    prepareBookmark($(this))
+  })
   element.find('h1').after('<button title="Zmień..." class="jkp edit-folder btn btn-sm btn-outline-primary"><span class="fa fa-pencil-square-o"></span></button> <button title="Dodaj folder..." class="jkp add-folder btn btn-sm btn-outline-success"><span class="fa fa-plus-square-o"></span></button>')
   element.find('h3').after('<button title="Zmień..." class="jkp edit-folder btn btn-sm btn-outline-primary"><span class="fa fa-pencil-square-o"></span></button> <button title="Usuń folder" class="jkp remove-folder btn btn-sm btn-outline-danger"><span class="fa fa-times-rectangle-o"></span></button> <button title="Dodaj folder..." class="jkp create-folder btn btn-sm btn-outline-success"><span class="fa fa-plus-square-o"></span></button> <button title="Dodaj zakładkę..." class="jkp add-link btn btn-sm btn-outline-success"><span class="fa fa-plus"></span></button>')
   element.find('.edit-folder').click(function() {
@@ -88,8 +87,8 @@ module.exports.prepareBookmarks = prepareBookmarks = function(element) {
     $('#folder-edit').modal({})
     $('#folder-apply').off()
     $('#folder-apply').click(function() {
-      folder.text($('#folder-name').val())
       $('#folder-apply').off()
+      folder.text($('#folder-name').val())
       return true
     })
   })
@@ -98,26 +97,32 @@ module.exports.prepareBookmarks = prepareBookmarks = function(element) {
     folder.parent().remove()
   })
   element.find('.create-folder').click(function() {
-    var folder = $(this).siblings('h1, h3').first()
+    var exfolder = $(this).siblings('h3').first()
     $('#folder-name').val('')
     $('#folder-edit').modal({})
     $('#folder-apply').off()
     $('#folder-apply').click(function() {
-      folder.parent().before('<dt><h3>' + $('#folder-name').val() + '</h3><dl><p></dl><p></dt>')
       $('#folder-apply').off()
-      prepareBookmarks(folder.parent().prev())
+      // folder.parent().before('<dt><h3>' + $('#folder-name').val() + '</h3><dl><p></dl><p></dt>')
+      exfolder.parent().before('<dt><h3></h3><dl><p></dl><p></dt>')
+      var folder = exfolder.parent().prev().children('h3').first()
+      folder.text($('#folder-name').val())
+      prepareBookmarks(folder.parent())
       return true
     })
   })
   element.find('.add-folder').click(function() {
-    var folder = $(this).siblings('h1, h3').first()
+    var exfolder = $(this).siblings('h1').first()
     $('#folder-name').val('')
     $('#folder-edit').modal({})
     $('#folder-apply').off()
     $('#folder-apply').click(function() {
-      folder.parent().children('dl').first().append('<dt><h3>' + $('#folder-name').val() + '</h3><dl><p></dl><p></dt>')
       $('#folder-apply').off()
-      prepareBookmarks(folder.parent().children('dl').first().children('dt').last())
+      // folder.parent().children('dl').first().append('<dt><h3>' + $('#folder-name').val() + '</h3><dl><p></dl><p></dt>')
+      exfolder.parent().children('dl').first().append('<dt><h3></h3><dl><p></dl><p></dt>')
+      var folder = exfolder.parent().children('dl').first().children('dt').last().children('h3').first()
+      folder.text($('#folder-name').val())
+      prepareBookmarks(folder.parent())
       return true
     })
   })
@@ -128,9 +133,15 @@ module.exports.prepareBookmarks = prepareBookmarks = function(element) {
     $('#link-edit').modal({})
     $('#link-apply').off()
     $('#link-apply').click(function() {
-      folder.parent().children('dl').first().append('<dt><a href="' + $('#link-address').val() + '">' + $('#link-name').val() + '</a>')
       $('#link-apply').off()
-      prepareBookmarks(folder.parent().children('dl').first().children('dt').last())
+      // folder.parent().children('dl').first().append('<dt><a href="' + $('#link-address').val() + '">' + $('#link-name').val() + '</a>')
+      folder.parent().children('dl').first().append('<dt><a></a>')
+      var link = folder.parent().children('dl').first().children('dt').last().children('a').first()
+      link.attr('href', $('#link-address').val())
+      if ($("#link-favicon").is(":visible"))
+        link.attr('icon_uri', $('#link-favicon').attr('src'))
+      link.text($('#link-name').val())
+      prepareBookmarks(link.parent())
       return true
     })
   })
@@ -142,14 +153,12 @@ module.exports.prepareBookmarks = prepareBookmarks = function(element) {
     $('#link-edit').modal({})
     $('#link-apply').off()
     $('#link-apply').click(function() {
-      link.attr('href', $('#link-address').val())
-      if (allowIcon && $("#link-favicon").is(":visible")) {
-        link.attr('icon_uri', $('#link-favicon').attr('src'))
-        link.html('<img src="' + $('#link-favicon').attr('src') + '" width="32" height="32"> ')
-        link.append($('#link-name').val())
-      } else
-        link.text($('#link-name').val())
       $('#link-apply').off()
+      link.attr('href', $('#link-address').val())
+      if ($("#link-favicon").is(":visible"))
+        link.attr('icon_uri', $('#link-favicon').attr('src'))
+      link.text($('#link-name').val())
+      prepareBookmark(link)
       return true
     })
   })
@@ -158,19 +167,20 @@ module.exports.prepareBookmarks = prepareBookmarks = function(element) {
     link.parent().remove()
   })
   element.find('.create-link').click(function() {
-    var link = $(this).siblings('a').first()
+    var exlink = $(this).siblings('a').first()
     $('#link-name').val('')
     $('#link-address').val('')
     $('#link-edit').modal({})
     $('#link-apply').off()
     $('#link-apply').click(function() {
-      if (allowIcon && $("#link-favicon").is(":visible")) {
-        link.attr('icon_uri', $('#link-favicon').attr('src'))
-        link.parent().before('<dt><a href="' + $('#link-address').val() + '"><img src="' + $('#link-favicon').attr('src') + '" width="32" height="32"> ' + $('#link-name').val() + '</a>')
-      } else
-        link.parent().before('<dt><a href="' + $('#link-address').val() + '">' + $('#link-name').val() + '</a>')
       $('#link-apply').off()
-      prepareBookmarks(link.parent().prev())
+      exlink.parent().before('<dt><a></a>')
+      link = exlink.parent().prev().children('a').first()
+      link.attr('href', $('#link-address').val())
+      if ($("#link-favicon").is(":visible"))
+        link.attr('icon_uri', $('#link-favicon').attr('src'))
+      link.text($('#link-name').val())
+      prepareBookmarks(link.parent())
       return true
     })
   })
@@ -200,10 +210,8 @@ function dropOnItems( event, ui ) {
 
 module.exports.findFavicon = findFavicon = function(sel, spnnr, href) {
   $(sel).hide()
-  if (allowIcon) {
-    var url = new URL(href)
-    startAjax(sel, spnnr, url.origin, url.pathname, updateFavicon)
-  }
+  var url = new URL(href)
+  startAjax(sel, spnnr, url.origin, url.pathname, updateFavicon)
 }
 
 module.exports.updateFavicon = updateFavicon = function(sel, base, html) {
