@@ -57,6 +57,43 @@ module.exports.prepareBookmarks = prepareBookmarks = function(element) {
     return false
   })
 
+        $('#drag-file').css('border', 'solid 1px orange')
+
+        $('#drag-file').on('dragover', () => {
+            return false;
+        })
+
+        $('#drag-file').on('dragleave', () => {
+            return false;
+        })
+
+        $('#drag-file').on('dragend', () => {
+            return false;
+        })
+
+        $('#drag-file').on('drop', function(e) {
+
+            alert(typeof e.originalEvent)
+
+            e.preventDefault();
+
+            var data = e.originalEvent.dataTransfer.items
+            for(var i = 0; i < data.length; i++) {
+              alert (data[i].type)
+              if (data[i].type === 'text/uri-list') {
+                data[i].getAsString(function(s) {
+                  alert(s)
+                })
+              }
+            }
+
+            return false;
+        })
+        
+        $('#drag-file').css('border', 'solid 1px red')
+        $('h3').attr('draggable', true)
+  
+/*
   element.find('a').draggable({
     revert: 'invalid',
     cursor: "move"
@@ -76,6 +113,7 @@ module.exports.prepareBookmarks = prepareBookmarks = function(element) {
     greedy: true,
     drop: dropOnItems
   })
+*/
 
   element.find('a[icon_uri], a[icon]').each(function() {
     prepareBookmark($(this))

@@ -4,8 +4,26 @@
   a:link, a:visited, a:hover, a:active { cursor: inherit; }
 </style>
 <body>
+<style>
+    #drag-file {
+        background-color: sandybrown;
+        color:white;
+        text-align: center;
+        width:400px;
+        height:100px;
+    }
+</style>
 <div class="container">
   <% include title.ejs %>
+
+  <div class="row">
+    <div class="col">
+      <div id="drag-file">
+        <p>Drag your files here</p>
+      </div>
+    </div>
+  </div>
+
   <div class="row">
     <div id="bookmarks" class="col">
     </div>
@@ -112,5 +130,7 @@
   $('#link-address').on('blur', function () {
     findFavicon('#link-favicon','#link-spinner', $('#link-address').val())
   })
+</script>
+<script>
 </script>
 </html>
