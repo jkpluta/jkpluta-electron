@@ -73,6 +73,7 @@ module.exports.prepareBookmarks = prepareBookmarks = function(element) {
 
         $('#drag-file').on('drop', function(e) {
 
+
             alert(typeof e.originalEvent)
 
             e.preventDefault();
@@ -90,8 +91,52 @@ module.exports.prepareBookmarks = prepareBookmarks = function(element) {
             return false;
         })
         
-        $('#drag-file').css('border', 'solid 1px red')
-        $('h3').attr('draggable', true)
+  $('dt').on('dragover', function(e) {
+    return false;
+  })
+  $('dt').on('dragleave', function(e) {
+    return false;
+  })
+  $('dt').on('drop', function(e) {
+    e.preventDefault();
+
+    if (draggable != null) {
+      if ($(this).children('h1, h3').length > 0 && $(draggable).children('h1, h3').length == 0) {
+        $(this).children('dl').first().append($(draggable))
+      } else {
+        $(this).before($(draggable))
+      }
+      $(draggable).css('left', '')
+      $(draggable).css('top', '')
+    } else {
+      if (e.originalEvent.dataTransfer != null) {
+        var data = e.originalEvent.dataTransfer.items
+        for(var i = 0; i < data.length; i++) {
+          alert (data[i].type)
+          if (data[i].type === 'text/uri-list') {
+            data[i].getAsString(function(s) {
+              alert(s)
+            })
+          }
+        }
+      }
+    }
+    return false;
+  })
+
+  $('a').attr('draggable', false)
+  $('dt').attr('draggable', true)
+  $('dt').on('dragstart',function(e) {
+    if (draggable == null)
+      draggable = this
+    return true
+  })
+  $('dt').on('dragend',function(e) {
+    draggable = null
+    return true
+  })
+
+  let draggable = null
   
 /*
   element.find('a').draggable({
