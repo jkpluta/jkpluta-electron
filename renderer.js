@@ -58,6 +58,7 @@ module.exports.prepareBookmarks = prepareBookmarks = function(element) {
     return false
   })
 
+  $('dt').off()
   $('dt').attr('draggable', true)
   $('dt').on('dragover', function(e) {
     if (draggable != null) {
@@ -89,12 +90,21 @@ module.exports.prepareBookmarks = prepareBookmarks = function(element) {
       $(draggable).css('top', '')
     } else {
       if (e.originalEvent.dataTransfer != null) {
-        var data = e.originalEvent.dataTransfer.items
+        var droppable = this
+        data = e.originalEvent.dataTransfer.items
         for(var i = 0; i < data.length; i++) {
-          alert (data[i].type)
           if (data[i].type === 'text/uri-list') {
             data[i].getAsString(function(s) {
-              alert(s)
+              var link = null
+              if ($(this).children('h1, h3').length > 0)
+                link = $('<dt><a></a>').appendTo($(droppable).find('dl:first')).children('a:first')
+              else {
+                link = $('<dt><a></a>').insertBefore($(droppable)).children('a:first')
+              }
+              link.attr('href', s)
+              link.text(s)
+              prepareBookmarks(link.parent())
+              findFavicon(link, null, link.attr('href'))
             })
           }
         }
@@ -305,10 +315,7 @@ module.exports.showAlert = showAlert = function(text, kind) {
     kind = 'info'
   $('#alert').removeClass()
   $('#alert').addClass("alert alert-" + kind)
-  if ($('#alert').text() === '')
-    $('#alert').text(text)
-  else
-    $('#alert').text($('#alert').text() + ', ' + text)
+  $('#alert').text(text)
   $('#alert').parent().parent().css("display", "block")
 }
 
