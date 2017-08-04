@@ -109,8 +109,10 @@ module.exports.prepareBookmarks = prepareBookmarks = function(element) {
   })
   element.find('h1').after('<button title="Zmień..." class="jkp edit-folder btn btn-sm btn-outline-primary"><span class="fa fa-pencil-square-o"></span></button> <button title="Dodaj folder..." class="jkp add-folder btn btn-sm btn-outline-success"><span class="fa fa-plus-square-o"></span></button>')
   element.find('h3').after('<button title="Zmień..." class="jkp edit-folder btn btn-sm btn-outline-primary"><span class="fa fa-pencil-square-o"></span></button> <button title="Usuń folder" class="jkp remove-folder btn btn-sm btn-outline-danger"><span class="fa fa-times-rectangle-o"></span></button> <button title="Dodaj folder..." class="jkp create-folder btn btn-sm btn-outline-success"><span class="fa fa-plus-square-o"></span></button><button title="Odśwież folder..." class="jkp refresh-folder btn btn-sm btn-outline-warning"><span class="fa fa-check-square-o"></span></button> <button title="Dodaj zakładkę..." class="jkp add-link btn btn-sm btn-outline-success"><span class="fa fa-plus"></span></button>')
+  element.find('a').after(' <button title="Zmień..." class="jkp edit-link btn btn-sm btn-outline-primary"><span class="fa fa-pencil"></span></button> <button title="Usuń zakładkę" class="jkp remove-link btn btn-sm btn-outline-danger"><span class="fa fa-times"></span></button> <button title="Dodaj zakładkę..." class="jkp create-link btn btn-sm btn-outline-success"><span class="fa fa-plus"></span></button>')
+  element.find('dd, hr').after(' <button title="Usuń element" class="jkp remove-tag btn btn-sm btn-outline-danger"><span class="fa fa-times-circle"></span></button>')
   element.find('.edit-folder').click(function() {
-    var folder = $(this).siblings('h1, h3').first()
+    var folder = $(this).siblings('h1,h3:first')
     $('#folder-name').val(folder.text())
     $('#folder-edit').modal({})
     $('#folder-apply').off()
@@ -121,55 +123,50 @@ module.exports.prepareBookmarks = prepareBookmarks = function(element) {
     })
   })
   element.find('.remove-folder').click(function() {
-    var folder = $(this).siblings('h1, h3').first()
-    folder.parent().remove()
+    $(this).parent().remove()
   })
   element.find('.create-folder').click(function() {
-    var exfolder = $(this).siblings('h3').first()
+    var parent = $(this).parent()
     $('#folder-name').val('')
     $('#folder-edit').modal({})
     $('#folder-apply').off()
     $('#folder-apply').click(function() {
       $('#folder-apply').off()
-      exfolder.parent().before('<dt><h3></h3><dl><p></dl><p></dt>')
-      var folder = exfolder.parent().prev().children('h3').first()
+      var folder = $('<dt><h3></h3><dl><p></dl><p></dt>').insertBefore(parent).children('h3:first')
       folder.text($('#folder-name').val())
       prepareBookmarks(folder.parent())
       return true
     })
   })
   element.find('.refresh-folder').click(function() {
-    var folder = $(this).siblings('h3').first()
-    folder.parent().children('dl').first().children('dt').each(function() {
-      var link = $(this).children('a').first()
+    $(this).parent().find('dl:first>dt').each(function() {
+      var link = $(this).children('a:first')
       if (link != null)
         findFavicon(link, null, link.attr('href'))
     })
   })
   element.find('.add-folder').click(function() {
-    var exfolder = $(this).siblings('h1').first()
+    var parent = $(this).parent()
     $('#folder-name').val('')
     $('#folder-edit').modal({})
     $('#folder-apply').off()
     $('#folder-apply').click(function() {
       $('#folder-apply').off()
-      exfolder.parent().children('dl').first().append('<dt><h3></h3><dl><p></dl><p></dt>')
-      var folder = exfolder.parent().children('dl').first().children('dt').last().children('h3').first()
+      var folder = $('<dt><h3></h3><dl><p></dl><p></dt>').appendTo(parent.find('dl:first')).children('h3:first')
       folder.text($('#folder-name').val())
       prepareBookmarks(folder.parent())
       return true
     })
   })
   element.find('.add-link').click(function() {
-    var folder = $(this).siblings('h1, h3').first()
+    var parent = $(this).parent()
     $('#link-name').val('')
     $('#link-address').val('')
     $('#link-edit').modal({})
     $('#link-apply').off()
     $('#link-apply').click(function() {
       $('#link-apply').off()
-      folder.parent().children('dl').first().append('<dt><a></a>')
-      var link = folder.parent().children('dl').first().children('dt').last().children('a').first()
+      var link = $('<dt><a></a>').appendTo(parent.find('dl:first')).children('a:first')
       link.attr('href', $('#link-address').val())
       if ($("#link-favicon").is(":visible"))
         link.attr('icon_uri', $('#link-favicon').attr('src'))
@@ -178,7 +175,6 @@ module.exports.prepareBookmarks = prepareBookmarks = function(element) {
       return true
     })
   })
-  element.find('a').after(' <button title="Zmień..." class="jkp edit-link btn btn-sm btn-outline-primary"><span class="fa fa-pencil"></span></button> <button title="Usuń zakładkę" class="jkp remove-link btn btn-sm btn-outline-danger"><span class="fa fa-times"></span></button> <button title="Dodaj zakładkę..." class="jkp create-link btn btn-sm btn-outline-success"><span class="fa fa-plus"></span></button>')
   element.find('.edit-link').click(function() {
     var link = $(this).siblings('a').first()
     $('#link-name').val(link.text())
@@ -196,19 +192,17 @@ module.exports.prepareBookmarks = prepareBookmarks = function(element) {
     })
   })
   element.find('.remove-link').click(function() {
-    var link = $(this).siblings('a').first()
-    link.parent().remove()
+    $(this).parent().remove()
   })
   element.find('.create-link').click(function() {
-    var exlink = $(this).siblings('a').first()
+    var parent = $(this).parent()
     $('#link-name').val('')
     $('#link-address').val('')
     $('#link-edit').modal({})
     $('#link-apply').off()
     $('#link-apply').click(function() {
       $('#link-apply').off()
-      exlink.parent().before('<dt><a></a>')
-      link = exlink.parent().prev().children('a').first()
+      link = $('<dt><a></a>').insertBefore(parent).children('a:first')
       link.attr('href', $('#link-address').val())
       if ($("#link-favicon").is(":visible"))
         link.attr('icon_uri', $('#link-favicon').attr('src'))
@@ -217,7 +211,6 @@ module.exports.prepareBookmarks = prepareBookmarks = function(element) {
       return true
     })
   })
-  element.find('dd, hr').after(' <button title="Usuń element" class="jkp remove-tag btn btn-sm btn-outline-danger"><span class="fa fa-times-circle"></span></button>')
   element.find('.remove-tag').click(function() {
     $(this).prev().remove()
     $(this).remove()
