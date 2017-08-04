@@ -60,19 +60,24 @@ module.exports.prepareBookmarks = prepareBookmarks = function(element) {
 
   $('dt').attr('draggable', true)
   $('dt').on('dragover', function(e) {
-    return false;
-  })
-  $('dt').on('dragleave', function(e) {
-    return false;
+    e.preventDefault()
+    e.stopPropagation()
+    //showInfo('DRAGOVER: ' + $(this).children().first().text().toString())
   })
   $('dt').on('drop', function(e) {
-    e.preventDefault();
-
+    e.preventDefault()
+    e.stopPropagation()
     if (draggable != null) {
-      if ($(this).children('h1, h3').length > 0 && $(draggable).children('h1, h3').length == 0) {
-        $(this).children('dl').first().append($(draggable))
-      } else {
-        $(this).before($(draggable))
+      var parent = this
+      while (draggable !== parent && parent != null) {
+        parent = parent.parentElement
+      }
+      if (draggable !== parent) {
+        if ($(this).children('h1, h3').length > 0 && $(draggable).children('h1, h3').length == 0) {
+          $(this).children('dl').first().append($(draggable))
+        } else {
+          $(this).before($(draggable))
+        }
       }
       $(draggable).css('left', '')
       $(draggable).css('top', '')
@@ -89,18 +94,21 @@ module.exports.prepareBookmarks = prepareBookmarks = function(element) {
         }
       }
     }
-    return false;
+    showInfo('DROP: ' + $(this).children().first().text().toString())
+    draggable = null
   })
   $('dt').on('dragstart',function(e) {
+    e.stopPropagation()
     if (draggable == null)
       draggable = this
-    return true
+    clearAlert()
+    showInfo('DRAGSTART: ' + $(this).children().first().text().toString())
   })
   $('dt').on('dragend',function(e) {
+    e.stopPropagation()
     draggable = null
-    return true
+    showInfo('DRAGEND: ' + $(this).children().first().text().toString())
   })
-
   let draggable = null
   
   element.find('a[icon_uri], a[icon]').each(function() {
@@ -284,6 +292,25 @@ module.exports.commit = commit = function(content, name) {
       return true
     })
   })
+}
+
+module.exports.showAlert = showAlert = function(text, kind) {
+  if (kind == null)
+    kind = 'info'
+  $('#alert').removeClass()
+  $('#alert').addClass("alert alert-" + kind)
+  $('#alert').text($('#alert').text() + '|' + text)
+  $('#alert').parent().parent().css("display", "block")
+}
+
+module.exports.clearAlert = clearAlert = function() {
+  $('#alert').removeClass()
+  $('#alert').text('')
+  $('#alert').parent().parent().css("display", "none")
+}
+
+module.exports.showInfo = showInfo = function(text) {
+  showAlert(text, 'info')
 }
 
 module.exports.init = init = function(size) {
