@@ -60,7 +60,16 @@ module.exports.prepareBookmarks = prepareBookmarks = function(element) {
 
   $('dt').attr('draggable', true)
   $('dt').on('dragover', function(e) {
-    e.preventDefault()
+    if (draggable != null) {
+      var parent = this
+      while (draggable !== parent && parent != null)
+        parent = parent.parentElement
+      if (draggable !== parent)
+        e.preventDefault()
+    } else {
+      if (e.originalEvent.dataTransfer != null)
+        e.preventDefault()
+    }
     e.stopPropagation()
     //showInfo('DRAGOVER: ' + $(this).children().first().text().toString())
   })
@@ -69,16 +78,13 @@ module.exports.prepareBookmarks = prepareBookmarks = function(element) {
     e.stopPropagation()
     if (draggable != null) {
       var parent = this
-      while (draggable !== parent && parent != null) {
+      while (draggable !== parent && parent != null)
         parent = parent.parentElement
-      }
-      if (draggable !== parent) {
-        if ($(this).children('h1, h3').length > 0 && $(draggable).children('h1, h3').length == 0) {
+      if (draggable !== parent)
+        if ($(this).children('h1, h3').length > 0 && $(draggable).children('h1, h3').length == 0)
           $(this).children('dl').first().append($(draggable))
-        } else {
+        else
           $(this).before($(draggable))
-        }
-      }
       $(draggable).css('left', '')
       $(draggable).css('top', '')
     } else {
@@ -94,7 +100,7 @@ module.exports.prepareBookmarks = prepareBookmarks = function(element) {
         }
       }
     }
-    showInfo('DROP: ' + $(this).children().first().text().toString())
+    //showInfo('DROP: ' + $(this).children().first().text().toString())
     draggable = null
   })
   $('dt').on('dragstart',function(e) {
@@ -102,12 +108,12 @@ module.exports.prepareBookmarks = prepareBookmarks = function(element) {
     if (draggable == null)
       draggable = this
     clearAlert()
-    showInfo('DRAGSTART: ' + $(this).children().first().text().toString())
+    //showInfo('DRAGSTART: ' + $(this).children().first().text().toString())
   })
   $('dt').on('dragend',function(e) {
     e.stopPropagation()
     draggable = null
-    showInfo('DRAGEND: ' + $(this).children().first().text().toString())
+    //showInfo('DRAGEND: ' + $(this).children().first().text().toString())
   })
   let draggable = null
   
@@ -299,7 +305,10 @@ module.exports.showAlert = showAlert = function(text, kind) {
     kind = 'info'
   $('#alert').removeClass()
   $('#alert').addClass("alert alert-" + kind)
-  $('#alert').text($('#alert').text() + '|' + text)
+  if ($('#alert').text() === '')
+    $('#alert').text(text)
+  else
+    $('#alert').text($('#alert').text() + ', ' + text)
   $('#alert').parent().parent().css("display", "block")
 }
 
