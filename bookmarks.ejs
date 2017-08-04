@@ -107,6 +107,7 @@
     $('#link-favicon').hide()
   })
   $('#link-edit').on('shown.bs.modal', function () {
+    $(this).find('[autofocus]').focus();
     findFavicon('#link-favicon','#link-spinner', $('#link-address').val())
   })
   $('#link-address').on('blur', function () {

@@ -52,11 +52,13 @@ module.exports.prepareBookmark = prepareBookmark = function(element) {
 }
 
 module.exports.prepareBookmarks = prepareBookmarks = function(element) {
+  element.find('a').attr('draggable', false)
   element.find('a').click(function() {
     // loadURL($(this).attr('href'))
     return false
   })
 
+  $('dt').attr('draggable', true)
   $('dt').on('dragover', function(e) {
     return false;
   })
@@ -89,9 +91,6 @@ module.exports.prepareBookmarks = prepareBookmarks = function(element) {
     }
     return false;
   })
-
-  $('a').attr('draggable', false)
-  $('dt').attr('draggable', true)
   $('dt').on('dragstart',function(e) {
     if (draggable == null)
       draggable = this
