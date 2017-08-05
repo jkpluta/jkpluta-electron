@@ -302,11 +302,25 @@ module.exports.loadURL = loadURL = function(url) {
 }
 
 module.exports.commit = commit = function(content, name) {
-  electron.remote.getGlobal('sharedObj').commit(content, name, function(func) {
+  electron.remote.getGlobal('sharedObj').commit(content, name, function(func, error) {
+    if (error == null)
+      $('#auth-alert').css('display', 'none')
+    else {
+      var msg = error
+      if (typeof error === 'object') {
+        var pattern = /"?message"?: *"([^"]*)"/i
+        var match = pattern.exec(error.toString())
+        if (match.length == 2)
+          mfg = match[1]
+        msg = pattern.exec(error.toString())[1].toString()
+      }
+      $('#auth-alert').text(msg)
+      $('#auth-alert').css('display', 'block')
+    }
     $('#auth-edit').modal({})
+    $('#auth-apply').off()
     $('#auth-apply').click(function() {
       func($('#auth-username').val(), $('#auth-password').val())
-      $('#auth-apply').off()
       return true
     })
   })

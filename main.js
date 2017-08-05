@@ -213,7 +213,7 @@ function loadURL(url) {
     mainWindow.loadURL(url)
 }
 
-function commit(content, name, func) {
+function commit(content, name, func, error) {
 
   github = new GitHubApi({
     // optional 
@@ -231,13 +231,13 @@ function commit(content, name, func) {
 
   if (settings.auth_token == null) {
     func(function(username, password) {
-
-      github.authenticate({
-        type: "basic",
-        username: username,
-        password: password
-      })
-
+      if (username !== '' && password !== '') {
+        github.authenticate({
+          type: "basic",
+          username: username,
+          password: password
+        })
+      }
       github.authorization.create({
         scopes: ["user", "repo", "gist"],
         note: "jkpluta-electron-".concat(new Date().toISOString()),
@@ -246,18 +246,18 @@ function commit(content, name, func) {
         }
       }, function(err, res) {
         if (err != null) {
-          commit(content, name, func)
+          commit(content, name, func, err)
         } else {
           if (res != null && res.data != null && res.data.token != null) {
             settings.auth_token = res.data.token
             storage.set('settings', settings, function(error) {
               if (error) throw error;
             })
-            commit(content, name, func)
+            commit(content, name, func, null)
           }
         }
       })
-    })
+    }, error)
   }
   else {
     github.authenticate({
@@ -272,7 +272,7 @@ function commit(content, name, func) {
         storage.set('settings', settings, function(error) {
           if (error) throw error;
         })
-        commit(content, name, func)
+        commit(content, name, func, err)
       } else {
         if (res != null) {
           gitHubCommit(content, name)
