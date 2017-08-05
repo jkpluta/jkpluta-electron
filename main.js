@@ -191,7 +191,7 @@ function loadPage(template, title, data)
 }
 
 function showAbout() {
-  var dialog = new BrowserWindow({width: 700, height: 500, frame: false, modal: true, skipTaskbar: true, })
+  var dialog = new BrowserWindow({width: 600, height: 200, frame: false, modal: true, skipTaskbar: true, })
   dialog.on('blur', function() {
     dialog.close()
   })

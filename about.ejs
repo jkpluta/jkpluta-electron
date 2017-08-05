@@ -1,16 +1,19 @@
 <html>
 <% include head.ejs %>
-<body class="win-close" style="background-color:khaki">
+<body class="win-close" style="background-color:khaki; padding-top: 2em;">
 <div class="container">
   <div style="float:left;">
     <img src="./img/logo.png">
   </div>
   <h2 style="text-align: center;"><%= title %></h2>
-  <div style="text-align: center;">
+  <div style="text-align: center">
     Wersja <b><script>document.write(electron.remote.app.getVersion())</script></b>
-    (<i>Node.js <script>document.write(process.versions.node)</script></i>,
-    <i>Chromium <script>document.write(process.versions.chrome)</script></i>,
-    <i>Electron <script>document.write(process.versions.electron)</script></i>)
+    <br>
+    <i>Node.js <script>document.write(process.versions.node)</script></i>
+    <br>
+    <i>Chromium <script>document.write(process.versions.chrome)</script></i>
+    <br>
+    <i>Electron <script>document.write(process.versions.electron)</script></i>
   </div>
 </div>
 </body>
