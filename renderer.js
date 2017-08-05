@@ -82,7 +82,6 @@ module.exports.prepareBookmarks = prepareBookmarks = function(element) {
         e.preventDefault()
     }
     e.stopPropagation()
-    //showInfo('DRAGOVER: ' + $(this).children().first().text().toString())
   })
   $('dt').on('drop', function(e) {
     e.preventDefault()
@@ -101,26 +100,21 @@ module.exports.prepareBookmarks = prepareBookmarks = function(element) {
     } else {
       if (e.originalEvent.dataTransfer != null) {
         var droppable = this
-        data = e.originalEvent.dataTransfer.items
-        for(var i = 0; i < data.length; i++) {
-          if (data[i].type === 'text/uri-list') {
-            data[i].getAsString(function(s) {
-              var link = null
-              if ($(this).children('h1, h3').length > 0)
-                link = $('<dt><a></a>').appendTo($(droppable).find('dl:first')).children('a:first')
-              else {
-                link = $('<dt><a></a>').insertBefore($(droppable)).children('a:first')
-              }
-              link.attr('href', s)
-              link.text(s)
-              prepareBookmarks(link.parent())
-              findFavicon(link, null, link.attr('href'))
-            })
-          }
-        }
+        var url = e.originalEvent.dataTransfer.getData('text/uri-list')
+        var title = e.originalEvent.dataTransfer.getData('vivaldi/x-title')
+        if (title == null || title === '')
+          title = url
+        var link = null
+        if ($(this).children('h1, h3').length > 0)
+          link = $('<dt><a></a>').appendTo($(droppable).find('dl:first')).children('a:first')
+        else
+          link = $('<dt><a></a>').insertBefore($(droppable)).children('a:first')
+        link.attr('href', url)
+        link.text(title)
+        prepareBookmarks(link.parent())
+        findFavicon(link, null, link.attr('href'))
       }
     }
-    //showInfo('DROP: ' + $(this).children().first().text().toString())
     draggable = null
   })
   $('dt').on('dragstart',function(e) {
@@ -128,12 +122,10 @@ module.exports.prepareBookmarks = prepareBookmarks = function(element) {
     if (draggable == null)
       draggable = this
     clearAlert()
-    //showInfo('DRAGSTART: ' + $(this).children().first().text().toString())
   })
   $('dt').on('dragend',function(e) {
     e.stopPropagation()
     draggable = null
-    //showInfo('DRAGEND: ' + $(this).children().first().text().toString())
   })
   let draggable = null
   
