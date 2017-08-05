@@ -9,7 +9,7 @@ window.jQuery = window.$ = $
 let iconSize = 16
 
 module.exports.updateAjax = updateAjax = function(sel, base, html) {
-  $(sel).html(html);
+  $(sel).html(html)
   $(sel).find('a').click(function() {
     loadURL($(this).attr('href'))
     return false
@@ -30,6 +30,16 @@ module.exports.startAjax = startAjax = function(sel, spnr, base, href, func) {
       if (spnr != null) 
         $(spnr).html('<img src="./img/error.png"> <b>' + status + '</b> <i>' + error + "</i>")
     }
+  })
+}
+
+module.exports.updateMain = updateMain = function(sel, base, html) {
+  var dom = $(html)
+  dom.find('#header').remove()
+  $(sel).html(dom)
+  $(sel).find('a').click(function() {
+    loadURL($(this).attr('href'))
+    return false
   })
 }
 
