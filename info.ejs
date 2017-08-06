@@ -36,7 +36,7 @@
 <script src="https://cdn.quilljs.com/1.3.0/quill.js"></script>
 <script>
 $(document).ready(function() {
-  startAjax("#editor", "#info", "http://jkpluta.github.io", "/info.html", updateQuill)
+  renderer.startAjax("#editor", "#info", "http://jkpluta.github.io", "/info.html", updateQuill)
 })
 var quill = new Quill('#editor', {
   theme: 'snow'
@@ -49,10 +49,10 @@ function updateQuill(sel, base, html) {
 
 $('#save').click(function() {
   var info = quill.root.innerHTML
-  commit(info, 'info.html')
+  renderer.commit(info, 'info.html')
 })
 $('#refresh').click(function() {
-  startAjax("#editor", "#info", "http://jkpluta.github.io", "/info.html", updateQuill)
+  renderer.startAjax("#editor", "#info", "http://jkpluta.github.io", "/info.html", updateQuill)
 })
 </script>
 </html>

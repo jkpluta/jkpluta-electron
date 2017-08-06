@@ -356,4 +356,3 @@ exports = module.exports = {
     showInfo: showInfo,
     init: init
 };
-//# sourceMappingURL=renderer.js.map

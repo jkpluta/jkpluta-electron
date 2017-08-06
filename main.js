@@ -108,6 +108,7 @@ function createWindow() {
             ]
         }
     ];
+    /*
     if (process.platform === 'darwin') {
         template.unshift({
             label: app.getName(),
@@ -124,6 +125,7 @@ function createWindow() {
             ]
         });
     }
+    */
     electron.Menu.setApplicationMenu(electron.Menu.buildFromTemplate(template));
 }
 // This method will be called when Electron has finished
@@ -309,5 +311,4 @@ function gitHubCommit(content, name) {
         });
     });
 }
-//# sourceMappingURL=main.js.map 
 //# sourceMappingURL=main.js.map

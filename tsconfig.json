@@ -4,8 +4,12 @@
         "target": "es5",
         "module": "commonjs",
         "sourceMap": true
-    },
+    }
+    /*
+    ,
     "files": [
-        "main.ts"
-    ]    
+        "main.ts",
+        "renderer.ts"
+    ]
+    */   
 }

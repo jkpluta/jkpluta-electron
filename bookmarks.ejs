@@ -87,20 +87,20 @@
 </body>
 <script type="text/javascript">
   <% if (data === 'icons.html') { %>
-  init(32)
+    renderer.init(32)
   <% } else { %>
-  init(16)
+    renderer.init(16)
   <% } %>
   $(document).ready(function() {
-    startAjax("#bookmarks", "#bookmarks", "http://jkpluta.github.io", "/<%- data %>", updateBookmarks)
+    renderer.startAjax("#bookmarks", "#bookmarks", "http://jkpluta.github.io", "/<%- data %>", renderer.updateBookmarks)
   });
   $('#save').click(function() {
     var bookmarks = $('#bookmarks').clone()
     $('.jkp', bookmarks).remove()
-    commit(bookmarks.html(), '<%- data %>')
+    renderer.commit(bookmarks.html(), '<%- data %>')
   })
   $('#refresh').click(function() {
-    startAjax("#bookmarks", "#bookmarks", "http://jkpluta.github.io", "/<%- data %>", updateBookmarks)
+    renderer.startAjax("#bookmarks", "#bookmarks", "http://jkpluta.github.io", "/<%- data %>", renderer.updateBookmarks)
   })
   $('#link-edit').on('show.bs.modal', function () {
     $('#link-favicon').removeAttr('src')
@@ -108,10 +108,10 @@
   })
   $('#link-edit').on('shown.bs.modal', function () {
     $(this).find('[autofocus]').focus();
-    findFavicon('#link-favicon','#link-spinner', $('#link-address').val())
+    renderer.findFavicon('#link-favicon','#link-spinner', $('#link-address').val())
   })
   $('#link-address').on('blur', function () {
-    findFavicon('#link-favicon','#link-spinner', $('#link-address').val())
+    renderer.findFavicon('#link-favicon','#link-spinner', $('#link-address').val())
   })
 </script>
 <script>
