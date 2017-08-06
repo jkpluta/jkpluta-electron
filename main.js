@@ -28,7 +28,7 @@ function createWindow() {
         mainWindowCommit: mainWindowCommit
     };
     // Create the browser window.
-    mainWindow = new BrowserWindow({ width: 900, height: 620, title: 'jkp', icon: path.join(__dirname, 'icon.ico') });
+    mainWindow = new BrowserWindow({ width: 900, height: 620, title: 'jkp', icon: path.join(__dirname, 'img/icon.png') });
     loadPage('index', null, null);
     // Open the DevTools.
     // mainWindow.webContents.openDevTools()
@@ -172,7 +172,7 @@ function showAbout() {
     dialog.on('blur', function () {
         dialog.close();
     });
-    renderPage(dialog, 'about', getTitle(), 'about?ajax=yes');
+    renderPage(dialog, 'about', getTitle(), 'about');
 }
 function mainWindowLoad(url) {
     if (url === '#main')
