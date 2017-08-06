@@ -7,6 +7,14 @@
             "taskName": "echo",
             "command": "echo Hello",
             "type": "shell"
+        },
+        {
+            "type": "typescript",
+            "tsconfig": "tsconfig.json",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
         }
     ]
 }

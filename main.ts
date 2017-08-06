@@ -309,5 +309,4 @@ function gitHubCommit(content, name) {
         });
     });
 }
-//# sourceMappingURL=main.js.map 
 //# sourceMappingURL=main.js.map
