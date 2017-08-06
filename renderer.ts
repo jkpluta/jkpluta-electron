@@ -1,10 +1,10 @@
 // This file is required by the index.html file and will
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
-var $ = require('jquery');
-var electron = require('electron');
-var url = require('url');
-var iconSize = 16;
+import $ = require('jquery');
+import electron = require('electron');
+import url = require('url');
+let iconSize = 16;
 function updateAjax(sel, base, html) {
     $(sel).html(html);
     $(sel).find('a').click(function () {

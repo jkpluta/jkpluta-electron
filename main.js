@@ -1,14 +1,12 @@
-var electron = require('electron');
-// Module to control application life.
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var electron = require("electron");
 var app = electron.app;
-// Module to create native browser window.
 var BrowserWindow = electron.BrowserWindow;
-var path = require('path');
-var url = require('url');
-var ejs = require('ejs');
-var fs = require('fs');
-var storage = require('electron-json-storage');
-var ejse = require('ejs-electron');
+var path = require("path");
+var url = require("url");
+var storage = require("electron-json-storage");
+var ejse = require("ejs-electron");
 var GitHubApi = require("github");
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -16,7 +14,7 @@ var mainWindow = null;
 var settings = {
     auth_token: null
 };
-var github;
+var github = null;
 ejse.options({ root: __dirname });
 storage.get('settings', function (error, data) {
     if (error)
@@ -188,7 +186,7 @@ function mainWindowLoad(url) {
     else if (url === '#about')
         showAbout();
     else
-        mainWindow.mainWindowLoad(url);
+        mainWindow.loadURL(url);
 }
 function mainWindowCommit(content, name, func, error) {
     github = new GitHubApi({
