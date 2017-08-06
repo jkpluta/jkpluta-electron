@@ -4,12 +4,11 @@
 var $ = require('jquery');
 var electron = require('electron');
 var url = require('url');
-window.jQuery = window.$ = $;
 var iconSize = 16;
 function updateAjax(sel, base, html) {
     $(sel).html(html);
     $(sel).find('a').click(function () {
-        loadURL($(this).attr('href'));
+        loadUrl($(this).attr('href'));
         return false;
     });
 }
@@ -34,7 +33,7 @@ function updateMain(sel, base, html) {
     dom.find('#header').remove();
     $(sel).html(dom);
     $(sel).find('a').click(function () {
-        loadURL($(this).attr('href'));
+        loadUrl($(this).attr('href'));
         return false;
     });
 }
@@ -285,12 +284,12 @@ function updateFavicon(sel, base, html) {
         }
     }
 }
-function loadURL(url) {
-    electron.remote.getGlobal('sharedObj').loadURL(url);
+function loadUrl(url) {
+    electron.remote.getGlobal('sharedObj').mainWindowLoad(url);
     return false;
 }
 function commit(content, name) {
-    electron.remote.getGlobal('sharedObj').commit(content, name, function (func, error) {
+    electron.remote.getGlobal('sharedObj').mainWindowCommit(content, name, function (func, error) {
         if (error == null)
             $('#auth-alert').css('display', 'none');
         else {
@@ -333,7 +332,7 @@ function init(size) {
 }
 $(document).ready(function () {
     $("a").click(function () {
-        loadURL($(this).attr('href'));
+        loadUrl($(this).attr('href'));
         return false;
     });
     $('.modal').on('shown.bs.modal', function () {
@@ -349,7 +348,7 @@ exports = module.exports = {
     prepareBookmarks: prepareBookmarks,
     findFavicon: findFavicon,
     updateFavicon: updateFavicon,
-    loadURL: loadURL,
+    loadURL: loadUrl,
     commit: commit,
     showAlert: showAlert,
     clearAlert: clearAlert,

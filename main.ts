@@ -12,7 +12,7 @@ var ejse = require('ejs-electron');
 var GitHubApi = require("github");
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-var mainWindow;
+var mainWindow = null;
 var settings = {
     auth_token: null
 };
@@ -26,8 +26,8 @@ storage.get('settings', function (error, data) {
 });
 function createWindow() {
     global.sharedObj = {
-        loadURL: loadURL,
-        commit: commit
+        mainWindowLoad: mainWindowLoad,
+        mainWindowCommit: mainWindowCommit
     };
     // Create the browser window.
     mainWindow = new BrowserWindow({ width: 900, height: 620, title: 'jkp', icon: path.join(__dirname, 'icon.ico') });
@@ -81,19 +81,19 @@ function createWindow() {
             submenu: [
                 {
                     label: 'Główna',
-                    click: function () { loadURL('#main'); }
+                    click: function () { mainWindowLoad('#main'); }
                 },
                 {
                     label: 'Informacje',
-                    click: function () { loadURL('#info'); }
+                    click: function () { mainWindowLoad('#info'); }
                 },
                 {
                     label: 'Ikony',
-                    click: function () { loadURL('#icons'); }
+                    click: function () { mainWindowLoad('#icons'); }
                 },
                 {
                     label: 'Zakładki',
-                    click: function () { loadURL('#bookmarks'); }
+                    click: function () { mainWindowLoad('#bookmarks'); }
                 }
             ]
         },
@@ -103,7 +103,7 @@ function createWindow() {
             submenu: [
                 {
                     label: 'O programie',
-                    click: function () { loadURL('#about'); }
+                    click: function () { mainWindowLoad('#about'); }
                 }
             ]
         }
@@ -176,7 +176,7 @@ function showAbout() {
     });
     renderPage(dialog, 'about', getTitle(), 'about?ajax=yes');
 }
-function loadURL(url) {
+function mainWindowLoad(url) {
     if (url === '#main')
         loadPage('index', null, null);
     else if (url === '#info')
@@ -188,9 +188,9 @@ function loadURL(url) {
     else if (url === '#about')
         showAbout();
     else
-        mainWindow.loadURL(url);
+        mainWindow.mainWindowLoad(url);
 }
-function commit(content, name, func, error) {
+function mainWindowCommit(content, name, func, error) {
     github = new GitHubApi({
         // optional 
         debug: false,
@@ -221,7 +221,7 @@ function commit(content, name, func, error) {
                 }
             }, function (err, res) {
                 if (err != null) {
-                    commit(content, name, func, err);
+                    mainWindowCommit(content, name, func, err);
                 }
                 else {
                     if (res != null && res.data != null && res.data.token != null) {
@@ -230,7 +230,7 @@ function commit(content, name, func, error) {
                             if (error)
                                 throw error;
                         });
-                        commit(content, name, func, null);
+                        mainWindowCommit(content, name, func, null);
                     }
                 }
             });
@@ -248,7 +248,7 @@ function commit(content, name, func, error) {
                     if (error)
                         throw error;
                 });
-                commit(content, name, func, err);
+                mainWindowCommit(content, name, func, err);
             }
             else {
                 if (res != null) {
