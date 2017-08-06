@@ -22,13 +22,16 @@ storage.get('settings', function (error, data) {
     if (typeof data.auth_token !== "undefined")
         settings.auth_token = data.auth_token;
 });
+var icon = 'img/icon.png';
+if (process.platform === 'win32')
+    icon = 'icon.ico';
 function createWindow() {
     global.sharedObj = {
         mainWindowLoad: mainWindowLoad,
         mainWindowCommit: mainWindowCommit
     };
     // Create the browser window.
-    mainWindow = new BrowserWindow({ width: 900, height: 620, title: 'jkp', icon: path.join(__dirname, 'img/icon.png') });
+    mainWindow = new BrowserWindow({ width: 900, height: 620, title: 'jkp', icon: path.join(__dirname, icon) });
     loadPage('index', null, null);
     // Open the DevTools.
     // mainWindow.webContents.openDevTools()
