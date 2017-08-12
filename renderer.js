@@ -6,6 +6,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var $ = require("jquery");
 var electron = require("electron");
 window.jQuery = window.$ = $;
+var Popper = require("popper");
+window.Popper = Popper;
+//require("bootstrap/js/dist/modal");
+require("bootstrap");
 var iconSize = 16;
 function updateAjax(sel, base, html) {
     $(sel).html(html);

@@ -5,6 +5,10 @@ import $ = require('jquery');
 import electron = require('electron');
 import url = require('url');
 window.jQuery = window.$ = $;
+import Popper = require("popper");
+window.Popper = Popper;
+//require("bootstrap/js/dist/modal");
+require("bootstrap");
 let iconSize = 16;
 function updateAjax(sel, base, html) {
     $(sel).html(html);
