@@ -5,6 +5,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // All of the Node.js APIs are available in this process.
 var $ = require("jquery");
 var electron = require("electron");
+window.jQuery = window.$ = $;
 var iconSize = 16;
 function updateAjax(sel, base, html) {
     $(sel).html(html);

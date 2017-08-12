@@ -4,6 +4,7 @@
 import $ = require('jquery');
 import electron = require('electron');
 import url = require('url');
+window.jQuery = window.$ = $;
 let iconSize = 16;
 function updateAjax(sel, base, html) {
     $(sel).html(html);
