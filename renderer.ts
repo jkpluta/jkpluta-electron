@@ -8,7 +8,9 @@ window.jQuery = window.$ = $;
 import Popper = require("popper");
 window.Popper = Popper;
 //require("bootstrap/js/dist/modal");
+import Quill = require("quill");
 require("bootstrap");
+let quill: Quill.Quill = null
 let iconSize = 16;
 function updateAjax(sel, base, html) {
     $(sel).html(html);
@@ -289,6 +291,16 @@ function updateFavicon(sel, base, html) {
         }
     }
 }
+function createQuill(sel) {
+    quill = new Quill(sel, { theme: 'snow' })
+}
+function updateQuill(sel, base, html) {
+    quill.setText('')
+    quill.clipboard.dangerouslyPasteHTML(0, html)
+}
+function saveQuill() {
+    commit(quill.root.innerHTML, 'info.html')
+}
 function loadUrl(url) {
     electron.remote.getGlobal('sharedObj').mainWindowLoad(url);
     return false;
@@ -344,6 +356,7 @@ $(document).ready(function () {
         $(this).find('[autofocus]').focus();
     });
 });
+let renderer = module.exports
 exports = module.exports = {
     updateAjax: updateAjax,
     startAjax: startAjax,
@@ -351,6 +364,9 @@ exports = module.exports = {
     updateBookmarks: updateBookmarks,
     prepareBookmark: prepareBookmark,
     prepareBookmarks: prepareBookmarks,
+    createQuill,
+    updateQuill,
+    saveQuill,
     findFavicon: findFavicon,
     updateFavicon: updateFavicon,
     loadURL: loadUrl,
@@ -358,5 +374,6 @@ exports = module.exports = {
     showAlert: showAlert,
     clearAlert: clearAlert,
     showInfo: showInfo,
-    init: init
+    init: init,
+    renderer
 };

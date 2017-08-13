@@ -9,7 +9,9 @@ window.jQuery = window.$ = $;
 var Popper = require("popper");
 window.Popper = Popper;
 //require("bootstrap/js/dist/modal");
+var Quill = require("quill");
 require("bootstrap");
+var quill = null;
 var iconSize = 16;
 function updateAjax(sel, base, html) {
     $(sel).html(html);
@@ -290,6 +292,16 @@ function updateFavicon(sel, base, html) {
         }
     }
 }
+function createQuill(sel) {
+    quill = new Quill(sel, { theme: 'snow' });
+}
+function updateQuill(sel, base, html) {
+    quill.setText('');
+    quill.clipboard.dangerouslyPasteHTML(0, html);
+}
+function saveQuill() {
+    commit(quill.root.innerHTML, 'info.html');
+}
 function loadUrl(url) {
     electron.remote.getGlobal('sharedObj').mainWindowLoad(url);
     return false;
@@ -345,6 +357,7 @@ $(document).ready(function () {
         $(this).find('[autofocus]').focus();
     });
 });
+var renderer = module.exports;
 exports = module.exports = {
     updateAjax: updateAjax,
     startAjax: startAjax,
@@ -352,6 +365,9 @@ exports = module.exports = {
     updateBookmarks: updateBookmarks,
     prepareBookmark: prepareBookmark,
     prepareBookmarks: prepareBookmarks,
+    createQuill: createQuill,
+    updateQuill: updateQuill,
+    saveQuill: saveQuill,
     findFavicon: findFavicon,
     updateFavicon: updateFavicon,
     loadURL: loadUrl,
@@ -359,6 +375,7 @@ exports = module.exports = {
     showAlert: showAlert,
     clearAlert: clearAlert,
     showInfo: showInfo,
-    init: init
+    init: init,
+    renderer: renderer
 };
 //# sourceMappingURL=renderer.js.map

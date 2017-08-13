@@ -33,26 +33,16 @@
   </div>
 </div>
 </body>
-<script src="https://cdn.quilljs.com/1.3.0/quill.js"></script>
 <script>
+renderer.createQuill("#editor");
 $(document).ready(function() {
-  renderer.startAjax("#editor", "#info", "http://jkpluta.github.io", "/info.html", updateQuill)
+    renderer.startAjax("#editor", "#info", "http://jkpluta.github.io", "/info.html", renderer.updateQuill);
 })
-var quill = new Quill('#editor', {
-  theme: 'snow'
-})
-
-function updateQuill(sel, base, html) {
-  quill.setText('')
-  quill.clipboard.dangerouslyPasteHTML(0, html)
-}
-
 $('#save').click(function() {
-  var info = quill.root.innerHTML
-  renderer.commit(info, 'info.html')
+    renderer.saveQuill()
 })
 $('#refresh').click(function() {
-  renderer.startAjax("#editor", "#info", "http://jkpluta.github.io", "/info.html", updateQuill)
+    renderer.startAjax("#editor", "#info", "http://jkpluta.github.io", "/info.html", renderer.updateQuill);
 })
 </script>
 </html>
