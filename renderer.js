@@ -357,7 +357,6 @@ $(document).ready(function () {
         $(this).find('[autofocus]').focus();
     });
 });
-var renderer = module.exports;
 exports = module.exports = {
     updateAjax: updateAjax,
     startAjax: startAjax,
@@ -370,12 +369,11 @@ exports = module.exports = {
     saveQuill: saveQuill,
     findFavicon: findFavicon,
     updateFavicon: updateFavicon,
-    loadURL: loadUrl,
+    loadUrl: loadUrl,
     commit: commit,
     showAlert: showAlert,
     clearAlert: clearAlert,
     showInfo: showInfo,
-    init: init,
-    renderer: renderer
+    init: init
 };
 //# sourceMappingURL=renderer.js.map

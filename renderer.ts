@@ -10,7 +10,7 @@ window.Popper = Popper;
 //require("bootstrap/js/dist/modal");
 import Quill = require("quill");
 require("bootstrap");
-let quill: Quill.Quill = null
+let quill: Quill = null
 let iconSize = 16;
 function updateAjax(sel, base, html) {
     $(sel).html(html);
@@ -356,24 +356,22 @@ $(document).ready(function () {
         $(this).find('[autofocus]').focus();
     });
 });
-let renderer = module.exports
 exports = module.exports = {
-    updateAjax: updateAjax,
-    startAjax: startAjax,
-    updateMain: updateMain,
-    updateBookmarks: updateBookmarks,
-    prepareBookmark: prepareBookmark,
-    prepareBookmarks: prepareBookmarks,
+    updateAjax,
+    startAjax,
+    updateMain,
+    updateBookmarks,
+    prepareBookmark,
+    prepareBookmarks,
     createQuill,
     updateQuill,
     saveQuill,
-    findFavicon: findFavicon,
-    updateFavicon: updateFavicon,
-    loadURL: loadUrl,
-    commit: commit,
-    showAlert: showAlert,
-    clearAlert: clearAlert,
-    showInfo: showInfo,
-    init: init,
-    renderer
+    findFavicon,
+    updateFavicon,
+    loadUrl,
+    commit,
+    showAlert,
+    clearAlert,
+    showInfo,
+    init: init
 };
