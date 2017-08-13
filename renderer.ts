@@ -1,15 +1,14 @@
 // This file is required by the index.html file and will
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
-import $ = require('jquery');
-import electron = require('electron');
-import url = require('url');
-window.jQuery = window.$ = $;
+import * as electron from  "electron";
+import * as url from "url";
+import * as $ from "jquery";
+(<any>window).$ = (<any>window).jQuery = $
 import Popper = require("popper");
-window.Popper = Popper;
-//require("bootstrap/js/dist/modal");
+(<any>window).Popper = Popper;
+import "bootstrap";
 import * as Quill from 'quill';
-require("bootstrap");
 let quill: Quill = null
 let iconSize = 16;
 function updateAjax(sel, base, html) {

@@ -3,14 +3,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // This file is required by the index.html file and will
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
-var $ = require("jquery");
 var electron = require("electron");
-window.jQuery = window.$ = $;
+var $ = require("jquery");
+window.$ = window.jQuery = $;
 var Popper = require("popper");
 window.Popper = Popper;
-//require("bootstrap/js/dist/modal");
-var Quill = require("quill");
 require("bootstrap");
+var Quill = require("quill");
 var quill = null;
 var iconSize = 16;
 function updateAjax(sel, base, html) {
