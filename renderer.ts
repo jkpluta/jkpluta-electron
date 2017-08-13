@@ -8,7 +8,7 @@ window.jQuery = window.$ = $;
 import Popper = require("popper");
 window.Popper = Popper;
 //require("bootstrap/js/dist/modal");
-import Quill = require("quill");
+import * as Quill from 'quill';
 require("bootstrap");
 let quill: Quill = null
 let iconSize = 16;
