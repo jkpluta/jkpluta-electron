@@ -256,8 +256,8 @@ function saveBookmarks(name) {
     html = html.replace(/<\/?([a-z]+)/ig, function (match) { return match.toUpperCase(); });
     html = html.replace(/<\/(p|dt)>/ig, '');
     html = html.replace(/<p>/ig, '<p>\r\n');
-    html = html.replace(/<DL>/ig, '\r\n<DL>');
-    html = html.replace(/<\/DL>/ig, '\r\n</DL>');
+    html = html.replace(/<dl>/ig, '\r\n<DL>');
+    html = html.replace(/<\/dl>/ig, '\r\n</DL>');
     html = html.replace(/\r\s+\n/ig, '\r\n');
     html = html.replace(/(href|add_date|last_visit|folded|last_modified)=/ig, function (match) { return match.toUpperCase(); });
     commit(html, name);
