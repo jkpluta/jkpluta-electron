@@ -95,9 +95,7 @@
     renderer.startAjax("#bookmarks", "#bookmarks", "http://jkpluta.github.io", "/<%- data %>", renderer.updateBookmarks)
   });
   $('#save').click(function() {
-    var bookmarks = $('#bookmarks').clone()
-    $('.jkp', bookmarks).remove()
-    renderer.commit(bookmarks.html(), '<%- data %>')
+    renderer.saveBookmarks('<%- data %>');
   })
   $('#refresh').click(function() {
     renderer.startAjax("#bookmarks", "#bookmarks", "http://jkpluta.github.io", "/<%- data %>", renderer.updateBookmarks)

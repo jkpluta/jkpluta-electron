@@ -126,7 +126,7 @@ function prepareBookmarks(element) {
         draggable = null;
     });
     var draggable = null;
-    element.find('a[icon_uri], a[icon]').each(function () {
+    element.find('a[icon_uri]').each(function () {
         prepareBookmark($(this));
     });
     element.find('h1').after('<button title="Zmień..." class="jkp edit-folder btn btn-sm btn-outline-primary"><span class="fa fa-pencil-square-o"></span></button><button title="Odśwież folder..." class="jkp refresh-folder btn btn-sm btn-outline-warning"><span class="fa fa-check-square-o"></span></button> <button title="Dodaj folder..." class="jkp add-folder btn btn-sm btn-outline-success"><span class="fa fa-plus-square-o"></span></button>');
@@ -237,6 +237,25 @@ function prepareBookmarks(element) {
         $(this).prev().remove();
         $(this).remove();
     });
+}
+function saveBookmarks(name) {
+    var bookmarks = $('#bookmarks').clone();
+    $('.jkp', bookmarks).remove();
+    bookmarks.find('[draggable]').removeAttr('draggable');
+    bookmarks.find('[class]').removeAttr('class');
+    bookmarks.find('[style]').removeAttr('style');
+    bookmarks.find('[clicks]').removeAttr('clicks');
+    bookmarks.find('[updateurl]').removeAttr('updateurl');
+    bookmarks.find('[color]').removeAttr('color');
+    bookmarks.find('[icon]').removeAttr('icon');
+    var html = bookmarks.html();
+    //html = html.replace(/<([^>]+)>\s*<\/\1>/igm, '<$1>'); 
+    html = html.replace(/<\/?([a-z]+)/ig, function (match) { return match.toUpperCase(); });
+    html = html.replace(/<\/(p|dt)>/ig, '');
+    html = html.replace(/<p>/ig, '<p>\r\n');
+    html = html.replace(/<DL>/ig, '\r\n<dl>');
+    html = html.replace(/(href|add_date|last_visit|folded|last_modified)=/ig, function (match) { return match.toUpperCase(); });
+    commit(html, name);
 }
 function findFavicon(sel, spnnr, href) {
     if ($(sel).prop('tagName') == 'IMG')
@@ -382,6 +401,7 @@ exports = module.exports = {
     updateBookmarks: updateBookmarks,
     prepareBookmark: prepareBookmark,
     prepareBookmarks: prepareBookmarks,
+    saveBookmarks: saveBookmarks,
     createQuill: createQuill,
     updateQuill: updateQuill,
     saveQuill: saveQuill,
