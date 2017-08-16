@@ -249,9 +249,9 @@ function saveBookmarks(name) {
     bookmarks.find('[icon]').removeAttr('icon');
     var html = bookmarks.html()
     //html = html.replace(/<([^>]+)>\s*<\/\1>/igm, '<$1>'); 
-    html = html.replace(/\n/ig, '\r\n');
-    html = html.replace(/^\s+/ig, '');
-    html = html.replace(/\s+$/ig, '');
+    html = html.replace(/^\s+/igm, '');
+    html = html.replace(/\s+$/igm, '');
+    html = html.replace(/\n/igm, '\r\n');
     html = html.replace(/<\/?([a-z]+)/ig, function(match) { return match.toUpperCase(); });
     html = html.replace(/<\/(p|dt)>/ig, '');
     html = html.replace(/<p>/ig, '<p>\r\n');
