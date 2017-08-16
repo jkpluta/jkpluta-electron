@@ -54,9 +54,8 @@ function prepareBookmark(element) {
         src = element.attr('ICON_URI');
     else if (element.attr('ICON') != null)
         src = element.attr('ICON');
-    if (src != null) {
-        element.html('<img src="' + src + '" width="' + iconSize.toString() + '" height="' + iconSize.toString() + '" alt="' + text + '" class="jkp"><span class="jkp"> </span>' + text);
-    }
+    if (src != null) 
+        element.html('<img src="' + src + '" width="' + iconSize.toString() + '" height="' + iconSize.toString() + '" alt="" class="jkp"><span class="jkp"> </span>' + text);
 }
 function prepareBookmarks(element) {
     element.find('a').attr('draggable', false);
@@ -129,7 +128,7 @@ function prepareBookmarks(element) {
     element.find('a[icon_uri], a[icon]').each(function () {
         prepareBookmark($(this));
     });
-    element.find('h1').after('<button title="Zmień..." class="jkp edit-folder btn btn-sm btn-outline-primary"><span class="fa fa-pencil-square-o"></span></button> <button title="Dodaj folder..." class="jkp add-folder btn btn-sm btn-outline-success"><span class="fa fa-plus-square-o"></span></button>');
+    element.find('h1').after('<button title="Zmień..." class="jkp edit-folder btn btn-sm btn-outline-primary"><span class="fa fa-pencil-square-o"></span></button><button title="Odśwież folder..." class="jkp refresh-folder btn btn-sm btn-outline-warning"><span class="fa fa-check-square-o"></span></button> <button title="Dodaj folder..." class="jkp add-folder btn btn-sm btn-outline-success"><span class="fa fa-plus-square-o"></span></button>');
     element.find('h3').after('<button title="Zmień..." class="jkp edit-folder btn btn-sm btn-outline-primary"><span class="fa fa-pencil-square-o"></span></button> <button title="Usuń folder" class="jkp remove-folder btn btn-sm btn-outline-danger"><span class="fa fa-times-rectangle-o"></span></button> <button title="Dodaj folder..." class="jkp create-folder btn btn-sm btn-outline-success"><span class="fa fa-plus-square-o"></span></button><button title="Odśwież folder..." class="jkp refresh-folder btn btn-sm btn-outline-warning"><span class="fa fa-check-square-o"></span></button> <button title="Dodaj zakładkę..." class="jkp add-link btn btn-sm btn-outline-success"><span class="fa fa-plus"></span></button>');
     element.find('a').after(' <button title="Zmień..." class="jkp edit-link btn btn-sm btn-outline-primary"><span class="fa fa-pencil"></span></button> <button title="Usuń zakładkę" class="jkp remove-link btn btn-sm btn-outline-danger"><span class="fa fa-times"></span></button> <button title="Dodaj zakładkę..." class="jkp create-link btn btn-sm btn-outline-success"><span class="fa fa-plus"></span></button>');
     element.find('dd, hr').after(' <button title="Usuń element" class="jkp remove-tag btn btn-sm btn-outline-danger"><span class="fa fa-times-circle"></span></button>');
@@ -266,28 +265,50 @@ function updateFavicon(sel, base, html) {
         }
     }
     if (src == null) {
-        src = '/favicon.ico';
+        src = base + '/favicon.ico';
     }
-    if (src != null) {
-        if (src.indexOf('//') >= 0) {
-            if (src.startsWith('//')) {
-                src = (new URL(base)).protocol.concat(src);
-            }
+    if (src.indexOf('//') >= 0) {
+        if (src.startsWith('//')) {
+            src = (new URL(base)).protocol.concat(src);
         }
-        else {
-            if (src.startsWith('/'))
-                src = base.concat(src);
-            else
-                src = base.concat('/').concat(src);
+    }
+    else {
+        if (src.startsWith('/'))
+            src = base.concat(src);
+        else
+            src = base.concat('/').concat(src);
+    }
+    $.get({
+        url: src,
+        cache: false,
+        success: function (html) {
+            setFavicon(sel, src)
+        },
+        error: function (xhr, status, error) {
+            removeFavicon(sel)
         }
-        if ($(sel).prop('tagName') == 'IMG') {
-            $(sel).attr('src', src);
-            $(sel).show();
-        }
-        if ($(sel).prop('tagName') == 'A') {
-            $(sel).attr('ICON_URI', src);
-            prepareBookmark($(sel));
-        }
+    });
+}
+function setFavicon(sel, src)
+{
+    if ($(sel).prop('tagName') == 'IMG') {
+        $(sel).attr('src', src);
+        $(sel).show();
+    }
+    if ($(sel).prop('tagName') == 'A') {
+        $(sel).attr('ICON_URI', src);
+        prepareBookmark($(sel));
+    }
+}
+function removeFavicon(sel)
+{
+    if ($(sel).prop('tagName') == 'IMG') {
+        $(sel).removeAttr('src');
+        $(sel).hide();
+    }
+    if ($(sel).prop('tagName') == 'A') {
+        $(sel).removeAttr('ICON_URI');
+        $(sel).html($(sel).text())
     }
 }
 function createQuill(sel) {
@@ -367,6 +388,8 @@ exports = module.exports = {
     saveQuill,
     findFavicon,
     updateFavicon,
+    setFavicon,
+    removeFavicon,
     loadUrl,
     commit,
     showAlert,
