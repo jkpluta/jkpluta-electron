@@ -57,6 +57,11 @@ typings/
 # dotenv environment variables file
 .env
 
+<<<<<<< HEAD
 # Jan K. Pluta
 dist
 
+=======
+# JKP
+dist
+>>>>>>> 99d170865f938eabe01391acdb85476807a69c5c
