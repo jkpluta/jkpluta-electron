@@ -3,7 +3,11 @@
   "version": "0.9.0",
   "main": "main.js",
   "description": "Eksperymentalna strona startowa",
-  "author": "Jan K. Pluta",
+  "author": {
+    "name": "Jan K. Pluta",
+    "email": "jkpluta@gmail.com",
+    "url": "jkpluta.github.io"
+  },
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -21,10 +25,12 @@
   },
   "scripts": {
     "start": "electron .",
-    "pack": "build --dir",
-    "dist": "build",
-    "pack32": "electron-packager ./ --platform=win32 --arch=ia32 --out ./dist",
-    "pack64": "electron-packager ./ --platform=win32 --arch=x64 --out ./dist"
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "dist-win64": "electron-builder --win --x64",
+    "dist-win32": "electron-builder --win --ia32",
+    "dist-deb": "electron-builder --linux deb",
+    "dist-rpm": "electron-builder --linux rpm"
   },
   "dependencies": {
     "bluebird": "^3.5.0",
