@@ -26,7 +26,7 @@ var icon = 'img/icon.png';
 if (process.platform === 'win32')
     icon = 'icon.ico';
 function createWindow() {
-    global.sharedObj = {
+    (<any>global).sharedObj = {
         mainWindowLoad: mainWindowLoad,
         mainWindowCommit: mainWindowCommit
     };

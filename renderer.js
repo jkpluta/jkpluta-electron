@@ -65,8 +65,9 @@ function prepareBookmarks(element) {
         return false;
     });
     $('dt').off();
-    $('dt').attr('draggable', true);
+    $('dt').attr('draggable', "true");
     $('dt').on('dragover', function (e) {
+        var oe = e.originalEvent;
         if (draggable != null) {
             var parent = this;
             while (draggable !== parent && parent != null)
@@ -75,12 +76,13 @@ function prepareBookmarks(element) {
                 e.preventDefault();
         }
         else {
-            if (e.originalEvent.dataTransfer != null)
+            if (oe.dataTransfer != null)
                 e.preventDefault();
         }
         e.stopPropagation();
     });
     $('dt').on('drop', function (e) {
+        var oe = e.originalEvent;
         e.preventDefault();
         e.stopPropagation();
         if (draggable != null) {
@@ -96,10 +98,10 @@ function prepareBookmarks(element) {
             $(draggable).css('top', '');
         }
         else {
-            if (e.originalEvent.dataTransfer != null) {
+            if (oe.dataTransfer != null) {
                 var droppable = this;
-                var url = e.originalEvent.dataTransfer.getData('text/uri-list');
-                var title = e.originalEvent.dataTransfer.getData('vivaldi/x-title');
+                var url = oe.dataTransfer.getData('text/uri-list');
+                var title = oe.dataTransfer.getData('vivaldi/x-title');
                 if (title == null || title === '')
                     title = url;
                 var link = null;
@@ -140,7 +142,7 @@ function prepareBookmarks(element) {
         $('#folder-apply').off();
         $('#folder-apply').click(function () {
             $('#folder-apply').off();
-            folder.text($('#folder-name').val());
+            folder.text($('#folder-name').val().toString());
             return true;
         });
     });
@@ -155,7 +157,7 @@ function prepareBookmarks(element) {
         $('#folder-apply').click(function () {
             $('#folder-apply').off();
             var folder = $('<dt><h3></h3><dl><p></dl><p></dt>').insertBefore(parent).children('h3:first');
-            folder.text($('#folder-name').val());
+            folder.text($('#folder-name').val().toString());
             prepareBookmarks(folder.parent());
             return true;
         });
@@ -175,7 +177,7 @@ function prepareBookmarks(element) {
         $('#folder-apply').click(function () {
             $('#folder-apply').off();
             var folder = $('<dt><h3></h3><dl><p></dl><p></dt>').appendTo(parent.find('dl:first')).children('h3:first');
-            folder.text($('#folder-name').val());
+            folder.text($('#folder-name').val().toString());
             prepareBookmarks(folder.parent());
             return true;
         });
@@ -189,10 +191,10 @@ function prepareBookmarks(element) {
         $('#link-apply').click(function () {
             $('#link-apply').off();
             var link = $('<dt><a></a>').appendTo(parent.find('dl:first')).children('a:first');
-            link.attr('href', $('#link-address').val());
+            link.attr('href', $('#link-address').val().toString());
             if ($("#link-favicon").is(":visible"))
                 link.attr('icon_uri', $('#link-favicon').attr('src'));
-            link.text($('#link-name').val());
+            link.text($('#link-name').val().toString());
             prepareBookmarks(link.parent());
             return true;
         });
@@ -205,10 +207,10 @@ function prepareBookmarks(element) {
         $('#link-apply').off();
         $('#link-apply').click(function () {
             $('#link-apply').off();
-            link.attr('href', $('#link-address').val());
+            link.attr('href', $('#link-address').val().toString());
             if ($("#link-favicon").is(":visible"))
                 link.attr('icon_uri', $('#link-favicon').attr('src'));
-            link.text($('#link-name').val());
+            link.text($('#link-name').val().toString());
             prepareBookmark(link);
             return true;
         });
@@ -225,10 +227,10 @@ function prepareBookmarks(element) {
         $('#link-apply').click(function () {
             $('#link-apply').off();
             var link = $('<dt><a></a>').insertBefore(parent).children('a:first');
-            link.attr('href', $('#link-address').val());
+            link.attr('href', $('#link-address').val().toString());
             if ($("#link-favicon").is(":visible"))
                 link.attr('icon_uri', $('#link-favicon').attr('src'));
-            link.text($('#link-name').val());
+            link.text($('#link-name').val().toString());
             prepareBookmarks(link.parent());
             return true;
         });
@@ -273,18 +275,20 @@ function updateFavicon(sel, base, html) {
     var src = null;
     if (src == null) {
         for (var i = 0; i < dom.length; i++) {
-            if (dom[i].nodeName.toUpperCase() === 'LINK') {
-                if (dom[i].rel.toLowerCase() === "shortcut icon") {
-                    src = dom[i].getAttribute('href');
+            var nd = dom[i];
+            if (nd.nodeName.toUpperCase() === 'LINK') {
+                if (nd.rel.toLowerCase() === "shortcut icon") {
+                    src = nd.getAttribute('href');
                 }
             }
         }
     }
     if (src == null) {
         for (var i = 0; i < dom.length; i++) {
-            if (dom[i].nodeName.toUpperCase() === 'LINK') {
-                if (dom[i].rel.toLowerCase() === "icon") {
-                    src = dom[i].getAttribute('href');
+            var nd = dom[i];
+            if (nd.nodeName.toUpperCase() === 'LINK') {
+                if (nd.rel.toLowerCase() === "icon") {
+                    src = nd.getAttribute('href');
                 }
             }
         }
