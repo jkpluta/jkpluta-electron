@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var electron = require("electron");
 var $ = require("jquery");
 window.$ = window.jQuery = $;
-var Popper = require("popper");
+var Popper = require("popper.js");
 window.Popper = Popper;
 require("bootstrap");
 var Quill = require("quill");
