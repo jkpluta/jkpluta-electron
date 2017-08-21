@@ -20,7 +20,7 @@
       "category": "public.app-category.utilities"
     },
     "nsis": {
-      "artifactName": "${name}-${version}-setup.${ext}",
+      "artifactName": "${name}-${version}-${arch}-setup.${ext}",
       "oneClick": true
     }
   },
