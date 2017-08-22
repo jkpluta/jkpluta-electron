@@ -7,6 +7,8 @@ module.exports = {
   target: 'electron-renderer',
   output: {
     path: path.resolve(__dirname, './webpack'),
-    filename: '[name].js'
+    filename: 'renderer.js',
+    library: 'renderer',
+    libraryTarget: 'umd'
   }
 };

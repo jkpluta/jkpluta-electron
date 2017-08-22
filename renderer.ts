@@ -11,14 +11,14 @@ import "bootstrap";
 import * as Quill from 'quill';
 let quill: Quill = null
 let iconSize = 16;
-function updateAjax(sel, base, html) {
+export function updateAjax(sel, base, html) {
     $(sel).html(html);
     $(sel).find('a').click(function () {
         loadUrl($(this).attr('href'));
         return false;
     });
 }
-function startAjax(sel, spnr, base, href, func) {
+export function startAjax(sel, spnr, base, href, func) {
     if (spnr != null)
         $(spnr).html('<img src="./img/spinner.gif">');
     $.ajax({
@@ -34,7 +34,7 @@ function startAjax(sel, spnr, base, href, func) {
         }
     });
 }
-function updateMain(sel, base, html) {
+export function updateMain(sel, base, html) {
     var dom = $(html);
     dom.find('#header').remove();
     $(sel).html(<any>dom);
@@ -43,11 +43,11 @@ function updateMain(sel, base, html) {
         return false;
     });
 }
-function updateBookmarks(sel, base, html) {
+export function updateBookmarks(sel, base, html) {
     $(sel).html(html);
     prepareBookmarks($(sel));
 }
-function prepareBookmark(element) {
+export function prepareBookmark(element) {
     var src = null;
     var text = element.text();
     if (element.attr('ICON_URI') != null)
@@ -57,7 +57,7 @@ function prepareBookmark(element) {
     if (src != null) 
         element.html('<img src="' + src + '" width="' + iconSize.toString() + '" height="' + iconSize.toString() + '" alt="" class="jkp"><span class="jkp"> </span>' + text);
 }
-function prepareBookmarks(element) {
+export function prepareBookmarks(element) {
     element.find('a').attr('draggable', false);
     element.find('a').click(function () {
         // loadURL($(this).attr('href'))
@@ -239,7 +239,7 @@ function prepareBookmarks(element) {
         $(this).remove();
     });
 }
-function saveBookmarks(name) {
+export function saveBookmarks(name) {
     var bookmarks = $('#bookmarks').clone()
     $('.jkp', bookmarks).remove()
     bookmarks.find('[draggable]').removeAttr('draggable');
@@ -263,13 +263,13 @@ function saveBookmarks(name) {
     html = html.replace(/(href|add_date|last_visit|folded|last_modified)=/ig, function(match) { return match.toUpperCase(); });
     commit(html, name)
 }
-function findFavicon(sel, spnnr, href) {
+export function findFavicon(sel, spnnr, href) {
     if ($(sel).prop('tagName') == 'IMG')
         $(sel).hide();
     var url = new URL(href);
     startAjax(sel, spnnr, url.origin, url.pathname, updateFavicon);
 }
-function updateFavicon(sel, base, html) {
+export function updateFavicon(sel, base, html) {
     var dom = $.parseHTML(html, null, false);
     var src = null;
     if (src == null) {
@@ -317,7 +317,7 @@ function updateFavicon(sel, base, html) {
         }
     });
 }
-function setFavicon(sel, src)
+export function setFavicon(sel, src)
 {
     if ($(sel).prop('tagName') == 'IMG') {
         $(sel).attr('src', src);
@@ -328,7 +328,7 @@ function setFavicon(sel, src)
         prepareBookmark($(sel));
     }
 }
-function removeFavicon(sel)
+export function removeFavicon(sel)
 {
     if ($(sel).prop('tagName') == 'IMG') {
         $(sel).removeAttr('src');
@@ -339,21 +339,21 @@ function removeFavicon(sel)
         $(sel).html($(sel).text())
     }
 }
-function createQuill(sel) {
+export function createQuill(sel) {
     quill = new Quill(sel, { theme: 'snow' })
 }
-function updateQuill(sel, base, html) {
+export function updateQuill(sel, base, html) {
     quill.setText('')
     quill.clipboard.dangerouslyPasteHTML(0, html)
 }
-function saveQuill() {
+export function saveQuill() {
     commit(quill.root.innerHTML, 'info.html')
 }
-function loadUrl(url) {
+export function loadUrl(url) {
     electron.remote.getGlobal('sharedObj').mainWindowLoad(url);
     return false;
 }
-function commit(content, name) {
+export function commit(content, name) {
     electron.remote.getGlobal('sharedObj').mainWindowCommit(content, name, function (func, error) {
         if (error == null)
             $('#auth-alert').css('display', 'none');
@@ -376,7 +376,7 @@ function commit(content, name) {
         });
     });
 }
-function showAlert(text, kind) {
+export function showAlert(text, kind) {
     if (kind == null)
         kind = 'info';
     $('#alert').removeClass();
@@ -384,15 +384,15 @@ function showAlert(text, kind) {
     $('#alert').text(text);
     $('#alert').parent().parent().css("display", "block");
 }
-function clearAlert() {
+export function clearAlert() {
     $('#alert').removeClass();
     $('#alert').text('');
     $('#alert').parent().parent().css("display", "none");
 }
-function showInfo(text) {
+export function showInfo(text) {
     showAlert(text, 'info');
 }
-function init(size) {
+export function init(size) {
     iconSize = size;
 }
 $(document).ready(function () {
@@ -404,25 +404,3 @@ $(document).ready(function () {
         $(this).find('[autofocus]').focus();
     });
 });
-exports = module.exports = {
-    updateAjax,
-    startAjax,
-    updateMain,
-    updateBookmarks,
-    prepareBookmark,
-    prepareBookmarks,
-    saveBookmarks,
-    createQuill,
-    updateQuill,
-    saveQuill,
-    findFavicon,
-    updateFavicon,
-    setFavicon,
-    removeFavicon,
-    loadUrl,
-    commit,
-    showAlert,
-    clearAlert,
-    showInfo,
-    init: init
-};

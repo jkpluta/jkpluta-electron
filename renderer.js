@@ -19,6 +19,7 @@ function updateAjax(sel, base, html) {
         return false;
     });
 }
+exports.updateAjax = updateAjax;
 function startAjax(sel, spnr, base, href, func) {
     if (spnr != null)
         $(spnr).html('<img src="./img/spinner.gif">');
@@ -35,6 +36,7 @@ function startAjax(sel, spnr, base, href, func) {
         }
     });
 }
+exports.startAjax = startAjax;
 function updateMain(sel, base, html) {
     var dom = $(html);
     dom.find('#header').remove();
@@ -44,10 +46,12 @@ function updateMain(sel, base, html) {
         return false;
     });
 }
+exports.updateMain = updateMain;
 function updateBookmarks(sel, base, html) {
     $(sel).html(html);
     prepareBookmarks($(sel));
 }
+exports.updateBookmarks = updateBookmarks;
 function prepareBookmark(element) {
     var src = null;
     var text = element.text();
@@ -58,6 +62,7 @@ function prepareBookmark(element) {
     if (src != null)
         element.html('<img src="' + src + '" width="' + iconSize.toString() + '" height="' + iconSize.toString() + '" alt="" class="jkp"><span class="jkp"> </span>' + text);
 }
+exports.prepareBookmark = prepareBookmark;
 function prepareBookmarks(element) {
     element.find('a').attr('draggable', false);
     element.find('a').click(function () {
@@ -240,6 +245,7 @@ function prepareBookmarks(element) {
         $(this).remove();
     });
 }
+exports.prepareBookmarks = prepareBookmarks;
 function saveBookmarks(name) {
     var bookmarks = $('#bookmarks').clone();
     $('.jkp', bookmarks).remove();
@@ -264,12 +270,14 @@ function saveBookmarks(name) {
     html = html.replace(/(href|add_date|last_visit|folded|last_modified)=/ig, function (match) { return match.toUpperCase(); });
     commit(html, name);
 }
+exports.saveBookmarks = saveBookmarks;
 function findFavicon(sel, spnnr, href) {
     if ($(sel).prop('tagName') == 'IMG')
         $(sel).hide();
     var url = new URL(href);
     startAjax(sel, spnnr, url.origin, url.pathname, updateFavicon);
 }
+exports.findFavicon = findFavicon;
 function updateFavicon(sel, base, html) {
     var dom = $.parseHTML(html, null, false);
     var src = null;
@@ -318,6 +326,7 @@ function updateFavicon(sel, base, html) {
         }
     });
 }
+exports.updateFavicon = updateFavicon;
 function setFavicon(sel, src) {
     if ($(sel).prop('tagName') == 'IMG') {
         $(sel).attr('src', src);
@@ -328,6 +337,7 @@ function setFavicon(sel, src) {
         prepareBookmark($(sel));
     }
 }
+exports.setFavicon = setFavicon;
 function removeFavicon(sel) {
     if ($(sel).prop('tagName') == 'IMG') {
         $(sel).removeAttr('src');
@@ -338,20 +348,25 @@ function removeFavicon(sel) {
         $(sel).html($(sel).text());
     }
 }
+exports.removeFavicon = removeFavicon;
 function createQuill(sel) {
     quill = new Quill(sel, { theme: 'snow' });
 }
+exports.createQuill = createQuill;
 function updateQuill(sel, base, html) {
     quill.setText('');
     quill.clipboard.dangerouslyPasteHTML(0, html);
 }
+exports.updateQuill = updateQuill;
 function saveQuill() {
     commit(quill.root.innerHTML, 'info.html');
 }
+exports.saveQuill = saveQuill;
 function loadUrl(url) {
     electron.remote.getGlobal('sharedObj').mainWindowLoad(url);
     return false;
 }
+exports.loadUrl = loadUrl;
 function commit(content, name) {
     electron.remote.getGlobal('sharedObj').mainWindowCommit(content, name, function (func, error) {
         if (error == null)
@@ -375,6 +390,7 @@ function commit(content, name) {
         });
     });
 }
+exports.commit = commit;
 function showAlert(text, kind) {
     if (kind == null)
         kind = 'info';
@@ -383,17 +399,21 @@ function showAlert(text, kind) {
     $('#alert').text(text);
     $('#alert').parent().parent().css("display", "block");
 }
+exports.showAlert = showAlert;
 function clearAlert() {
     $('#alert').removeClass();
     $('#alert').text('');
     $('#alert').parent().parent().css("display", "none");
 }
+exports.clearAlert = clearAlert;
 function showInfo(text) {
     showAlert(text, 'info');
 }
+exports.showInfo = showInfo;
 function init(size) {
     iconSize = size;
 }
+exports.init = init;
 $(document).ready(function () {
     $("a").click(function () {
         loadUrl($(this).attr('href'));
@@ -403,26 +423,4 @@ $(document).ready(function () {
         $(this).find('[autofocus]').focus();
     });
 });
-exports = module.exports = {
-    updateAjax: updateAjax,
-    startAjax: startAjax,
-    updateMain: updateMain,
-    updateBookmarks: updateBookmarks,
-    prepareBookmark: prepareBookmark,
-    prepareBookmarks: prepareBookmarks,
-    saveBookmarks: saveBookmarks,
-    createQuill: createQuill,
-    updateQuill: updateQuill,
-    saveQuill: saveQuill,
-    findFavicon: findFavicon,
-    updateFavicon: updateFavicon,
-    setFavicon: setFavicon,
-    removeFavicon: removeFavicon,
-    loadUrl: loadUrl,
-    commit: commit,
-    showAlert: showAlert,
-    clearAlert: clearAlert,
-    showInfo: showInfo,
-    init: init
-};
 //# sourceMappingURL=renderer.js.map
