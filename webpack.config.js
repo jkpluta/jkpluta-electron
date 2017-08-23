@@ -18,6 +18,10 @@ module.exports = [
       'main': './main.js'
     },
     target: 'electron-main',
+    externals: {
+      'ejs-electron': 'ejs-electron',
+      'github': 'github'
+    },
     output: {
       path: path.resolve(__dirname, './webpack'),
       filename: 'main.js'
