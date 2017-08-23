@@ -26,6 +26,7 @@
   },
   "scripts": {
     "start": "electron .",
+    "webpack": "webpack",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
     "dist-win64": "electron-builder --win --x64",
