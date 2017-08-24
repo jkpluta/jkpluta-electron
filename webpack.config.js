@@ -19,8 +19,7 @@ module.exports = [
     },
     target: 'electron-main',
     externals: {
-      'ejs-electron': 'ejs-electron',
-      'github': 'github'
+      'ejs-electron': 'ejs-electron'
     },
     output: {
       path: path.resolve(__dirname, './app'),
