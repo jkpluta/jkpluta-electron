@@ -28,6 +28,10 @@
   dependencies:
     "@types/jquery" "*"
 
+"@types/ejs@^2.3.33":
+  version "2.3.33"
+  resolved "https://registry.yarnpkg.com/@types/ejs/-/ejs-2.3.33.tgz#0a4e0a7aeee09944154b06ce5a2ac6a118f92b00"
+
 "@types/jquery@*", "@types/jquery@^3.2.11":
   version "3.2.11"
   resolved "https://registry.yarnpkg.com/@types/jquery/-/jquery-3.2.11.tgz#9119f91bb103b16ae8c4375b019a9b341b409f50"

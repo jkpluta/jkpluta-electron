@@ -6,8 +6,7 @@
         "module": "commonjs",
         "sourceMap": true
     },
-    "files": [
-        "main.ts",
-        "renderer.ts"
+    "include": [
+        "*.ts"
     ]
 }
