@@ -7,7 +7,7 @@ module.exports = [
     },
     target: 'electron-renderer',
     output: {
-      path: path.resolve(__dirname, './webpack'),
+      path: path.resolve(__dirname, './app'),
       filename: 'renderer.js',
       library: 'renderer',
       libraryTarget: 'umd'
@@ -19,7 +19,7 @@ module.exports = [
     },
     target: 'electron-main',
     output: {
-      path: path.resolve(__dirname, './webpack'),
+      path: path.resolve(__dirname, './app'),
       filename: 'main.js'
     }
   }
