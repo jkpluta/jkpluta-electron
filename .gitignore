@@ -59,4 +59,7 @@ typings/
 
 # Jan K. Pluta
 dist
+app
 webpack
+css
+fonts

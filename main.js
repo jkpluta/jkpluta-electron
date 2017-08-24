@@ -5,8 +5,17 @@ var app = electron.app;
 var BrowserWindow = electron.BrowserWindow;
 var path = require("path");
 var url = require("url");
+var fs = require("fs");
 var storage = require("electron-json-storage");
-var ejse = require("ejs-electron");
+var ejse = null;
+var ejsPages = null;
+try {
+    ejsPages = JSON.parse(fs.readFileSync(path.join(__dirname, 'utils-ejs.json'), 'utf8'));
+    ejse = require('ejs-electron');
+    ejse.options({ root: __dirname });
+}
+catch (err) {
+}
 var GitHubApi = require("github");
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -15,7 +24,6 @@ var settings = {
     auth_token: null
 };
 var github = null;
-ejse.options({ root: __dirname });
 storage.get('settings', function (error, data) {
     if (error)
         throw error;
@@ -32,7 +40,7 @@ function createWindow() {
     };
     // Create the browser window.
     mainWindow = new BrowserWindow({ width: 900, height: 620, title: 'jkp', icon: path.join(__dirname, icon) });
-    loadPage('index', null, null);
+    loadPage('main');
     // Open the DevTools.
     // mainWindow.webContents.openDevTools()
     // Emitted when the window is closed.
@@ -82,19 +90,19 @@ function createWindow() {
             submenu: [
                 {
                     label: 'Główna',
-                    click: function () { mainWindowLoad('#main'); }
+                    click: function () { loadPage('main'); }
                 },
                 {
                     label: 'Informacje',
-                    click: function () { mainWindowLoad('#info'); }
+                    click: function () { loadPage('info'); }
                 },
                 {
                     label: 'Ikony',
-                    click: function () { mainWindowLoad('#icons'); }
+                    click: function () { loadPage('icons'); }
                 },
                 {
                     label: 'Zakładki',
-                    click: function () { mainWindowLoad('#bookmarks'); }
+                    click: function () { loadPage('bookmarks'); }
                 }
             ]
         },
@@ -104,7 +112,7 @@ function createWindow() {
             submenu: [
                 {
                     label: 'O programie',
-                    click: function () { mainWindowLoad('#about'); }
+                    click: function () { loadPage('about'); }
                 }
             ]
         }
@@ -150,44 +158,37 @@ app.on('activate', function () {
 });
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
-function renderPage(browserWindow, template, title, data) {
-    ejse.data({
-        title: title,
-        data: data
-    });
-    browserWindow.loadURL(url.format({
-        pathname: path.join(__dirname, template + '.ejs'),
+function renderPage(browserWindow, name) {
+    var pageName = name + '.html';
+    if (ejsPages != null) {
+        var ejsPage = ejsPages[name];
+        ejse.data({
+            title: ejsPage.title,
+            data: ejsPage.data
+        });
+        pageName = ejsPage.template + '.ejs';
+    }
+    var pageUrl = url.format({
+        pathname: path.join(__dirname, pageName),
         protocol: 'file:',
         slashes: true
-    }));
-}
-function getTitle() {
-    return 'Jan K. Pluta';
-}
-function loadPage(template, title, data) {
-    var fullTitle = getTitle();
-    if (title !== null)
-        fullTitle += ' | ' + title;
-    renderPage(mainWindow, template, fullTitle, data);
-}
-function showAbout() {
-    var dialog = new BrowserWindow({ width: 600, height: 200, frame: false, modal: true, skipTaskbar: true, });
-    dialog.on('blur', function () {
-        dialog.close();
     });
-    renderPage(dialog, 'about', getTitle(), 'about');
+    browserWindow.loadURL(pageUrl);
+}
+function loadPage(name) {
+    if (name === "about") {
+        var dialog = new BrowserWindow({ width: 600, height: 200, frame: false, modal: true, skipTaskbar: true, });
+        dialog.on('blur', function () {
+            dialog.close();
+        });
+        renderPage(dialog, name);
+        return;
+    }
+    renderPage(mainWindow, name);
 }
 function mainWindowLoad(url) {
-    if (url === '#main')
-        loadPage('index', null, null);
-    else if (url === '#info')
-        loadPage('info', 'Informacje', null);
-    else if (url === '#icons')
-        loadPage('bookmarks', 'Ikony', 'icons.html');
-    else if (url === '#bookmarks')
-        loadPage('bookmarks', 'Zakładki', 'bookmarks.html');
-    else if (url === '#about')
-        showAbout();
+    if (url.startsWith('#'))
+        loadPage(url.substring(1));
     else
         mainWindow.loadURL(url);
 }
