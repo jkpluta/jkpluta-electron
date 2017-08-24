@@ -158,7 +158,6 @@ app.on('activate', function () {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 function renderPage(browserWindow, name) {
-    console.log(ejsPages)
     var pageName = name + '.html';
     if (ejsPages != null) {
         var ejsPage = ejsPages[name];
@@ -168,13 +167,21 @@ function renderPage(browserWindow, name) {
         });
         pageName = ejsPage.template + '.ejs';
     }
-    else
-        console.log('Z')
+    var pageUrl = url.format({
+        pathname: path.join(__dirname, pageName),
+        protocol: 'file:',
+        slashes: true
+    });
+    pageUrl = 'file:///C:\\Users\\jkp\\GitHub\\jkpluta-electron\\app\\main.html'
+    console.log(pageUrl)
+    browserWindow.loadURL(pageUrl);
+    /*
     browserWindow.loadURL(url.format({
         pathname: path.join(__dirname, pageName),
         protocol: 'file:',
         slashes: true
     }));
+    */
 }
 function loadPage(name) {
     if (name === "about") {
