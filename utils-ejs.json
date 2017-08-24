@@ -1,4 +1,27 @@
 {
-  "jeden" : 1,
-  "dwa": 2
+    "main": {
+        "template": "index",
+        "title": "Jan K. Pluta",
+        "data": null
+    },
+    "info": {
+        "template": "info",
+        "title": "Jan K. Pluta | Informacje",
+        "data": null
+    },
+    "icons": {
+        "template": "bookmarks",
+        "title": "Jan K. Pluta | Ikony",
+        "data": "icons.html"
+    },
+    "bookmarks": {
+        "template": "bookmarks",
+        "title": "Jan K. Pluta | Zakładki",
+        "data": "bookmarks.html"
+    },
+    "about": {
+        "template": "about",
+        "title": "Jan K. Pluta | O programie",
+        "data": "bookmarks.html"
+    }
 }
