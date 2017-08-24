@@ -21,6 +21,10 @@ module.exports = [
     output: {
       path: path.resolve(__dirname, './app'),
       filename: 'main.js'
-    }
+    },
+    node: {
+      __dirname: false,
+      __filename: false
+    }  
   }
 ];

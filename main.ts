@@ -172,16 +172,7 @@ function renderPage(browserWindow, name) {
         protocol: 'file:',
         slashes: true
     });
-    pageUrl = 'file:///C:\\Users\\jkp\\GitHub\\jkpluta-electron\\app\\main.html'
-    console.log(pageUrl)
     browserWindow.loadURL(pageUrl);
-    /*
-    browserWindow.loadURL(url.format({
-        pathname: path.join(__dirname, pageName),
-        protocol: 'file:',
-        slashes: true
-    }));
-    */
 }
 function loadPage(name) {
     if (name === "about") {
