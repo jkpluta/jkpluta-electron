@@ -6,13 +6,13 @@ var fs = require('fs');
 var webpack = require('webpack')
 var webpackConfig = require('./webpack.config.js');
 
-var opts = { cache: false } //{ root: __dirname, cache: false, filename: path.join(__dirname, '.') };
-var ejsPages = JSON.parse(fs.readFileSync('utils-ejs.json', 'utf8'))
+var opts = { cache: false };
+var ejsPages = JSON.parse(fs.readFileSync('utils-ejs.json', 'utf8'));
 
 gulp.task('default', function() {
 
     try {
-        fs.mkdirSync('app')
+        fs.mkdirSync('app');
     } catch (err) {
     }
     
