@@ -376,14 +376,7 @@ function authenticate(func, error) {
     if (error == null)
         $('#auth-alert').css('display', 'none');
     else {
-        var msg = error;
-        if (typeof error === 'object') {
-            var pattern = /"?message"?: *"([^"]*)"/i;
-            var match = pattern.exec(error.toString());
-            if (match.length == 2)
-                msg = match[1];
-        }
-        $('#auth-alert').text(msg);
+        $('#auth-alert').text(error);
         $('#auth-alert').css('display', 'block');
     }
     $('#auth-edit').modal({});
