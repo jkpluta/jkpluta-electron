@@ -1,7 +1,6 @@
 // This file is required by the index.html file and will
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
-import * as electron from  "electron";
 import * as url from "url";
 import * as $ from "jquery";
 (<any>window).$ = (<any>window).jQuery = $
@@ -10,6 +9,7 @@ import Popper = require("popper.js");
 import "bootstrap";
 import * as Quill from 'quill';
 let quill: Quill = null
+import * as jkp from './jkp-utils'
 let iconSize = 16;
 export function updateAjax(sel, base, html) {
     $(sel).html(html);
@@ -350,11 +350,17 @@ export function saveQuill() {
     commit(quill.root.innerHTML, 'info.html')
 }
 export function loadUrl(url) {
-    electron.remote.getGlobal('sharedObj').mainWindowLoad(url);
-    return false;
+    if (jkp.sharedObj().loadUrl == null) 
+        return false;
+
+    jkp.sharedObj().loadUrl(url)
+    return true;
 }
 export function commit(content, name) {
-    electron.remote.getGlobal('sharedObj').mainWindowCommit(content, name, function (func, error) {
+    if (jkp.sharedObj().commit == null) 
+        return false;
+
+    jkp.sharedObj().commit(content, name, function (func, error) {
         if (error == null)
             $('#auth-alert').css('display', 'none');
         else {
@@ -375,6 +381,29 @@ export function commit(content, name) {
             return true;
         });
     });
+}
+export function authenticate(func, error)
+{
+    if (error == null)
+        $('#auth-alert').css('display', 'none');
+    else {
+        var msg = error;
+        if (typeof error === 'object') {
+            var pattern = /"?message"?: *"([^"]*)"/i;
+            var match = pattern.exec(error.toString());
+            if (match.length == 2)
+                msg = match[1];
+        }
+        $('#auth-alert').text(msg);
+        $('#auth-alert').css('display', 'block');
+    }
+    $('#auth-edit').modal({});
+    $('#auth-apply').off();
+    $('#auth-apply').click(function () {
+        func($('#auth-username').val(), $('#auth-password').val());
+        return true;
+    });
+
 }
 export function showAlert(text, kind) {
     if (kind == null)
