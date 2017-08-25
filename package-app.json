@@ -1,14 +1,5 @@
 {
-  "name": "jkpluta-electron",
-  "version": "0.9.2",
   "main": "main.js",
-  "description": "Eksperymentalna strona startowa",
-  "author": {
-    "name": "Jan K. Pluta",
-    "email": "jkpluta@gmail.com",
-    "url": "jkpluta.github.io"
-  },
-  "license": "MIT",
   "build": {
     "appId": "55ede969-ed85-488b-8009-b878609302c8",
     "productName": "Jan K. Pluta",
