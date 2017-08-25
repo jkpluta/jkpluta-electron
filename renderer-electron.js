@@ -7,11 +7,15 @@ function loadUrl(url) {
     return true;
 }
 exports.loadUrl = loadUrl;
-function commit(content, name, func) {
-    electron.remote.getGlobal('sharedObj').mainWindowCommit(content, name, func);
-    return true;
+function readFromSettings(name) {
+    return electron.remote.getGlobal('sharedObj').mainWindowReadFromSettings(name);
 }
-exports.commit = commit;
+exports.readFromSettings = readFromSettings;
+function writeToSettings(name, value) {
+    electron.remote.getGlobal('sharedObj').mainWindowWriteToSettings(name, value);
+}
+exports.writeToSettings = writeToSettings;
 jkp.sharedObj().loadUrl = loadUrl;
-jkp.sharedObj().commit = commit;
+jkp.sharedObj().readFromSettings = readFromSettings;
+jkp.sharedObj().writeToSettings = writeToSettings;
 //# sourceMappingURL=renderer-electron.js.map

@@ -369,27 +369,7 @@ exports.loadUrl = loadUrl;
 function commit(content, name) {
     if (jkp.sharedObj().commit == null)
         return false;
-    jkp.sharedObj().commit(content, name, function (func, error) {
-        if (error == null)
-            $('#auth-alert').css('display', 'none');
-        else {
-            var msg = error;
-            if (typeof error === 'object') {
-                var pattern = /"?message"?: *"([^"]*)"/i;
-                var match = pattern.exec(error.toString());
-                if (match.length == 2)
-                    msg = match[1];
-            }
-            $('#auth-alert').text(msg);
-            $('#auth-alert').css('display', 'block');
-        }
-        $('#auth-edit').modal({});
-        $('#auth-apply').off();
-        $('#auth-apply').click(function () {
-            func($('#auth-username').val(), $('#auth-password').val());
-            return true;
-        });
-    });
+    jkp.sharedObj().commit(content, name, null);
 }
 exports.commit = commit;
 function authenticate(func, error) {
@@ -414,6 +394,7 @@ function authenticate(func, error) {
     });
 }
 exports.authenticate = authenticate;
+jkp.sharedObj().authenticate = authenticate;
 function showAlert(text, kind) {
     if (kind == null)
         kind = 'info';

@@ -16,14 +16,12 @@ try {
 }
 catch (err) {
 }
-var GitHubApi = require("github");
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 var mainWindow = null;
 var settings = {
     auth_token: null
 };
-var github = null;
 storage.get('settings', function (error, data) {
     if (error)
         throw error;
@@ -36,7 +34,8 @@ if (process.platform === 'win32')
 function createWindow() {
     global.sharedObj = {
         mainWindowLoad: mainWindowLoad,
-        mainWindowCommit: mainWindowCommit
+        mainWindowReadFromSettings: mainWindowReadFromSettings,
+        mainWindowWriteToSettings: mainWindowWriteToSettings,
     };
     // Create the browser window.
     mainWindow = new BrowserWindow({ width: 900, height: 620, title: 'jkp', icon: path.join(__dirname, icon) });
@@ -192,125 +191,12 @@ function mainWindowLoad(url) {
     else
         mainWindow.loadURL(url);
 }
-function mainWindowCommit(content, name, func, error) {
-    github = new GitHubApi({
-        // optional 
-        debug: false,
-        protocol: "https",
-        host: "api.github.com",
-        pathPrefix: null,
-        headers: {
-            "user-agent": "jkpluta" // GitHub is happy with a unique user agent 
-        },
-        Promise: require('bluebird'),
-        followRedirects: false,
-        timeout: 5000
-    });
-    if (settings.auth_token == null) {
-        func(function (username, password) {
-            if (username !== '' && password !== '') {
-                github.authenticate({
-                    type: "basic",
-                    username: username,
-                    password: password
-                });
-            }
-            github.authorization.create({
-                scopes: ["user", "repo", "gist"],
-                note: "jkpluta-electron-".concat(new Date().toISOString()),
-                headers: {
-                    "X-GitHub-OTP": "two-factor-code"
-                }
-            }, function (err, res) {
-                if (err != null) {
-                    mainWindowCommit(content, name, func, err);
-                }
-                else {
-                    if (res != null && res.data != null && res.data.token != null) {
-                        settings.auth_token = res.data.token;
-                        storage.set('settings', settings, function (error) {
-                            if (error)
-                                throw error;
-                        });
-                        mainWindowCommit(content, name, func, null);
-                    }
-                }
-            });
-        }, error);
-    }
-    else {
-        github.authenticate({
-            type: "oauth",
-            token: settings.auth_token
-        });
-        github.users.get({}, function (err, res) {
-            if (err != null) {
-                settings.auth_token = null;
-                storage.set('settings', settings, function (error) {
-                    if (error)
-                        throw error;
-                });
-                mainWindowCommit(content, name, func, err);
-            }
-            else {
-                if (res != null) {
-                    gitHubCommit(content, name);
-                }
-            }
-        });
-    }
+function mainWindowReadFromSettings(name) {
+    return settings[name];
 }
-function gitHubCommit(content, name) {
-    github.gitdata.getReference({
-        owner: "jkpluta",
-        repo: "jkpluta.github.io",
-        ref: "heads/master"
-    }, function (err, res) {
-        var SHA_LATEST_COMMIT = res.data.object.sha;
-        github.gitdata.getCommit({
-            owner: "jkpluta",
-            repo: "jkpluta.github.io",
-            sha: SHA_LATEST_COMMIT
-        }, function (err, res) {
-            var SHA_BASE_TREE = res.data.tree.sha;
-            github.gitdata.createTree({
-                owner: "jkpluta",
-                repo: "jkpluta.github.io",
-                tree: [
-                    {
-                        "path": name,
-                        "mode": "100644",
-                        "type": "blob",
-                        "content": content
-                    }
-                ],
-                base_tree: SHA_BASE_TREE
-            }, function (err, res) {
-                var SHA_NEW_TREE = res.data.sha;
-                github.gitdata.createCommit({
-                    owner: "jkpluta",
-                    repo: "jkpluta.github.io",
-                    message: "jkpluta-electron",
-                    tree: SHA_NEW_TREE,
-                    parents: [SHA_LATEST_COMMIT],
-                    author: {
-                        "name": "Jan K. Pluta",
-                        "email": "jkpluta@gmail.com",
-                        "date": new Date().toISOString()
-                    },
-                }, function (err, res) {
-                    var SHA_NEW_COMMIT = res.data.sha;
-                    github.gitdata.updateReference({
-                        owner: "jkpluta",
-                        repo: "jkpluta.github.io",
-                        ref: "heads/master",
-                        sha: SHA_NEW_COMMIT,
-                        force: true
-                    }, function (err, res) {
-                    });
-                });
-            });
-        });
+function mainWindowWriteToSettings(name, value) {
+    settings[name] = value;
+    storage.set('settings', settings, function (error) {
     });
 }
 //# sourceMappingURL=main.js.map

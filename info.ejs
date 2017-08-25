@@ -34,6 +34,7 @@
 </div>
 </body>
 <script>
+require('./jkp-github')
 renderer.createQuill("#editor");
 $(document).ready(function() {
     renderer.startAjax("#editor", "#info", "http://jkpluta.github.io", "/info.html", renderer.updateQuill);

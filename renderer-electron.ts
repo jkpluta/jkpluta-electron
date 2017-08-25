@@ -4,9 +4,12 @@ export function loadUrl(url) {
     electron.remote.getGlobal('sharedObj').mainWindowLoad(url);
     return true;
 }
-export function commit(content, name, func) {
-    electron.remote.getGlobal('sharedObj').mainWindowCommit(content, name, func);
-    return true;
+export function readFromSettings(name) {
+    return electron.remote.getGlobal('sharedObj').mainWindowReadFromSettings(name);
+}
+export function writeToSettings(name, value) {
+    electron.remote.getGlobal('sharedObj').mainWindowWriteToSettings(name, value);
 }
 jkp.sharedObj().loadUrl = loadUrl
-jkp.sharedObj().commit = commit
+jkp.sharedObj().readFromSettings = readFromSettings
+jkp.sharedObj().writeToSettings = writeToSettings
