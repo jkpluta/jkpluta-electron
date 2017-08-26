@@ -20,7 +20,6 @@
 </head>
 
 <link href="https://cdn.quilljs.com/1.3.0/quill.snow.css" rel="stylesheet">
-<script src="./jkp-github.sc"></script>
 <body>
 <div class="container">
     <nav id="header" class="navbar navbar-expand-sm navbar-light bg-faded" style="background-color: khaki;">
@@ -122,15 +121,16 @@
 </div>
 </body>
 <script>
-renderer.createQuill("#editor");
-$(document).ready(function() {
+  require('./jkp-github');
+  renderer.createQuill("#editor");
+  $(document).ready(function() {
     renderer.startAjax("#editor", "#info", "https://jkpluta.github.io", "/info.html", renderer.updateQuill);
-})
-$('#save').click(function() {
+  })
+  $('#save').click(function() {
     renderer.saveQuill()
-})
-$('#refresh').click(function() {
+  })
+  $('#refresh').click(function() {
     renderer.startAjax("#editor", "#info", "https://jkpluta.github.io", "/info.html", renderer.updateQuill);
-})
+  })
 </script>
 </html>

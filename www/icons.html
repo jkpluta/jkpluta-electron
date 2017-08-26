@@ -19,7 +19,6 @@
   </style>
 </head>
 
-<script src="./jkp-github.sc"></script>
 <style>
   a:link, a:visited, a:hover, a:active { cursor: inherit; }
 </style>
@@ -174,8 +173,9 @@
 </div>
 </body>
 <script type="text/javascript">
+  require('./jkp-github');
   
-    renderer.init(32)
+  renderer.init(32);
   
   $(document).ready(function() {
     renderer.startAjax("#bookmarks", "#bookmarks", "https://jkpluta.github.io", "/icons.html", renderer.updateBookmarks)
