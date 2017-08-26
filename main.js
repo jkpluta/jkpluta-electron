@@ -5,12 +5,13 @@ var app = electron.app;
 var BrowserWindow = electron.BrowserWindow;
 var path = require("path");
 var url = require("url");
+// import ejs = require('ejs');
 var fs = require("fs");
 var storage = require("electron-json-storage");
 var ejse = null;
 var ejsPages = null;
 try {
-    ejsPages = JSON.parse(fs.readFileSync(path.join(__dirname, 'utils-ejs.json'), 'utf8'));
+    ejsPages = JSON.parse(fs.readFileSync(path.join(__dirname, 'ejs.json'), 'utf8'));
     ejse = require('ejs-electron');
     ejse.options({ root: __dirname });
 }
@@ -163,7 +164,8 @@ function renderPage(browserWindow, name) {
         var ejsPage = ejsPages[name];
         ejse.data({
             title: ejsPage.title,
-            data: ejsPage.data
+            data: ejsPage.data,
+            target: "electron"
         });
         pageName = ejsPage.template + '.ejs';
     }

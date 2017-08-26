@@ -1,0 +1,202 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="author" content="Jan K. Pluta">
+  <meta name="description" content="Jan K. Pluta">
+  <link rel="stylesheet" href="./css/bootstrap-reboot.min.css">
+  <link rel="stylesheet" href="./css/bootstrap-grid.min.css">
+  <link rel="stylesheet" href="./css/bootstrap.min.css">
+  <link rel="stylesheet" href="./css/font-awesome.min.css">
+  <title>Jan K. Pluta | Zakładki</title>
+  <script>
+    const renderer = require('./renderer.js')
+    require('./renderer-electron.js')
+  </script>
+  <style>
+    dl { margin-left: 2em; }
+  </style>
+</head>
+
+<style>
+  a:link, a:visited, a:hover, a:active { cursor: inherit; }
+</style>
+<body>
+<div class="container">
+    <nav id="header" class="navbar navbar-expand-sm navbar-light bg-faded" style="background-color: khaki;">
+    <a href="#main" class="navbar-brand">
+      <img src="./img/icon.png" class="d-inline-block align-top" alt="">
+      Jan K. Pluta
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbar">
+      <ul class="navbar-nav">
+        <!--
+        <li class="nav-item">
+          <a class="nav-link " href="#main">Główna</a>
+        </li>
+        -->
+        <li class="nav-item">
+          <a class="nav-link " href="#info">Informacje</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link " href="#icons">Ikony</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="#bookmarks">Zakładki</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="modal fade" id="auth-edit" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Logowanie do GitHub</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div id="auth-alert" class="alert alert-danger" style="display: none;">
+          </div>
+          <form class="form-horizontal">
+            <div class="form-group">
+              <label for="auth-username" class="form-control-label">Użytkownik:</label>
+              <input type="text" class="form-control" id="auth-username" placeholder="" autofocus>
+            </div>
+            <div class="form-group">
+              <label for="auth-password" class="form-control-label">Hasło:</label>
+              <input type="password" class="form-control" id="auth-password">
+            </div>
+          </form>        </div>
+        <div class="modal-footer">
+          <button id="auth-apply" type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+  <div class="row" style="display: none;">
+    <div class="col">
+      <div id="alert">
+      </div>
+    </div>
+  </div>
+  
+
+
+  <div class="row">
+    <div id="bookmarks" class="col">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <hr>
+      <p class="text-right">
+        <button id="save" class="btn btn-primary"><span class="fa fa-save"></span> Zapisz</button>
+        <button id="refresh" class="btn btn-danger"><span class="fa fa-refresh"></span> Odśwież</button>
+      </p>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="folder-edit" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Folder</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-group">
+              <label for="folder-name" class="form-control-label">Nazwa:</label>
+              <input type="text" class="form-control" id="folder-name" placeholder="" autofocus>
+            </div>
+          </form>        </div>
+        <div class="modal-footer">
+          <button id="folder-apply" type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+  <div class="modal fade" id="link-edit" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Zakładka</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Zamknij">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form class="form-horizontal">
+            <div class="form-group">
+              <label for="link-name" class="form-control-label">Nazwa:</label>
+              <input type="text" class="form-control" id="link-name" placeholder="" autofocus>
+            </div>
+            <div class="form-group">
+              <label for="link-address" class="form-control-label">Adres:</label>
+              <input type="text" class="form-control" id="link-address">
+            </div>
+          </form>        
+        </div>
+        <div class="modal-footer">
+          <img id="link-favicon" width="32" height="32" alt="Ikona strony" class="mr-auto">
+          <div id="link-spinner" class="mr-auto"></div>
+          <button id="link-apply" type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+</div>
+</body>
+<script type="text/javascript">
+  require('./jkp-github')
+  
+    renderer.init(16)
+  
+  $(document).ready(function() {
+    renderer.startAjax("#bookmarks", "#bookmarks", "http://jkpluta.github.io", "/bookmarks.html", renderer.updateBookmarks)
+  });
+  $('#save').click(function() {
+    renderer.saveBookmarks('bookmarks.html');
+  })
+  $('#refresh').click(function() {
+    renderer.startAjax("#bookmarks", "#bookmarks", "http://jkpluta.github.io", "/bookmarks.html", renderer.updateBookmarks)
+  })
+  $('#link-edit').on('show.bs.modal', function () {
+    $('#link-favicon').removeAttr('src')
+    $('#link-favicon').hide()
+  })
+  $('#link-edit').on('shown.bs.modal', function () {
+    $(this).find('[autofocus]').focus();
+    renderer.findFavicon('#link-favicon','#link-spinner', $('#link-address').val())
+  })
+  $('#link-address').on('blur', function () {
+    renderer.findFavicon('#link-favicon','#link-spinner', $('#link-address').val())
+  })
+</script>
+<script>
+</script>
+</html>

@@ -6,8 +6,20 @@ var fs = require('fs');
 var webpack = require('webpack')
 var webpackConfig = require('./webpack.config.js');
 
-var opts = { cache: false };
-var ejsPages = JSON.parse(fs.readFileSync('utils-ejs.json', 'utf8'));
+function ejsToHtml(target, dst) {
+    var ejsPages = JSON.parse(fs.readFileSync('ejs.json', 'utf8'));
+    var opts = { cache: false };
+    for(var ejsName in ejsPages) {
+        var ejsPage = ejsPages[ejsName];
+        if (ejsPage.target == null || ejsPage.target === target) {
+            ejsPage.target = target;
+            gulp.src(ejsPage.template + '.ejs')
+            .pipe(ejs(ejsPage, opts))
+            .pipe(rename(ejsName + '.html'))
+            .pipe(gulp.dest(dst))
+        }
+    }
+}
 
 gulp.task('default', function() {
 
@@ -43,14 +55,12 @@ gulp.task('default', function() {
     gulp.src("build/*")
     .pipe(gulp.dest("app/build"));
 
-    for(var ejsName in ejsPages) {
-        var ejsPage = ejsPages[ejsName]
-        gulp.src(ejsPage.template + '.ejs')
-        .pipe(ejs(ejsPage, opts))
-        .pipe(rename(ejsName + '.html'))
-        .pipe(gulp.dest("app"))
-    }
+    gulp.src("jkp-*.js")
+    .pipe(gulp.dest("app"));
 
+    ejsToHtml('electron', 'app')
+    ejsToHtml('node', 'www')
+    
     webpack(webpackConfig, function (err, stats) {
         if (err)
             throw new gutil.PluginError('webpack', err);

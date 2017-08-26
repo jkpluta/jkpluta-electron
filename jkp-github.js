@@ -76,6 +76,12 @@ function commit(content, name, error) {
         github.users.get({}, function (err, res) {
             if (err != null) {
                 writeToSettings("auth_token", null);
+                if (typeof err === 'object') {
+                    var pattern = /"?message"?: *"([^"]*)"/i;
+                    var match = pattern.exec(err.toString());
+                    if (match.length == 2)
+                        err = match[1];
+                }
                 commit(content, name, err);
             }
             else {
