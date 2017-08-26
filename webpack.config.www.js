@@ -10,6 +10,7 @@ module.exports = {
         path: path.resolve(__dirname, './www'),
         filename: '[name].js',
         library: 'renderer',
-        libraryTarget: 'umd'
+        libraryTarget: 'commonjs'
+        // libraryTarget: 'umd'
     }
 };
