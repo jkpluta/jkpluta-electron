@@ -132,6 +132,10 @@ gulp.task('www', function() {
     gulp.src("simple-commonjs.js")
     .pipe(gulp.dest("www"));
 
+    gulp.src("icon.ico")
+    .pipe(rename("favicon.ico"))
+    .pipe(gulp.dest("www"));
+
     ejsToHtml('node', 'www')
     
     webpack(require('./webpack.config.www.js'), function (err, stats) {

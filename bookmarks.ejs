@@ -86,20 +86,20 @@
 </div>
 </body>
 <script type="text/javascript">
-  require('./jkp-github')
+  require('./jkp-github');
   <% if (data === 'icons.html') { %>
-    renderer.init(32)
+  renderer.init(32);
   <% } else { %>
-    renderer.init(16)
+  renderer.init(16);
   <% } %>
   $(document).ready(function() {
-    renderer.startAjax("#bookmarks", "#bookmarks", "http://jkpluta.github.io", "/<%- data %>", renderer.updateBookmarks)
+    renderer.startAjax("#bookmarks", "#bookmarks", "https://jkpluta.github.io", "/<%- data %>", renderer.updateBookmarks)
   });
   $('#save').click(function() {
     renderer.saveBookmarks('<%- data %>');
   })
   $('#refresh').click(function() {
-    renderer.startAjax("#bookmarks", "#bookmarks", "http://jkpluta.github.io", "/<%- data %>", renderer.updateBookmarks)
+    renderer.startAjax("#bookmarks", "#bookmarks", "https://jkpluta.github.io", "/<%- data %>", renderer.updateBookmarks)
   })
   $('#link-edit').on('show.bs.modal', function () {
     $('#link-favicon').removeAttr('src')

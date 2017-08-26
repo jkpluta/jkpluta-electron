@@ -19,6 +19,7 @@
   </style>
 </head>
 
+<script src="./jkp-github.sc"></script>
 <style>
   a:link, a:visited, a:hover, a:active { cursor: inherit; }
 </style>
@@ -173,18 +174,17 @@
 </div>
 </body>
 <script type="text/javascript">
-  require('./jkp-github')
   
     renderer.init(32)
   
   $(document).ready(function() {
-    renderer.startAjax("#bookmarks", "#bookmarks", "http://jkpluta.github.io", "/icons.html", renderer.updateBookmarks)
+    renderer.startAjax("#bookmarks", "#bookmarks", "https://jkpluta.github.io", "/icons.html", renderer.updateBookmarks)
   });
   $('#save').click(function() {
     renderer.saveBookmarks('icons.html');
   })
   $('#refresh').click(function() {
-    renderer.startAjax("#bookmarks", "#bookmarks", "http://jkpluta.github.io", "/icons.html", renderer.updateBookmarks)
+    renderer.startAjax("#bookmarks", "#bookmarks", "https://jkpluta.github.io", "/icons.html", renderer.updateBookmarks)
   })
   $('#link-edit').on('show.bs.modal', function () {
     $('#link-favicon').removeAttr('src')

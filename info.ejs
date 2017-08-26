@@ -34,16 +34,16 @@
 </div>
 </body>
 <script>
-require('./jkp-github')
-renderer.createQuill("#editor");
-$(document).ready(function() {
-    renderer.startAjax("#editor", "#info", "http://jkpluta.github.io", "/info.html", renderer.updateQuill);
-})
-$('#save').click(function() {
+  require('./jkp-github');
+  renderer.createQuill("#editor");
+  $(document).ready(function() {
+    renderer.startAjax("#editor", "#info", "https://jkpluta.github.io", "/info.html", renderer.updateQuill);
+  })
+  $('#save').click(function() {
     renderer.saveQuill()
-})
-$('#refresh').click(function() {
-    renderer.startAjax("#editor", "#info", "http://jkpluta.github.io", "/info.html", renderer.updateQuill);
-})
+  })
+  $('#refresh').click(function() {
+    renderer.startAjax("#editor", "#info", "https://jkpluta.github.io", "/info.html", renderer.updateQuill);
+  })
 </script>
 </html>
