@@ -4,7 +4,6 @@ var rename = require('gulp-rename');
 var ejs = require("gulp-ejs");
 var fs = require('fs');
 var webpack = require('webpack')
-var webpackConfig = require('./webpack.config.js');
 
 function ejsToHtml(target, dst) {
     var ejsPages = JSON.parse(fs.readFileSync('ejs.json', 'utf8'));
@@ -23,6 +22,35 @@ function ejsToHtml(target, dst) {
 
 gulp.task('default', function() {
 
+    gulp.src("electron_modules/bootstrap/dist/css/*.min.css")
+    .pipe(gulp.dest("css"));
+    
+    gulp.src("electron_modules/font-awesome/css/*.min.css")
+    .pipe(gulp.dest("css"));
+    
+    gulp.src("electron_modules/font-awesome/fonts/*")
+    .pipe(gulp.dest("fonts"));
+    
+    /*
+    webpack(require('./webpack.config.js'), function (err, stats) {
+        if (err)
+            throw new gutil.PluginError('webpack', err);
+        gutil.log('[webpack] Completed\n' + stats.toString({
+            assets: true,
+            chunks: false,
+            chunkModules: false,
+            colors: true,
+            hash: false,
+            timings: false,
+            version: false
+        }));
+    });
+    */
+
+});
+
+gulp.task('app', function() {
+
     try {
         fs.mkdirSync('app');
     } catch (err) {
@@ -37,16 +65,10 @@ gulp.task('default', function() {
     app.license = package.license;
     fs.writeFileSync('app/package.json', JSON.stringify(app), { encoding: 'utf8'})
       
-    gulp.src("node_modules/bootstrap/dist/css/*.min.css")
-    .pipe(gulp.dest("css"))
+    gulp.src("css/*")
     .pipe(gulp.dest("app/css"));
     
-    gulp.src("node_modules/font-awesome/css/*.min.css")
-    .pipe(gulp.dest("css"))
-    .pipe(gulp.dest("app/css"));
-    
-    gulp.src("node_modules/font-awesome/fonts/*")
-    .pipe(gulp.dest("fonts"))
+    gulp.src("fonts/*")
     .pipe(gulp.dest("app/fonts"));
     
     gulp.src("img/*")
@@ -59,9 +81,8 @@ gulp.task('default', function() {
     .pipe(gulp.dest("app"));
 
     ejsToHtml('electron', 'app')
-    ejsToHtml('node', 'www')
     
-    webpack(webpackConfig, function (err, stats) {
+    webpack(require('./webpack.config.app.js'), function (err, stats) {
         if (err)
             throw new gutil.PluginError('webpack', err);
         gutil.log('[webpack] Completed\n' + stats.toString({
@@ -76,3 +97,56 @@ gulp.task('default', function() {
     });
 
 });
+
+gulp.task('www', function() {
+
+    try {
+        fs.mkdirSync('www');
+    } catch (err) {
+    }
+    
+    var package = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+    var www = JSON.parse(fs.readFileSync('package-www.json', 'utf8'));
+    www.name = package.name;
+    www.version = package.version;
+    www.description = package.description;
+    www.author = package.author;
+    www.license = package.license;
+    fs.writeFileSync('www/package.json', JSON.stringify(www), { encoding: 'utf8'})
+      
+    gulp.src("css/*")
+    .pipe(gulp.dest("www/css"));
+    
+    gulp.src("fonts/*")
+    .pipe(gulp.dest("www/fonts"));
+    
+    gulp.src("img/*")
+    .pipe(gulp.dest("www/img"));
+
+    gulp.src("build/*")
+    .pipe(gulp.dest("www/build"));
+
+    gulp.src("jkp-*.js")
+    .pipe(gulp.dest("www"));
+
+    gulp.src("simple-commonjs.js")
+    .pipe(gulp.dest("www"));
+
+    ejsToHtml('node', 'www')
+    
+    webpack(require('./webpack.config.www.js'), function (err, stats) {
+        if (err)
+            throw new gutil.PluginError('webpack', err);
+        gutil.log('[webpack] Completed\n' + stats.toString({
+            assets: true,
+            chunks: false,
+            chunkModules: false,
+            colors: true,
+            hash: false,
+            timings: false,
+            version: false
+        }));
+    });
+
+});
+
