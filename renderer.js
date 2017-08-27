@@ -1,12 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+// This file is required by the index.html file and will
+// be executed in the renderer process for that window.
+// All of the Node.js APIs are available in this process.
+var jkp = require("./jkp-utils");
 var $ = require("jquery");
 window.$ = window.jQuery = $;
 var Popper = require("popper.js");
 window.Popper = Popper;
 require("bootstrap");
 var markdown = require("markdown").markdown;
-var jkp = require("./jkp-utils");
 var iconSize = 16;
 var base_url = "https://jkpluta.github.io";
 function startAjax(sel, spnr, base, href, func) {

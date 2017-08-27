@@ -1,14 +1,14 @@
 // This file is required by the index.html file and will
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
+import * as jkp from './jkp-utils'
 import * as url from "url";
 import * as $ from "jquery";
 (<any>window).$ = (<any>window).jQuery = $
 import Popper = require("popper.js");
 (<any>window).Popper = Popper;
 import "bootstrap";
-let markdown = require( "markdown" ).markdown;
-import * as jkp from './jkp-utils'
+let markdown = require("markdown").markdown;
 let iconSize = 16;
 const base_url = "https://jkpluta.github.io";
 export function startAjax(sel: string | JQuery<HTMLElement>, spnr: string | JQuery<HTMLElement>, base: string, href: string, func: (sel: string | JQuery<HTMLElement>, base: string, html: any) => void) 
