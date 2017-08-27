@@ -53,6 +53,11 @@ function updateMain(sel, html) {
     });
 }
 exports.updateMain = updateMain;
+function startMain(href) {
+    start("#main", "#spnnr", href, updateMain);
+}
+exports.startMain = startMain;
+window.startMain = startMain;
 function updateBookmarks(sel, html) {
     $(sel).html(html);
     $("a[icon_uri]").removeAttr('icon_uri');
@@ -65,6 +70,7 @@ function startBookmarks(href, size) {
         saveBookmarks('<%- data %>');
     });
     $('#refresh').click(function () {
+        clearAlert();
         start("#bookmarks", "#bookmarks", href, updateBookmarks);
     });
     $('#link-edit').on('show.bs.modal', function () {
@@ -388,6 +394,7 @@ function startInfo(href) {
         saveInfo('#md');
     });
     $('#refresh').click(function () {
+        clearAlert();
         start("#md", "#spnnr", href, updateInfo);
     });
     start("#md", "#spnnr", href, updateInfo);
@@ -395,6 +402,7 @@ function startInfo(href) {
 exports.startInfo = startInfo;
 window.startInfo = startInfo;
 function updateInfo(sel, html) {
+    $('#spnnr').text('Informacje');
     var pattern = /<!--((.|[\r\n])*)-->/igm;
     var match = pattern.exec(html.toString());
     if (match != null && match.length >= 2)
@@ -403,7 +411,7 @@ function updateInfo(sel, html) {
 exports.updateInfo = updateInfo;
 function saveInfo(sel) {
     var md = $(sel).val().toString();
-    var html = "<html>\n<head>\n  <meta charset=\"utf-8\">\n</head>\n<body>\n  " + toHtml(md) + "\n  <!--" + md + "-->\n</body>\n</html>";
+    var html = "<html>\n<head>\n  <meta charset=\"utf-8\">\n</head>\n<body>\n  <h1>Informacje</h1>\n  " + toHtml(md) + "\n  <!--" + md + "-->\n</body>\n</html>";
     commit(html, 'info.html');
 }
 exports.saveInfo = saveInfo;

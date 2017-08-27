@@ -4,7 +4,7 @@
 <div class="container">
   <% include title.ejs %>
   <div class="row">
-    <div id="spnr" class="col">
+    <div id="spnnr" class="col">
     </div>
   </div>
 </div>
@@ -13,7 +13,7 @@
 </body>
 <script>
 $(document).ready(function() {
-  renderer.start("#main", "#spnr", "/index.html", renderer.updateMain)
+  startMain("/index.html");
 });
 </script>
 </html>

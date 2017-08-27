@@ -55,6 +55,11 @@ export function updateMain(sel: string, html: any): void
         return false;
     });
 }
+export function startMain(href: string) : void
+{
+    start("#main", "#spnnr", href, updateMain)
+}
+(<any>window).startMain = startMain;
 export function updateBookmarks(sel: string, html: any): void 
 {
     $(sel).html(html);
@@ -68,6 +73,7 @@ export function startBookmarks(href: string, size: number) : void
         saveBookmarks('<%- data %>');
     })
     $('#refresh').click(function() {
+        clearAlert();
         start("#bookmarks", "#bookmarks", href, updateBookmarks)
     })
     $('#link-edit').on('show.bs.modal', function () {
@@ -390,6 +396,7 @@ export function startInfo(href: string) : void
         saveInfo('#md');
     });
     $('#refresh').click(function() {
+        clearAlert();
         start("#md", "#spnnr", href, updateInfo);
     })
     start("#md", "#spnnr", href, updateInfo);
@@ -397,6 +404,7 @@ export function startInfo(href: string) : void
 (<any>window).startInfo = startInfo
 export function updateInfo(sel: string, html: any): void 
 {
+    $('#spnnr').text('Informacje');
     var pattern = /<!--((.|[\r\n])*)-->/igm;
     var match = pattern.exec(html.toString());
     if (match != null && match.length >= 2)
@@ -410,6 +418,7 @@ export function saveInfo(sel: string | JQuery<HTMLElement>) : void
   <meta charset="utf-8">
 </head>
 <body>
+  <h1>Informacje</h1>
   ` + toHtml(md) + `
   <!--` + md + `-->
 </body>
