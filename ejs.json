@@ -22,7 +22,7 @@
     "about": {
         "template": "about",
         "title": "Jan K. Pluta",
-        "data": "bookmarks.html",
+        "data": null,
         "target": "electron"
     }
 }

@@ -16,6 +16,21 @@ function authenticate(func, error) {
     jkp.sharedObj().authenticate(func, error);
     return true;
 }
+function showAlert(text, kind) {
+    if (jkp.sharedObj().showAlert == null)
+        return false;
+    jkp.sharedObj().showAlert(text, kind);
+    return true;
+}
+function decodeError(err) {
+    if (typeof err === 'object') {
+        var pattern = /"?message"?: *"([^"]*)"/i;
+        var match = pattern.exec(err.toString());
+        if (match.length == 2)
+            err = match[1];
+    }
+    return err;
+}
 export function commit(content, name, error) {
     var github = new GitHubApi({
         // optional 
@@ -48,13 +63,7 @@ export function commit(content, name, error) {
                 }
             }, function (err, res) {
                 if (err != null) {
-                    if (typeof err === 'object') {
-                        var pattern = /"?message"?: *"([^"]*)"/i;
-                        var match = pattern.exec(err.toString());
-                        if (match.length == 2)
-                            err = match[1];
-                    }
-                    commit(content, name, err);
+                    commit(content, name, decodeError(err));
                 }
                 else {
                     if (res != null && res.data != null && res.data.token != null) {
@@ -74,13 +83,7 @@ export function commit(content, name, error) {
         github.users.get({}, function (err, res) {
             if (err != null) {
                 writeToSettings("auth_token", null);
-                if (typeof err === 'object') {
-                    var pattern = /"?message"?: *"([^"]*)"/i;
-                    var match = pattern.exec(err.toString());
-                    if (match.length == 2)
-                        err = match[1];
-                }
-                commit(content, name, err);
+                commit(content, name, decodeError(err));
             }
             else {
                 if (res != null) {
@@ -92,17 +95,26 @@ export function commit(content, name, error) {
 }
 jkp.sharedObj().commit = commit
 export function gitHubCommit(github, content, name) {
+    showAlert("Zalogowano do GitHub", "info")
     github.gitdata.getReference({
         owner: "jkpluta",
         repo: "jkpluta.github.io",
         ref: "heads/master"
     }, function (err, res) {
+        if (err != null) {
+            showAlert(decodeError(err), "error");
+            return;
+        }
         var SHA_LATEST_COMMIT = res.data.object.sha;
         github.gitdata.getCommit({
             owner: "jkpluta",
             repo: "jkpluta.github.io",
             sha: SHA_LATEST_COMMIT
         }, function (err, res) {
+            if (err != null) {
+                showAlert(decodeError(err), "error");
+                return;
+            }
             var SHA_BASE_TREE = res.data.tree.sha;
             github.gitdata.createTree({
                 owner: "jkpluta",
@@ -117,6 +129,10 @@ export function gitHubCommit(github, content, name) {
                 ],
                 base_tree: SHA_BASE_TREE
             }, function (err, res) {
+                if (err != null) {
+                    showAlert(decodeError(err), "error");
+                    return;
+                }
                 var SHA_NEW_TREE = res.data.sha;
                 github.gitdata.createCommit({
                     owner: "jkpluta",
@@ -130,6 +146,10 @@ export function gitHubCommit(github, content, name) {
                         "date": new Date().toISOString()
                     },
                 }, function (err, res) {
+                    if (err != null) {
+                        showAlert(decodeError(err), "error");
+                        return;
+                    }
                     var SHA_NEW_COMMIT = res.data.sha;
                     github.gitdata.updateReference({
                         owner: "jkpluta",
@@ -138,6 +158,8 @@ export function gitHubCommit(github, content, name) {
                         sha: SHA_NEW_COMMIT,
                         force: true
                     }, function (err, res) {
+                        if (err == null)
+                            showAlert("Zmiany zostały zapisane", "success")
                     });
                 });
             });

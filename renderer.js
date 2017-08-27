@@ -397,12 +397,14 @@ function showAlert(text, kind) {
     $('#alert').parent().parent().css("display", "block");
 }
 exports.showAlert = showAlert;
+jkp.sharedObj().showAlert = showAlert;
 function clearAlert() {
     $('#alert').removeClass();
     $('#alert').text('');
     $('#alert').parent().parent().css("display", "none");
 }
 exports.clearAlert = clearAlert;
+jkp.sharedObj().clearaAlert = clearAlert;
 function showInfo(text) {
     showAlert(text, 'info');
 }

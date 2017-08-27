@@ -387,11 +387,13 @@ export function showAlert(text, kind) {
     $('#alert').text(text);
     $('#alert').parent().parent().css("display", "block");
 }
+jkp.sharedObj().showAlert = showAlert;
 export function clearAlert() {
     $('#alert').removeClass();
     $('#alert').text('');
     $('#alert').parent().parent().css("display", "none");
 }
+jkp.sharedObj().clearaAlert = clearAlert;
 export function showInfo(text) {
     showAlert(text, 'info');
 }
