@@ -21,7 +21,7 @@
     },
     "about": {
         "template": "about",
-        "title": "Jan K. Pluta | O programie",
+        "title": "Jan K. Pluta",
         "data": "bookmarks.html",
         "target": "electron"
     }

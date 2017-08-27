@@ -27,6 +27,7 @@ module.exports = [
           filename: '[name].js'
         },
         node: {
+            jkpEjs: false,
             __dirname: false,
             __filename: false
         }  
