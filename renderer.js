@@ -55,6 +55,7 @@ function updateMain(sel, html) {
 exports.updateMain = updateMain;
 function updateBookmarks(sel, html) {
     $(sel).html(html);
+    $("a[icon_uri]").removeAttr('icon_uri');
     prepareBookmarks($(sel));
 }
 exports.updateBookmarks = updateBookmarks;
@@ -379,9 +380,7 @@ function updateInfo(sel, html) {
 exports.updateInfo = updateInfo;
 function saveInfo(sel) {
     var md = $(sel).val().toString();
-    alert(md);
     var html = "<html>\n<head>\n  <meta charset=\"utf-8\">\n</head>\n<body>\n  " + toHtml(md) + "\n  <!--" + md + "-->\n</body>\n</html>";
-    alert(html);
     commit(html, 'info.html');
 }
 exports.saveInfo = saveInfo;
@@ -424,6 +423,7 @@ function showAlert(text, kind) {
 }
 exports.showAlert = showAlert;
 jkp.sharedObj().showAlert = showAlert;
+window.showAlert = showAlert;
 function clearAlert() {
     $('#alert').removeClass();
     $('#alert').text('');
@@ -431,6 +431,7 @@ function clearAlert() {
 }
 exports.clearAlert = clearAlert;
 jkp.sharedObj().clearaAlert = clearAlert;
+window.clearaAlert = clearAlert;
 function showInfo(text) {
     showAlert(text, 'info');
 }

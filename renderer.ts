@@ -58,6 +58,7 @@ export function updateMain(sel: string, html: any): void
 export function updateBookmarks(sel: string, html: any): void 
 {
     $(sel).html(html);
+    $("a[icon_uri]").removeAttr('icon_uri');
     prepareBookmarks($(sel));
 }
 export function prepareBookmark(element: JQuery<HTMLElement>): void 
@@ -381,7 +382,6 @@ export function updateInfo(sel: string, html: any): void
 export function saveInfo(sel: string | JQuery<HTMLElement>) : void
 {
     var md = $(sel).val().toString();
-    alert(md);
     var html = `<html>
 <head>
   <meta charset="utf-8">
@@ -391,7 +391,6 @@ export function saveInfo(sel: string | JQuery<HTMLElement>) : void
   <!--` + md + `-->
 </body>
 </html>`;
-    alert(html);
     commit(html, 'info.html');
 }
 export function loadUrl(url: string): boolean 
@@ -436,6 +435,7 @@ export function showAlert(text: string, kind?: string)
     $('#alert').parent().parent().css("display", "block");
 }
 jkp.sharedObj().showAlert = showAlert;
+(<any>window).showAlert = showAlert;
 export function clearAlert(): void 
 {
     $('#alert').removeClass();
@@ -443,6 +443,7 @@ export function clearAlert(): void
     $('#alert').parent().parent().css("display", "none");
 }
 jkp.sharedObj().clearaAlert = clearAlert;
+(<any>window).clearaAlert = clearAlert;
 export function showInfo(text: string): void 
 {
     showAlert(text, 'info');
