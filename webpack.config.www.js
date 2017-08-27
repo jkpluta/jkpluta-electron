@@ -8,8 +8,6 @@ module.exports = {
     target: 'node',
     output: {
         path: path.resolve(__dirname, './www'),
-        filename: '[name].js',
-        library: 'renderer',
-        libraryTarget: 'umd'
+        filename: '[name].js'
     }
 };
