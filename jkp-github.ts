@@ -100,7 +100,7 @@ export function commit(content: string, name: string, error: string): void
 jkp.sharedObj().commit = commit
 export function gitHubCommit(github: any, content: string, name: string): void 
 {
-    showAlert("Zalogowano do GitHub", "info")
+    showAlert("GitHub...", "info")
     github.gitdata.getReference({
         owner: "jkpluta",
         repo: "jkpluta.github.io",
@@ -164,7 +164,7 @@ export function gitHubCommit(github: any, content: string, name: string): void
                         force: true
                     }, function (err, res) {
                         if (err == null)
-                            showAlert("Zmiany zostały zapisane", "success")
+                            showAlert("GitHub - Zmiany zostały zapisane", "success")
                     });
                 });
             });
