@@ -34,7 +34,12 @@
 </div>
 </body>
 <script>
-  require('./jkp-github');
+  try {
+    require('./jkp-github');
+  }
+  catch (err) {
+    renderer.showAlert(err, "warning");
+  }
   renderer.createQuill("#editor");
   $(document).ready(function() {
     renderer.startAjax("#editor", "#info", "https://jkpluta.github.io", "/info.html", renderer.updateQuill);

@@ -5,12 +5,12 @@ import path = require('path');
 import url = require('url');
 import fs = require('fs');
 import storage = require('electron-json-storage');
-let wjsElectron = null
+let ejsElectron = null
 let ejsPages = null
 try {
     ejsPages = JSON.parse(fs.readFileSync(path.join(__dirname, 'ejs.json'), 'utf8'))
-    wjsElectron = require('ejs-electron');
-    wjsElectron.options({ root: __dirname });
+    ejsElectron = require('ejs-electron');
+    ejsElectron.options({ root: __dirname });
 }
 catch(err) {
 }
@@ -159,7 +159,7 @@ function renderPage(browserWindow, name) {
     var pageName = name + '.html';
     if (ejsPages != null) {
         var ejsPage = ejsPages[name];
-        wjsElectron.data({
+        ejsElectron.data({
             title: ejsPage.title,
             data: ejsPage.data,
             target: "electron"

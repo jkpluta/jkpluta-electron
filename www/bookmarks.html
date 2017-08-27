@@ -173,7 +173,12 @@
 </div>
 </body>
 <script type="text/javascript">
-  require('./jkp-github');
+  try {
+    require('./jkp-github');
+  }
+  catch (err) {
+    renderer.showAlert(err, "warning");
+  }
   
   renderer.init(16);
   
