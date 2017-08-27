@@ -61,6 +61,29 @@ export function updateBookmarks(sel: string, html: any): void
     $("a[icon_uri]").removeAttr('icon_uri');
     prepareBookmarks($(sel));
 }
+export function startBookmarks(href: string, size: number) : void
+{
+    iconSize = size;
+    $('#save').click(function() {
+        saveBookmarks('<%- data %>');
+    })
+    $('#refresh').click(function() {
+        start("#bookmarks", "#bookmarks", href, updateBookmarks)
+    })
+    $('#link-edit').on('show.bs.modal', function () {
+        $('#link-favicon').removeAttr('src')
+        $('#link-favicon').hide()
+    })
+    $('#link-edit').on('shown.bs.modal', function () {
+        $(this).find('[autofocus]').focus();
+        findFavicon('#link-favicon','#link-spinner', $('#link-address').val().toString())
+    })
+    $('#link-address').on('blur', function () {
+        findFavicon('#link-favicon','#link-spinner', $('#link-address').val().toString())
+    })
+    start('#bookmarks', '#bookmarks', href, updateBookmarks);
+}
+(<any>window).startBookmarks = startBookmarks;
 export function prepareBookmark(element: JQuery<HTMLElement>): void 
 {
     var src = null;
@@ -447,10 +470,6 @@ jkp.sharedObj().clearaAlert = clearAlert;
 export function showInfo(text: string): void 
 {
     showAlert(text, 'info');
-}
-export function init(size: number): void 
-{
-    iconSize = size;
 }
 $(document).ready(function () {
     $("a").click(function () {

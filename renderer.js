@@ -59,6 +59,29 @@ function updateBookmarks(sel, html) {
     prepareBookmarks($(sel));
 }
 exports.updateBookmarks = updateBookmarks;
+function startBookmarks(href, size) {
+    iconSize = size;
+    $('#save').click(function () {
+        saveBookmarks('<%- data %>');
+    });
+    $('#refresh').click(function () {
+        start("#bookmarks", "#bookmarks", href, updateBookmarks);
+    });
+    $('#link-edit').on('show.bs.modal', function () {
+        $('#link-favicon').removeAttr('src');
+        $('#link-favicon').hide();
+    });
+    $('#link-edit').on('shown.bs.modal', function () {
+        $(this).find('[autofocus]').focus();
+        findFavicon('#link-favicon', '#link-spinner', $('#link-address').val().toString());
+    });
+    $('#link-address').on('blur', function () {
+        findFavicon('#link-favicon', '#link-spinner', $('#link-address').val().toString());
+    });
+    start('#bookmarks', '#bookmarks', href, updateBookmarks);
+}
+exports.startBookmarks = startBookmarks;
+window.startBookmarks = startBookmarks;
 function prepareBookmark(element) {
     var src = null;
     var text = element.text();
@@ -436,10 +459,6 @@ function showInfo(text) {
     showAlert(text, 'info');
 }
 exports.showInfo = showInfo;
-function init(size) {
-    iconSize = size;
-}
-exports.init = init;
 $(document).ready(function () {
     $("a").click(function () {
         loadUrl($(this).attr('href'));

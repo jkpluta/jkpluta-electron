@@ -86,37 +86,9 @@
 </div>
 <% include github.ejs %>
 <script type="text/javascript">
-  try {
-    require('./jkp-github');
-  }
-  catch (err) {
-    renderer.showAlert(err, "warning");
-  }
-  <% if (data === 'icons.html') { %>
-  renderer.init(32);
-  <% } else { %>
-  renderer.init(16);
-  <% } %>
   $(document).ready(function() {
-    renderer.start("#bookmarks", "#bookmarks", "/<%- data %>", renderer.updateBookmarks)
+    startBookmarks("/<%- data %>", <% if (data === 'icons.html') { %>32<% } else { %>16<% } %>);
   });
-  $('#save').click(function() {
-    renderer.saveBookmarks('<%- data %>');
-  })
-  $('#refresh').click(function() {
-    renderer.start("#bookmarks", "#bookmarks", "/<%- data %>", renderer.updateBookmarks)
-  })
-  $('#link-edit').on('show.bs.modal', function () {
-    $('#link-favicon').removeAttr('src')
-    $('#link-favicon').hide()
-  })
-  $('#link-edit').on('shown.bs.modal', function () {
-    $(this).find('[autofocus]').focus();
-    renderer.findFavicon('#link-favicon','#link-spinner', $('#link-address').val())
-  })
-  $('#link-address').on('blur', function () {
-    renderer.findFavicon('#link-favicon','#link-spinner', $('#link-address').val())
-  })
 </script>
 </body>
 </html>
