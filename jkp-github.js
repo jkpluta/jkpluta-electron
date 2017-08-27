@@ -26,7 +26,7 @@ function decodeError(err) {
     if (typeof err === 'object') {
         var pattern = /"?message"?: *"([^"]*)"/i;
         var match = pattern.exec(err.toString());
-        if (match.length == 2)
+        if (match != null && match.length == 2)
             err = match[1];
     }
     return err;

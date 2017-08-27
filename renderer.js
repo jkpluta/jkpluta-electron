@@ -5,8 +5,7 @@ window.$ = window.jQuery = $;
 var Popper = require("popper.js");
 window.Popper = Popper;
 require("bootstrap");
-var Quill = require("quill");
-var quill = null;
+var markdown = require("markdown").markdown;
 var jkp = require("./jkp-utils");
 var iconSize = 16;
 var base_url = "https://jkpluta.github.io";
@@ -356,19 +355,36 @@ function removeFavicon(sel) {
     }
 }
 exports.removeFavicon = removeFavicon;
-function createQuill(sel) {
-    quill = new Quill(sel, { theme: 'snow' });
+function toHtml(md) {
+    return markdown.toHTML(md);
 }
-exports.createQuill = createQuill;
-function updateQuill(sel, html) {
-    quill.setText('');
-    quill.clipboard.dangerouslyPasteHTML(0, html);
+exports.toHtml = toHtml;
+function startInfo(href) {
+    $('#save').click(function () {
+        saveInfo('#md');
+    });
+    $('#refresh').click(function () {
+        start("#md", "#spnnr", href, updateInfo);
+    });
+    start("#md", "#spnnr", href, updateInfo);
 }
-exports.updateQuill = updateQuill;
-function saveQuill() {
-    commit(quill.root.innerHTML, 'info.html');
+exports.startInfo = startInfo;
+window.startInfo = startInfo;
+function updateInfo(sel, html) {
+    var pattern = /<!--((.|[\r\n])*)-->/igm;
+    var match = pattern.exec(html.toString());
+    if (match != null && match.length >= 2)
+        $('#md').val(match[1]);
 }
-exports.saveQuill = saveQuill;
+exports.updateInfo = updateInfo;
+function saveInfo(sel) {
+    var md = $(sel).val().toString();
+    alert(md);
+    var html = "<html>\n<head>\n  <meta charset=\"utf-8\">\n</head>\n<body>\n  " + toHtml(md) + "\n  <!--" + md + "-->\n</body>\n</html>";
+    alert(html);
+    commit(html, 'info.html');
+}
+exports.saveInfo = saveInfo;
 function loadUrl(url) {
     if (jkp.sharedObj().loadUrl == null)
         return false;

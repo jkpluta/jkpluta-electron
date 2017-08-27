@@ -7,8 +7,7 @@ import * as $ from "jquery";
 import Popper = require("popper.js");
 (<any>window).Popper = Popper;
 import "bootstrap";
-import * as Quill from 'quill';
-let quill: Quill = null
+let markdown = require( "markdown" ).markdown;
 import * as jkp from './jkp-utils'
 let iconSize = 16;
 const base_url = "https://jkpluta.github.io";
@@ -357,18 +356,43 @@ export function removeFavicon(sel: string | JQuery<HTMLElement>): void
         $(sel).html($(sel).text())
     }
 }
-export function createQuill(sel: string): void 
+export function toHtml(md: string): string
 {
-    quill = new Quill(sel, { theme: 'snow' })
+    return markdown.toHTML(md);
 }
-export function updateQuill(sel: string, html: any): void 
+export function startInfo(href: string) : void
 {
-    quill.setText('')
-    quill.clipboard.dangerouslyPasteHTML(0, html)
+    $('#save').click(function() {
+        saveInfo('#md');
+    });
+    $('#refresh').click(function() {
+        start("#md", "#spnnr", href, updateInfo);
+    })
+    start("#md", "#spnnr", href, updateInfo);
 }
-export function saveQuill(): void 
+(<any>window).startInfo = startInfo
+export function updateInfo(sel: string, html: any): void 
 {
-    commit(quill.root.innerHTML, 'info.html');
+    var pattern = /<!--((.|[\r\n])*)-->/igm;
+    var match = pattern.exec(html.toString());
+    if (match != null && match.length >= 2)
+        $('#md').val(match[1]);
+}
+export function saveInfo(sel: string | JQuery<HTMLElement>) : void
+{
+    var md = $(sel).val().toString();
+    alert(md);
+    var html = `<html>
+<head>
+  <meta charset="utf-8">
+</head>
+<body>
+  ` + toHtml(md) + `
+  <!--` + md + `-->
+</body>
+</html>`;
+    alert(html);
+    commit(html, 'info.html');
 }
 export function loadUrl(url: string): boolean 
 {
