@@ -11,7 +11,7 @@ let markdown = require( "markdown" ).markdown;
 import * as jkp from './jkp-utils'
 let iconSize = 16;
 const base_url = "https://jkpluta.github.io";
-export function startAjax(sel: string | JQuery<HTMLElement>, spnr: string, base: string, href: string, func: (sel: string | JQuery<HTMLElement>, base: string, html: any) => void) 
+export function startAjax(sel: string | JQuery<HTMLElement>, spnr: string | JQuery<HTMLElement>, base: string, href: string, func: (sel: string | JQuery<HTMLElement>, base: string, html: any) => void) 
 {
     if (spnr != null)
         $(spnr).html('<img src="./img/spinner.gif">');
@@ -28,7 +28,7 @@ export function startAjax(sel: string | JQuery<HTMLElement>, spnr: string, base:
         }
     });
 }
-export function start(sel: string, spnr: string, href: string, func: (sel: string, html: any) => void) 
+export function start(sel: string | JQuery<HTMLElement>, spnr: string | JQuery<HTMLElement>, href: string, func: (sel: string | JQuery<HTMLElement>, html: any) => void) 
 {
     if (spnr != null)
         $(spnr).html('<img src="./img/spinner.gif">');
@@ -45,7 +45,7 @@ export function start(sel: string, spnr: string, href: string, func: (sel: strin
         }
     });
 }
-export function updateMain(sel: string, html: any): void 
+export function updateMain(sel: string | JQuery<HTMLElement>, html: any): void 
 {
     var dom = $(html);
     dom.find('#header').remove();
@@ -60,7 +60,7 @@ export function startMain(href: string) : void
     start("#main", "#spnnr", href, updateMain)
 }
 (<any>window).startMain = startMain;
-export function updateBookmarks(sel: string, html: any): void 
+export function updateBookmarks(sel: string | JQuery<HTMLElement>, html: any): void 
 {
     $(sel).html(html);
     prepareBookmarks($(sel));
@@ -401,7 +401,7 @@ export function startInfo(href: string) : void
     start("#md", "#spnnr", href, updateInfo);
 }
 (<any>window).startInfo = startInfo
-export function updateInfo(sel: string, html: any): void 
+export function updateInfo(sel: string | JQuery<HTMLElement>, html: any): void 
 {
     $('#spnnr').text('Informacje');
     var pattern = /<!--((.|[\r\n])*)-->/igm;
