@@ -60,7 +60,6 @@ exports.startMain = startMain;
 window.startMain = startMain;
 function updateBookmarks(sel, html) {
     $(sel).html(html);
-    $("a[icon_uri]").removeAttr('icon_uri');
     prepareBookmarks($(sel));
 }
 exports.updateBookmarks = updateBookmarks;

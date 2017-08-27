@@ -63,7 +63,6 @@ export function startMain(href: string) : void
 export function updateBookmarks(sel: string, html: any): void 
 {
     $(sel).html(html);
-    $("a[icon_uri]").removeAttr('icon_uri');
     prepareBookmarks($(sel));
 }
 export function startBookmarks(href: string, size: number) : void

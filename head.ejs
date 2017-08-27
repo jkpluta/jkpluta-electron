@@ -10,7 +10,7 @@
   <title><%= title %></title>
   <%if (target === 'node') { %>  <script src="./simple-commonjs.js"></script><% }%>
   <script>
-    const renderer = require('./renderer')
+    require('./renderer')
     require('./renderer-<%= target %>')
   </script>
   <style>
