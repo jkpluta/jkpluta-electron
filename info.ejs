@@ -42,13 +42,13 @@
   }
   renderer.createQuill("#editor");
   $(document).ready(function() {
-    renderer.startAjax("#editor", "#info", "https://jkpluta.github.io", "/info.html", renderer.updateQuill);
+    renderer.start("#editor", "#info", "/info.html", renderer.updateQuill);
   })
   $('#save').click(function() {
     renderer.saveQuill()
   })
   $('#refresh').click(function() {
-    renderer.startAjax("#editor", "#info", "https://jkpluta.github.io", "/info.html", renderer.updateQuill);
+    renderer.start("#editor", "#info", "/info.html", renderer.updateQuill);
   })
 </script>
 </html>

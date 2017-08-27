@@ -9,14 +9,7 @@ var Quill = require("quill");
 var quill = null;
 var jkp = require("./jkp-utils");
 var iconSize = 16;
-function updateAjax(sel, base, html) {
-    $(sel).html(html);
-    $(sel).find('a').click(function () {
-        loadUrl($(this).attr('href'));
-        return false;
-    });
-}
-exports.updateAjax = updateAjax;
+var base_url = "https://jkpluta.github.io";
 function startAjax(sel, spnr, base, href, func) {
     if (spnr != null)
         $(spnr).html('<img src="./img/spinner.gif">');
@@ -34,7 +27,24 @@ function startAjax(sel, spnr, base, href, func) {
     });
 }
 exports.startAjax = startAjax;
-function updateMain(sel, base, html) {
+function start(sel, spnr, href, func) {
+    if (spnr != null)
+        $(spnr).html('<img src="./img/spinner.gif">');
+    $.ajax({
+        url: base_url + href,
+        cache: false,
+        success: function (html) {
+            $(spnr).html('');
+            func(sel, html);
+        },
+        error: function (xhr, status, error) {
+            if (spnr != null)
+                $(spnr).html('<img src="./img/error.png"> <b>' + status + '</b> <i>' + error + "</i>");
+        }
+    });
+}
+exports.start = start;
+function updateMain(sel, html) {
     var dom = $(html);
     dom.find('#header').remove();
     $(sel).html(dom);
@@ -44,7 +54,7 @@ function updateMain(sel, base, html) {
     });
 }
 exports.updateMain = updateMain;
-function updateBookmarks(sel, base, html) {
+function updateBookmarks(sel, html) {
     $(sel).html(html);
     prepareBookmarks($(sel));
 }
@@ -61,7 +71,7 @@ function prepareBookmark(element) {
 }
 exports.prepareBookmark = prepareBookmark;
 function prepareBookmarks(element) {
-    element.find('a').attr('draggable', false);
+    element.find('a').attr('draggable', "false");
     element.find('a').click(function () {
         // loadURL($(this).attr('href'))
         return false;
@@ -350,7 +360,7 @@ function createQuill(sel) {
     quill = new Quill(sel, { theme: 'snow' });
 }
 exports.createQuill = createQuill;
-function updateQuill(sel, base, html) {
+function updateQuill(sel, html) {
     quill.setText('');
     quill.clipboard.dangerouslyPasteHTML(0, html);
 }
@@ -368,7 +378,7 @@ function loadUrl(url) {
 exports.loadUrl = loadUrl;
 function commit(content, name) {
     if (jkp.sharedObj().commit == null)
-        return false;
+        return;
     jkp.sharedObj().commit(content, name, null);
 }
 exports.commit = commit;
@@ -382,7 +392,7 @@ function authenticate(func, error) {
     $('#auth-edit').modal({});
     $('#auth-apply').off();
     $('#auth-apply').click(function () {
-        func($('#auth-username').val(), $('#auth-password').val());
+        func($('#auth-username').val().toString(), $('#auth-password').val().toString());
         return true;
     });
 }

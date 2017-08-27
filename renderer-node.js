@@ -2,10 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var jkp = require("./jkp-utils");
 function loadUrl(url) {
-    if (url.startsWith('#'))
-        window.location = "./" + url.substring(1) + ".html";
-    else
-        window.location = url;
+    window.location = "./" + url.substring(1) + ".html";
     return true;
 }
 exports.loadUrl = loadUrl;

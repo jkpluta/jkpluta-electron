@@ -1,28 +1,31 @@
 import * as jkp from './jkp-utils'
 var GitHubApi = require("github");
-function readFromSettings(name) {
+function readFromSettings(name: string): any 
+{
     if (jkp.sharedObj().readFromSettings == null)
         return null;
     return jkp.sharedObj().readFromSettings(name);
 }
-function writeToSettings(name, value) {
+function writeToSettings(name: string, value: any): void 
+{
     if (jkp.sharedObj().writeToSettings == null)
         return;
     jkp.sharedObj().writeToSettings(name, value);
 }
-function authenticate(func, error) {
+function authenticate(func: (username: string, password: string) => void, error: string): void
+{
     if (jkp.sharedObj().authenticate == null)
-        return false;
+        return;
     jkp.sharedObj().authenticate(func, error);
-    return true;
 }
-function showAlert(text, kind) {
+function showAlert(text: string, kind: string): void
+{
     if (jkp.sharedObj().showAlert == null)
-        return false;
+        return;
     jkp.sharedObj().showAlert(text, kind);
-    return true;
 }
-function decodeError(err) {
+function decodeError(err: any): string 
+{
     if (typeof err === 'object') {
         var pattern = /"?message"?: *"([^"]*)"/i;
         var match = pattern.exec(err.toString());
@@ -31,7 +34,8 @@ function decodeError(err) {
     }
     return err;
 }
-export function commit(content, name, error) {
+export function commit(content: string, name: string, error: string): void 
+{
     var github = new GitHubApi({
         // optional 
         debug: false,
@@ -94,7 +98,8 @@ export function commit(content, name, error) {
     }
 }
 jkp.sharedObj().commit = commit
-export function gitHubCommit(github, content, name) {
+export function gitHubCommit(github: any, content: string, name: string): void 
+{
     showAlert("Zalogowano do GitHub", "info")
     github.gitdata.getReference({
         owner: "jkpluta",

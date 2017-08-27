@@ -11,14 +11,9 @@ import * as Quill from 'quill';
 let quill: Quill = null
 import * as jkp from './jkp-utils'
 let iconSize = 16;
-export function updateAjax(sel, base, html) {
-    $(sel).html(html);
-    $(sel).find('a').click(function () {
-        loadUrl($(this).attr('href'));
-        return false;
-    });
-}
-export function startAjax(sel, spnr, base, href, func) {
+const base_url = "https://jkpluta.github.io";
+export function startAjax(sel: string | JQuery<HTMLElement>, spnr: string, base: string, href: string, func: (sel: string | JQuery<HTMLElement>, base: string, html: any) => void) 
+{
     if (spnr != null)
         $(spnr).html('<img src="./img/spinner.gif">');
     $.ajax({
@@ -34,7 +29,25 @@ export function startAjax(sel, spnr, base, href, func) {
         }
     });
 }
-export function updateMain(sel, base, html) {
+export function start(sel: string, spnr: string, href: string, func: (sel: string, html: any) => void) 
+{
+    if (spnr != null)
+        $(spnr).html('<img src="./img/spinner.gif">');
+    $.ajax({
+        url: base_url + href,
+        cache: false,
+        success: function (html) {
+            $(spnr).html('');
+            func(sel, html);
+        },
+        error: function (xhr, status, error) {
+            if (spnr != null)
+                $(spnr).html('<img src="./img/error.png"> <b>' + status + '</b> <i>' + error + "</i>");
+        }
+    });
+}
+export function updateMain(sel: string, html: any): void 
+{
     var dom = $(html);
     dom.find('#header').remove();
     $(sel).html(<any>dom);
@@ -43,11 +56,13 @@ export function updateMain(sel, base, html) {
         return false;
     });
 }
-export function updateBookmarks(sel, base, html) {
+export function updateBookmarks(sel: string, html: any): void 
+{
     $(sel).html(html);
     prepareBookmarks($(sel));
 }
-export function prepareBookmark(element) {
+export function prepareBookmark(element: JQuery<HTMLElement>): void 
+{
     var src = null;
     var text = element.text();
     if (element.attr('ICON_URI') != null)
@@ -57,8 +72,9 @@ export function prepareBookmark(element) {
     if (src != null) 
         element.html('<img src="' + src + '" width="' + iconSize.toString() + '" height="' + iconSize.toString() + '" alt="" class="jkp"><span class="jkp"> </span>' + text);
 }
-export function prepareBookmarks(element) {
-    element.find('a').attr('draggable', false);
+export function prepareBookmarks(element: JQuery<HTMLElement>): void 
+{
+    element.find('a').attr('draggable', "false");
     element.find('a').click(function () {
         // loadURL($(this).attr('href'))
         return false;
@@ -239,7 +255,7 @@ export function prepareBookmarks(element) {
         $(this).remove();
     });
 }
-export function saveBookmarks(name) {
+export function saveBookmarks(name: string): void {
     var bookmarks = $('#bookmarks').clone()
     $('.jkp', bookmarks).remove()
     bookmarks.find('[draggable]').removeAttr('draggable');
@@ -263,13 +279,15 @@ export function saveBookmarks(name) {
     html = html.replace(/(href|add_date|last_visit|folded|last_modified)=/ig, function(match) { return match.toUpperCase(); });
     commit(html, name)
 }
-export function findFavicon(sel, spnnr, href) {
+export function findFavicon(sel: string | JQuery<HTMLElement>, spnnr: string, href: string): void 
+{
     if ($(sel).prop('tagName') == 'IMG')
         $(sel).hide();
     var url = new URL(href);
     startAjax(sel, spnnr, url.origin, url.pathname, updateFavicon);
 }
-export function updateFavicon(sel, base, html) {
+export function updateFavicon(sel: string | JQuery<HTMLElement>, base: string, html: string): void 
+{
     var dom = $.parseHTML(html, null, false);
     var src = null;
     if (src == null) {
@@ -317,7 +335,7 @@ export function updateFavicon(sel, base, html) {
         }
     });
 }
-export function setFavicon(sel, src)
+export function setFavicon(sel: string | JQuery<HTMLElement>, src: string): void
 {
     if ($(sel).prop('tagName') == 'IMG') {
         $(sel).attr('src', src);
@@ -328,7 +346,7 @@ export function setFavicon(sel, src)
         prepareBookmark($(sel));
     }
 }
-export function removeFavicon(sel)
+export function removeFavicon(sel: string | JQuery<HTMLElement>): void
 {
     if ($(sel).prop('tagName') == 'IMG') {
         $(sel).removeAttr('src');
@@ -339,30 +357,35 @@ export function removeFavicon(sel)
         $(sel).html($(sel).text())
     }
 }
-export function createQuill(sel) {
+export function createQuill(sel: string): void 
+{
     quill = new Quill(sel, { theme: 'snow' })
 }
-export function updateQuill(sel, base, html) {
+export function updateQuill(sel: string, html: any): void 
+{
     quill.setText('')
     quill.clipboard.dangerouslyPasteHTML(0, html)
 }
-export function saveQuill() {
-    commit(quill.root.innerHTML, 'info.html')
+export function saveQuill(): void 
+{
+    commit(quill.root.innerHTML, 'info.html');
 }
-export function loadUrl(url) {
+export function loadUrl(url: string): boolean 
+{
     if (jkp.sharedObj().loadUrl == null) 
         return false;
 
     jkp.sharedObj().loadUrl(url)
     return true;
 }
-export function commit(content, name) {
+export function commit(content: string, name: string): void 
+{
     if (jkp.sharedObj().commit == null) 
-        return false;
+        return;
 
     jkp.sharedObj().commit(content, name, null);
 }
-export function authenticate(func, error)
+export function authenticate(func: (username: string, password: string) => void, error)
 {
     if (error == null)
         $('#auth-alert').css('display', 'none');
@@ -373,13 +396,14 @@ export function authenticate(func, error)
     $('#auth-edit').modal({});
     $('#auth-apply').off();
     $('#auth-apply').click(function () {
-        func($('#auth-username').val(), $('#auth-password').val());
+        func($('#auth-username').val().toString(), $('#auth-password').val().toString());
         return true;
     });
 
 }
 jkp.sharedObj().authenticate = authenticate
-export function showAlert(text, kind) {
+export function showAlert(text: string, kind?: string) 
+{
     if (kind == null)
         kind = 'info';
     $('#alert').removeClass();
@@ -388,16 +412,19 @@ export function showAlert(text, kind) {
     $('#alert').parent().parent().css("display", "block");
 }
 jkp.sharedObj().showAlert = showAlert;
-export function clearAlert() {
+export function clearAlert(): void 
+{
     $('#alert').removeClass();
     $('#alert').text('');
     $('#alert').parent().parent().css("display", "none");
 }
 jkp.sharedObj().clearaAlert = clearAlert;
-export function showInfo(text) {
+export function showInfo(text: string): void 
+{
     showAlert(text, 'info');
 }
-export function init(size) {
+export function init(size: number): void 
+{
     iconSize = size;
 }
 $(document).ready(function () {

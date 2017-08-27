@@ -98,13 +98,13 @@
   renderer.init(16);
   <% } %>
   $(document).ready(function() {
-    renderer.startAjax("#bookmarks", "#bookmarks", "https://jkpluta.github.io", "/<%- data %>", renderer.updateBookmarks)
+    renderer.start("#bookmarks", "#bookmarks", "/<%- data %>", renderer.updateBookmarks)
   });
   $('#save').click(function() {
     renderer.saveBookmarks('<%- data %>');
   })
   $('#refresh').click(function() {
-    renderer.startAjax("#bookmarks", "#bookmarks", "https://jkpluta.github.io", "/<%- data %>", renderer.updateBookmarks)
+    renderer.start("#bookmarks", "#bookmarks", "/<%- data %>", renderer.updateBookmarks)
   })
   $('#link-edit').on('show.bs.modal', function () {
     $('#link-favicon').removeAttr('src')

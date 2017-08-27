@@ -14,15 +14,13 @@ function writeToSettings(name, value) {
 }
 function authenticate(func, error) {
     if (jkp.sharedObj().authenticate == null)
-        return false;
+        return;
     jkp.sharedObj().authenticate(func, error);
-    return true;
 }
 function showAlert(text, kind) {
     if (jkp.sharedObj().showAlert == null)
-        return false;
+        return;
     jkp.sharedObj().showAlert(text, kind);
-    return true;
 }
 function decodeError(err) {
     if (typeof err === 'object') {
