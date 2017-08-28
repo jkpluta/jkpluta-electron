@@ -30,7 +30,7 @@ function decodeError(err) {
         if (match != null && match.length == 2)
             err = match[1];
     }
-    return err;
+    return err.toString();
 }
 function commit(content, name, error) {
     var github = null;
@@ -54,7 +54,7 @@ function commit(content, name, error) {
                 data: JSON.stringify(json),
                 cache: false,
                 beforeSend: function (xhr) {
-                    xhr.setRequestHeader("Authorization", "Basic " + jsBase.Base64.encode('jkpluta:***REMOVED***'));
+                    xhr.setRequestHeader("Authorization", "Basic " + jsBase.Base64.encode(username + ':' + password));
                     xhr.setRequestHeader("X-Mobile", "false");
                     xhr.setRequestHeader("X-GitHub-OTP", "two-factor-code");
                 },
