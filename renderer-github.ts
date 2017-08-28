@@ -39,12 +39,13 @@ function decodeError(err: any): string
 }
 export function commit(content: string, name: string, error: string): void 
 {
+    showAlert("Przygotowanie...", "info")
     var github = null;
     var auth_token = readFromSettings("auth_token")
     if (auth_token == null) {
         authenticate(function (username, password) {
             if (username === '') username = '---';
-            if(password === '') password = '---'
+            if (password === '') password = '---'
             $.ajax({
                 url: 'https://api.github.com/authorizations',
                 method: "POST",
