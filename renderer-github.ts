@@ -76,10 +76,10 @@ export function commit(content: string, name: string, error: string): void
     else {
         github = new GitHub({ token: auth_token });
         const me = github.getUser();
-        me.getEmails(function(err, data) {
-            if (err != null) {
+        me.getEmails(function(error, result) {
+            if (error != null) {
                 writeToSettings("auth_token", null);
-                commit(content, name, decodeError(err));
+                commit(content, name, decodeError(error));
             }
             else {
                 gitHubCommit(github, content, name);
@@ -91,7 +91,47 @@ jkp.sharedObj().commit = commit
 export function gitHubCommit(github: any, content: string, name: string): void 
 {
     showAlert("GitHub...", "info")
-    github.getRef("")
+    try {
+        var repo = github.getRepo("jkpluta", "jkpluta.github.io");
+        repo.getRef("heads/master", function(error, result) {
+            if (error != null)
+                showAlert(decodeError(error), "error");
+            else {
+                var shaLatestCommit = result.object.sha;
+                repo.getCommit(shaLatestCommit, function(error, result) {
+                    if (error != null)
+                        showAlert(decodeError(error), "error");
+                    else {
+                        var shaBaseTree = result.sha;
+                        repo.createTree([ { "path": name, "mode": "100644", "type": "blob", "content": content } ], shaBaseTree, function(error, result) {
+                            if (error != null)
+                                showAlert(decodeError(error), "error");
+                            else {
+                                var shaNewTree = result.sha;
+                                repo.commit(shaLatestCommit , shaNewTree, "jkpluta-electron", function(error, result) {
+                                    if (error != null)
+                                        showAlert(decodeError(error), "error");
+                                    else {
+                                        var shaNewCommit = result.sha;
+                                        repo.updateHead("heads/master", shaNewCommit , true, function(error, result) {
+                                            if (error != null)
+                                                showAlert(decodeError(error), "error");
+                                            else 
+                                                showAlert("GitHub - Zmiany zostały zapisane", "success")
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    } 
+    catch(err) 
+    { 
+        showAlert(err) 
+    }
     return;
     github.gitdata.getReference({
         owner: "jkpluta",
