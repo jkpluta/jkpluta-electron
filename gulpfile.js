@@ -77,7 +77,7 @@ gulp.task('app', function() {
     gulp.src("build/*")
     .pipe(gulp.dest("app/build"));
 
-    gulp.src("jkp-*.js")
+    gulp.src("icon.*")
     .pipe(gulp.dest("app"));
 
     ejsToHtml('electron', 'app')
@@ -125,9 +125,6 @@ gulp.task('www', function() {
 
     gulp.src("build/*")
     .pipe(gulp.dest("www/build"));
-
-    gulp.src("jkp-*.js")
-    .pipe(gulp.dest("www"));
 
     gulp.src("simple-commonjs.js")
     .pipe(gulp.dest("www"));

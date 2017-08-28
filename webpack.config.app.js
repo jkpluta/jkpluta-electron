@@ -5,6 +5,7 @@ module.exports = [
         entry: {
           'renderer': './renderer.js',
           'renderer-electron': './renderer-electron.js',
+          'renderer-github': './renderer-github.js',
         },
         target: 'electron-renderer',
         output: {
@@ -24,10 +25,9 @@ module.exports = [
         },
         output: {
             path: path.resolve(__dirname, './app'),
-          filename: '[name].js'
+            filename: '[name].js'
         },
         node: {
-            jkpEjs: false,
             __dirname: false,
             __filename: false
         }  

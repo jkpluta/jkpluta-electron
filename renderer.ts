@@ -417,7 +417,6 @@ export function saveInfo(sel: string | JQuery<HTMLElement>) : void
   <meta charset="utf-8">
 </head>
 <body>
-  <h1>Informacje</h1>
   ` + toHtml(md) + `
   <!--` + md + `-->
 </body>

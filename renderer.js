@@ -413,7 +413,7 @@ function updateInfo(sel, html) {
 exports.updateInfo = updateInfo;
 function saveInfo(sel) {
     var md = $(sel).val().toString();
-    var html = "<html>\n<head>\n  <meta charset=\"utf-8\">\n</head>\n<body>\n  <h1>Informacje</h1>\n  " + toHtml(md) + "\n  <!--" + md + "-->\n</body>\n</html>";
+    var html = "<html>\n<head>\n  <meta charset=\"utf-8\">\n</head>\n<body>\n  " + toHtml(md) + "\n  <!--" + md + "-->\n</body>\n</html>";
     commit(html, 'info.html');
 }
 exports.saveInfo = saveInfo;
