@@ -2,10 +2,6 @@
   "scripts": {
     "start": "http-server -a localhost -p 60080"
   },
-  "dependencies": {
-    "bluebird": "^3.5.0",
-    "github": "^9.2.0"
-  },
   "devDependencies": {
     "http-server": "^0.10.0"
   }
