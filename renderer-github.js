@@ -24,6 +24,8 @@ function showAlert(text, kind) {
     jkp.sharedObj().showAlert(text, kind);
 }
 function decodeError(err) {
+    if (err == null)
+        return "";
     if (typeof err === 'object') {
         var pattern = /"?message"?: *"([^"]*)"/i;
         var match = pattern.exec(err.toString());
@@ -37,21 +39,17 @@ function commit(content, name, error) {
     var auth_token = readFromSettings("auth_token");
     if (auth_token == null) {
         authenticate(function (username, password) {
-            if (username === '' || password === '') {
-                commit(content, name, 'Proszę wprowadzić nazwę użytkownika i hasło');
-                return;
-            }
-            var json = {
-                "scopes": ["user", "repo", "gist"],
-                "note": "jkpluta-electron-".concat(new Date().toISOString())
-            };
+            if (username === '')
+                username = '---';
+            if (password === '')
+                password = '---';
             $.ajax({
                 url: 'https://api.github.com/authorizations',
                 method: "POST",
                 dataType: "json",
                 crossDomain: true,
                 contentType: "application/json; charset=utf-8",
-                data: JSON.stringify(json),
+                data: JSON.stringify({ "scopes": ["user", "repo", "gist"], "note": "jkpluta-electron-".concat(new Date().toISOString()) }),
                 cache: false,
                 beforeSend: function (xhr) {
                     xhr.setRequestHeader("Authorization", "Basic " + jsBase.Base64.encode(username + ':' + password));
@@ -125,78 +123,8 @@ function gitHubCommit(github, content, name) {
         });
     }
     catch (err) {
-        showAlert(err);
+        showAlert(err, "error");
     }
-    return;
-    github.gitdata.getReference({
-        owner: "jkpluta",
-        repo: "jkpluta.github.io",
-        ref: "heads/master"
-    }, function (err, res) {
-        if (err != null) {
-            showAlert(decodeError(err), "error");
-            return;
-        }
-        var SHA_LATEST_COMMIT = res.data.object.sha;
-        github.gitdata.getCommit({
-            owner: "jkpluta",
-            repo: "jkpluta.github.io",
-            sha: SHA_LATEST_COMMIT
-        }, function (err, res) {
-            if (err != null) {
-                showAlert(decodeError(err), "error");
-                return;
-            }
-            var SHA_BASE_TREE = res.data.tree.sha;
-            github.gitdata.createTree({
-                owner: "jkpluta",
-                repo: "jkpluta.github.io",
-                tree: [
-                    {
-                        "path": name,
-                        "mode": "100644",
-                        "type": "blob",
-                        "content": content
-                    }
-                ],
-                base_tree: SHA_BASE_TREE
-            }, function (err, res) {
-                if (err != null) {
-                    showAlert(decodeError(err), "error");
-                    return;
-                }
-                var SHA_NEW_TREE = res.data.sha;
-                github.gitdata.createCommit({
-                    owner: "jkpluta",
-                    repo: "jkpluta.github.io",
-                    message: "jkpluta-electron",
-                    tree: SHA_NEW_TREE,
-                    parents: [SHA_LATEST_COMMIT],
-                    author: {
-                        "name": "Jan K. Pluta",
-                        "email": "jkpluta@gmail.com",
-                        "date": new Date().toISOString()
-                    },
-                }, function (err, res) {
-                    if (err != null) {
-                        showAlert(decodeError(err), "error");
-                        return;
-                    }
-                    var SHA_NEW_COMMIT = res.data.sha;
-                    github.gitdata.updateReference({
-                        owner: "jkpluta",
-                        repo: "jkpluta.github.io",
-                        ref: "heads/master",
-                        sha: SHA_NEW_COMMIT,
-                        force: true
-                    }, function (err, res) {
-                        if (err == null)
-                            showAlert("GitHub - Zmiany zostały zapisane", "success");
-                    });
-                });
-            });
-        });
-    });
 }
 exports.gitHubCommit = gitHubCommit;
 //# sourceMappingURL=renderer-github.js.map

@@ -440,7 +440,9 @@ function authenticate(func, error) {
     $('#auth-edit').modal({});
     $('#auth-apply').off();
     $('#auth-apply').click(function () {
-        func($('#auth-username').val().toString(), $('#auth-password').val().toString());
+        var username = $('#auth-username').val();
+        var password = $('#auth-password').val();
+        func(username.toString(), password.toString());
         return true;
     });
 }

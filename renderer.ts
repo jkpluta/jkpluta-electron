@@ -450,7 +450,9 @@ export function authenticate(func: (username: string, password: string) => void,
     $('#auth-edit').modal({});
     $('#auth-apply').off();
     $('#auth-apply').click(function () {
-        func($('#auth-username').val().toString(), $('#auth-password').val().toString());
+        var username = $('#auth-username').val();
+        var password = $('#auth-password').val();
+        func(username.toString(), password.toString());
         return true;
     });
 
