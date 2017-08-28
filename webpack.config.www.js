@@ -4,10 +4,11 @@ module.exports = {
     entry: {
         'renderer': './renderer.js',
         'renderer-node': './renderer-node.js',
+        'renderer-github': './renderer-github.js'
     },
-    target: 'node',
+    target: 'web',
     output: {
         path: path.resolve(__dirname, './www'),
         filename: '[name].js'
     }
-};
+}
