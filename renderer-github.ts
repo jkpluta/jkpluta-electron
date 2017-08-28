@@ -33,7 +33,7 @@ function decodeError(err: any): string
         if (match != null && match.length == 2)
             err = match[1];
     }
-    return err;
+    return err.toString();
 }
 export function commit(content: string, name: string, error: string): void 
 {
@@ -58,7 +58,7 @@ export function commit(content: string, name: string, error: string): void
                 data: JSON.stringify(json), 
                 cache: false,
                 beforeSend: function (xhr) {
-                    xhr.setRequestHeader("Authorization", "Basic " + jsBase.Base64.encode('jkpluta:kfadrat0'));
+                    xhr.setRequestHeader("Authorization", "Basic " + jsBase.Base64.encode(username + ':' + password));
                     xhr.setRequestHeader("X-Mobile", "false");
                     xhr.setRequestHeader("X-GitHub-OTP", "two-factor-code");
                 },
