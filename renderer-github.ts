@@ -91,6 +91,7 @@ jkp.sharedObj().commit = commit
 export function gitHubCommit(github: any, content: string, name: string): void 
 {
     showAlert("GitHub...", "info")
+    github.getRef("")
     return;
     github.gitdata.getReference({
         owner: "jkpluta",
