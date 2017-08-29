@@ -39,6 +39,25 @@ function clearAlert(): void
         return;
     jkp.sharedObj().clearAlert();
 }
+function showError(error: any) : void
+{
+    if (typeof error === "object") {
+        if (error.response != null && error.response.status != null) {
+            var status = error.response.status
+            if (status == 0)
+                error = "Nie można nawiązać połączenia";
+            else if (status == 400)
+                error = "Nieprawidłowe zapytanie";
+            else if (status == 401) {
+                writeToSettings("auth_token", null);
+                error = "Nieautoryzowany dostęp";
+            }
+            else if (status == 500)
+                error = "Wewnętrzny błąd serwera; proszę spróbować później";
+        }
+    }
+    showAlert(error, "danger");
+}
 export function commit(content: string, name: string): void 
 {
     showAlert("Przygotowanie...", "info")
@@ -48,7 +67,7 @@ export function commit(content: string, name: string): void
         clearAlert();
         authorize('Logowanie do GitHub', function (username, password) {
             if (username === '' || password === '') {
-                showAlert("Nie wprowadzono nazwy użytkownika lub hasła", "danger");
+                showError("Nie wprowadzono nazwy użytkownika lub hasła");
                 return;
             }
             $.ajax({
@@ -71,29 +90,16 @@ export function commit(content: string, name: string): void
                 },
                 error: function (jqXHR, status, error) {
                     if (jqXHR.status == 401)
-                        showAlert("Błędna nazwa użytkownika lub hasło", "danger");
+                        showError("Błędna nazwa użytkownika lub hasło");
                     else 
-                        showAlert(status.substring(0, 1).toUpperCase() + status.substring(1) + ': ' + jqXHR.status.toString() + ' "' + error + '"', "danger");
-                    return;
+                        showError(status.substring(0, 1).toUpperCase() + status.substring(1) + ': ' + jqXHR.status.toString() + ' "' + error + '"');
                 }
             });
         });
     }
     else {
-        showAlert("Autoryzacja...", "info")
         github = new GitHub({ token: auth_token });
-        const me = github.getUser();
-        me.getEmails(function(error, result) {
-            if (error != null) {
-                if (error.response != null && error.response.status == 401) {
-                    writeToSettings("auth_token", null);
-                    commit(content, name);
-                } else
-                    showAlert(error, "danger");
-            }
-            else 
-                gitHubCommit(github, content, name);
-        });
+        gitHubCommit(github, content, name);
     }
 }
 jkp.sharedObj().commit = commit
@@ -103,27 +109,27 @@ export function gitHubCommit(github: any, content: string, name: string): void
     var repo = github.getRepo("jkpluta", "jkpluta.github.io");
     repo.getRef("heads/master", function(error, result) {
         if (error != null)
-            showAlert(error, "danger");
+            showError(error);
         else {
             var shaLatestCommit = result.object.sha;
             repo.getCommit(shaLatestCommit, function(error, result) {
                 if (error != null)
-                    showAlert(error, "danger");
+                    showError(error);
                 else {
                     var shaBaseTree = result.sha;
                     repo.createTree([ { "path": name, "mode": "100644", "type": "blob", "content": content } ], shaBaseTree, function(error, result) {
                         if (error != null)
-                            showAlert(error, "danger");
+                            showError(error);
                         else {
                             var shaNewTree = result.sha;
                             repo.commit(shaLatestCommit , shaNewTree, "jkpluta-electron", function(error, result) {
                                 if (error != null)
-                                    showAlert(error, "danger");
+                                    showError(error);
                                 else {
                                     var shaNewCommit = result.sha;
                                     repo.updateHead("heads/master", shaNewCommit , true, function(error, result) {
                                         if (error != null)
-                                            showAlert(error, "danger");
+                                            showError(error);
                                         else 
                                             showAlert("GitHub - Zmiany zostały zapisane", "success")
                                     });
