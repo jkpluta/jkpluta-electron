@@ -469,8 +469,8 @@ export function clearAlert(): void
     $('#alert').text('');
     $('#alert').parent().parent().css("display", "none");
 }
-jkp.sharedObj().clearaAlert = clearAlert;
-(<any>window).clearaAlert = clearAlert;
+jkp.sharedObj().clearAlert = clearAlert;
+(<any>window).clearAlert = clearAlert;
 export function showInfo(text: string): void 
 {
     showAlert(text, 'info');

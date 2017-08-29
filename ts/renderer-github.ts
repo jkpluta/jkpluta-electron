@@ -13,7 +13,7 @@ function writeToSettings(name: string, value: any): void
         return;
     jkp.sharedObj().writeToSettings(name, value);
 }
-export function authenticate(title: string, func: (username: string, password: string) => void)
+export function authorize(title: string, func: (username: string, password: string) => void)
 {
     $('#auth-title').text(title);
     $('#auth-edit').modal({});
@@ -26,12 +26,18 @@ export function authenticate(title: string, func: (username: string, password: s
     });
 
 }
-jkp.sharedObj().authenticate = authenticate
+jkp.sharedObj().authenticate = authorize
 function showAlert(text: string, kind?: string): void
 {
     if (jkp.sharedObj().showAlert == null)
         return;
     jkp.sharedObj().showAlert(text, kind);
+}
+function clearAlert(): void
+{
+    if (jkp.sharedObj().clearAlert == null)
+        return;
+    jkp.sharedObj().clearAlert();
 }
 export function commit(content: string, name: string): void 
 {
@@ -39,8 +45,8 @@ export function commit(content: string, name: string): void
     var github = null;
     var auth_token = readFromSettings("auth_token")
     if (auth_token == null) {
-        showAlert("Logowanie...", "info")
-        authenticate('Logowanie do GitHubb', function (username, password) {
+        clearAlert();
+        authorize('Logowanie do GitHub', function (username, password) {
             if (username === '' || password === '') {
                 showAlert("Nie wprowadzono nazwy użytkownika lub hasła", "danger");
                 return;

@@ -460,8 +460,8 @@ function clearAlert() {
     $('#alert').parent().parent().css("display", "none");
 }
 exports.clearAlert = clearAlert;
-jkp.sharedObj().clearaAlert = clearAlert;
-window.clearaAlert = clearAlert;
+jkp.sharedObj().clearAlert = clearAlert;
+window.clearAlert = clearAlert;
 function showInfo(text) {
     showAlert(text, 'info');
 }

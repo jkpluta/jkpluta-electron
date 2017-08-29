@@ -13,7 +13,7 @@ function writeToSettings(name, value) {
         return;
     jkp.sharedObj().writeToSettings(name, value);
 }
-function authenticate(title, func) {
+function authorize(title, func) {
     $('#auth-title').text(title);
     $('#auth-edit').modal({});
     $('#auth-apply').off();
@@ -24,20 +24,25 @@ function authenticate(title, func) {
         return true;
     });
 }
-exports.authenticate = authenticate;
-jkp.sharedObj().authenticate = authenticate;
+exports.authorize = authorize;
+jkp.sharedObj().authenticate = authorize;
 function showAlert(text, kind) {
     if (jkp.sharedObj().showAlert == null)
         return;
     jkp.sharedObj().showAlert(text, kind);
+}
+function clearAlert() {
+    if (jkp.sharedObj().clearAlert == null)
+        return;
+    jkp.sharedObj().clearAlert();
 }
 function commit(content, name) {
     showAlert("Przygotowanie...", "info");
     var github = null;
     var auth_token = readFromSettings("auth_token");
     if (auth_token == null) {
-        showAlert("Logowanie...", "info");
-        authenticate('Logowanie do GitHubb', function (username, password) {
+        clearAlert();
+        authorize('Logowanie do GitHub', function (username, password) {
             if (username === '' || password === '') {
                 showAlert("Nie wprowadzono nazwy użytkownika lub hasła", "danger");
                 return;
