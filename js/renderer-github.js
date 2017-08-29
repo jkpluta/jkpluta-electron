@@ -36,13 +36,14 @@ function commit(content, name) {
     var github = null;
     var auth_token = readFromSettings("auth_token");
     if (auth_token == null) {
+        showAlert("Logowanie...", "info");
         authenticate('Logowanie do GitHubb', function (username, password) {
             if (username === '' || password === '') {
                 showAlert("Nie wprowadzono nazwy użytkownika lub hasła", "danger");
                 return;
             }
             $.ajax({
-                url: 'http://api.github.com/authorizations',
+                url: 'https://api.github.com/authorizations',
                 method: "POST",
                 dataType: "json",
                 crossDomain: true,
@@ -70,6 +71,7 @@ function commit(content, name) {
         });
     }
     else {
+        showAlert("Autoryzacja...", "info");
         github = new GitHub({ token: auth_token });
         var me = github.getUser();
         me.getEmails(function (error, result) {
