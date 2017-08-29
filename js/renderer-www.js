@@ -6,13 +6,16 @@ function loadUrl(url) {
     return true;
 }
 exports.loadUrl = loadUrl;
-var settings = null;
 function readFromSettings(name) {
-    return settings[name];
+    if (jkp.sharedObj().settings == null)
+        jkp.sharedObj().settings = {};
+    return jkp.sharedObj().settings[name];
 }
 exports.readFromSettings = readFromSettings;
 function writeToSettings(name, value) {
-    settings[name] = value;
+    if (jkp.sharedObj().settings == null)
+        jkp.sharedObj().settings = {};
+    window.settings[name] = value;
 }
 exports.writeToSettings = writeToSettings;
 jkp.sharedObj().loadUrl = loadUrl;

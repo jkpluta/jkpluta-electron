@@ -37,7 +37,7 @@ export function commit(content: string, name: string): void
                 return;
             }
             $.ajax({
-                url: 'https://api.github.com/authorizations',
+                url: 'http://api.github.com/authorizations',
                 method: "POST",
                 dataType: "json",
                 crossDomain: true,
@@ -58,7 +58,7 @@ export function commit(content: string, name: string): void
                     if (jqXHR.status == 401)
                         showAlert("Błędna nazwa użytkownika lub hasło", "danger");
                     else 
-                        showAlert(status + ': ' + jqXHR.status.toString() + ' "' + error + '"', "danger");
+                        showAlert(status.substring(0, 1).toUpperCase() + status.substring(1) + ': ' + jqXHR.status.toString() + ' "' + error + '"', "danger");
                     return;
                 }
             });
