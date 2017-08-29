@@ -6,16 +6,16 @@ var fs = require('fs');
 var webpack = require('webpack')
 
 function ejsToHtml(target, dst) {
-    var ejsPages = JSON.parse(fs.readFileSync('ejs.json', 'utf8'));
+    var ejsPages = JSON.parse(fs.readFileSync('./html/ejs.json', 'utf8'));
     var opts = { cache: false };
     for(var ejsName in ejsPages) {
         var ejsPage = ejsPages[ejsName];
         if (ejsPage.target == null || ejsPage.target === target) {
             ejsPage.target = target;
-            gulp.src(ejsPage.template + '.ejs')
+            gulp.src('./html/' + ejsPage.template + '.ejs')
             .pipe(ejs(ejsPage, opts))
             .pipe(rename(ejsName + '.html'))
-            .pipe(gulp.dest(dst))
+            .pipe(gulp.dest(dst + '/html'))
         }
     }
 }
@@ -77,9 +77,6 @@ gulp.task('app', function() {
     gulp.src("build/*")
     .pipe(gulp.dest("app/build"));
 
-    gulp.src("icon.*")
-    .pipe(gulp.dest("app"));
-
     ejsToHtml('electron', 'app')
     
     webpack(require('./webpack.config.app.js'), function (err, stats) {
@@ -127,9 +124,9 @@ gulp.task('www', function() {
     .pipe(gulp.dest("www/build"));
 
     gulp.src("simple-commonjs.js")
-    .pipe(gulp.dest("www"));
+    .pipe(gulp.dest("www/js"));
 
-    gulp.src("icon.ico")
+    gulp.src("./img/icon.ico")
     .pipe(rename("favicon.ico"))
     .pipe(gulp.dest("www"));
 

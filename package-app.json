@@ -1,5 +1,5 @@
 {
-  "main": "main.js",
+  "main": "js/main.js",
   "build": {
     "appId": "55ede969-ed85-488b-8009-b878609302c8",
     "productName": "Jan K. Pluta",

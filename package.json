@@ -1,7 +1,7 @@
 {
   "name": "jkpluta-electron",
-  "version": "0.9.4",
-  "main": "main.js",
+  "version": "0.9.5",
+  "main": "js/main.js",
   "description": "Eksperymentalna strona startowa",
   "author": {
     "name": "Jan K. Pluta",

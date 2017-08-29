@@ -14,7 +14,7 @@ var iconSize = 16;
 var base_url = "https://jkpluta.github.io";
 function startAjax(sel, spnr, base, href, func) {
     if (spnr != null)
-        $(spnr).html('<img src="./img/spinner.gif">');
+        $(spnr).html('<img src="../img/spinner.gif">');
     $.ajax({
         url: base + href,
         cache: false,
@@ -24,14 +24,14 @@ function startAjax(sel, spnr, base, href, func) {
         },
         error: function (xhr, status, error) {
             if (spnr != null)
-                $(spnr).html('<img src="./img/error.png"> <b>' + status + '</b> <i>' + error + "</i>");
+                $(spnr).html('<img src="../img/error.png"> <b>' + status + '</b> <i>' + error + "</i>");
         }
     });
 }
 exports.startAjax = startAjax;
 function start(sel, spnr, href, func) {
     if (spnr != null)
-        $(spnr).html('<img src="./img/spinner.gif">');
+        $(spnr).html('<img src="../img/spinner.gif">');
     $.ajax({
         url: base_url + href,
         cache: false,
@@ -41,7 +41,7 @@ function start(sel, spnr, href, func) {
         },
         error: function (xhr, status, error) {
             if (spnr != null)
-                $(spnr).html('<img src="./img/error.png"> <b>' + status + '</b> <i>' + error + "</i>");
+                $(spnr).html('<img src="../img/error.png"> <b>' + status + '</b> <i>' + error + "</i>");
         }
     });
 }

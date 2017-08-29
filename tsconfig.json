@@ -4,12 +4,10 @@
         "watch": true,
         "target": "es5",
         "module": "commonjs",
-        "sourceMap": true
+        "sourceMap": true,
+        "outDir": "./js/"
     },
     "include": [
-        "*.ts"
-    ],
-    "exclude": [
-        "*.ejs"
+        "./ts/*.ts"
     ]
 }

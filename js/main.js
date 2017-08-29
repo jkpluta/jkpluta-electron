@@ -10,7 +10,7 @@ var storage = require("electron-json-storage");
 var ejsElectron = null;
 var ejsPages = null;
 try {
-    ejsPages = JSON.parse(fs.readFileSync(path.join(__dirname, 'ejs.json'), 'utf8'));
+    ejsPages = JSON.parse(fs.readFileSync(path.join(__dirname, '../html/ejs.json'), 'utf8'));
     ejsElectron = require('ejs-electron');
     ejsElectron.options({ root: __dirname });
 }
@@ -28,9 +28,9 @@ storage.get('settings', function (error, data) {
     if (typeof data.auth_token !== "undefined")
         settings.auth_token = data.auth_token;
 });
-var icon = 'img/icon.png';
+var icon = '../img/icon.png';
 if (process.platform === 'win32')
-    icon = 'icon.ico';
+    icon = '../img/icon.ico';
 function createWindow() {
     global.sharedObj = {
         mainWindowLoad: mainWindowLoad,
@@ -158,7 +158,7 @@ app.on('activate', function () {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 function renderPage(browserWindow, name) {
-    var pageName = name + '.html';
+    var pageName = '../html/' + name + '.html';
     if (ejsPages != null) {
         var ejsPage = ejsPages[name];
         ejsElectron.data({
@@ -166,7 +166,7 @@ function renderPage(browserWindow, name) {
             data: ejsPage.data,
             target: "electron"
         });
-        pageName = ejsPage.template + '.ejs';
+        pageName = '../html/' + ejsPage.template + '.ejs';
     }
     var pageUrl = url.format({
         pathname: path.join(__dirname, pageName),

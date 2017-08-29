@@ -3,13 +3,13 @@ const path = require('path');
 module.exports = [
     {
         entry: {
-          'renderer': './renderer.js',
-          'renderer-electron': './renderer-electron.js',
-          'renderer-github': './renderer-github.js',
+          'renderer': './js/renderer.js',
+          'renderer-electron': './js/renderer-electron.js',
+          'renderer-github': './js/renderer-github.js',
         },
         target: 'electron-renderer',
         output: {
-            path: path.resolve(__dirname, './app'),
+            path: path.resolve(__dirname, './app/js'),
             filename: '[name].js',
             library: 'renderer',
             libraryTarget: 'umd'
@@ -17,14 +17,14 @@ module.exports = [
     },
     {
         entry: {
-            'main': './main.js'
+            'main': './js/main.js'
         },
         target: 'electron-main',
         externals: {
             'ejs-electron': 'ejs-electron'
         },
         output: {
-            path: path.resolve(__dirname, './app'),
+            path: path.resolve(__dirname, './app/js'),
             filename: '[name].js'
         },
         node: {

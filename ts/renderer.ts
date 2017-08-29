@@ -14,7 +14,7 @@ const base_url = "https://jkpluta.github.io";
 export function startAjax(sel: string | JQuery<HTMLElement>, spnr: string | JQuery<HTMLElement>, base: string, href: string, func: (sel: string | JQuery<HTMLElement>, base: string, html: any) => void) 
 {
     if (spnr != null)
-        $(spnr).html('<img src="./img/spinner.gif">');
+        $(spnr).html('<img src="../img/spinner.gif">');
     $.ajax({
         url: base + href,
         cache: false,
@@ -24,14 +24,14 @@ export function startAjax(sel: string | JQuery<HTMLElement>, spnr: string | JQue
         },
         error: function (xhr, status, error) {
             if (spnr != null)
-                $(spnr).html('<img src="./img/error.png"> <b>' + status + '</b> <i>' + error + "</i>");
+                $(spnr).html('<img src="../img/error.png"> <b>' + status + '</b> <i>' + error + "</i>");
         }
     });
 }
 export function start(sel: string | JQuery<HTMLElement>, spnr: string | JQuery<HTMLElement>, href: string, func: (sel: string | JQuery<HTMLElement>, html: any) => void) 
 {
     if (spnr != null)
-        $(spnr).html('<img src="./img/spinner.gif">');
+        $(spnr).html('<img src="../img/spinner.gif">');
     $.ajax({
         url: base_url + href,
         cache: false,
@@ -41,7 +41,7 @@ export function start(sel: string | JQuery<HTMLElement>, spnr: string | JQuery<H
         },
         error: function (xhr, status, error) {
             if (spnr != null)
-                $(spnr).html('<img src="./img/error.png"> <b>' + status + '</b> <i>' + error + "</i>");
+                $(spnr).html('<img src="../img/error.png"> <b>' + status + '</b> <i>' + error + "</i>");
         }
     });
 }

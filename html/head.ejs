@@ -1,0 +1,19 @@
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="author" content="Jan K. Pluta">
+  <meta name="description" content="Jan K. Pluta">
+  <link rel="stylesheet" href="../css/bootstrap-reboot.min.css">
+  <link rel="stylesheet" href="../css/bootstrap-grid.min.css">
+  <link rel="stylesheet" href="../css/bootstrap.min.css">
+  <link rel="stylesheet" href="../css/font-awesome.min.css">
+  <title><%= title %></title>
+  <%if (target === 'node') { %>  <script src="../js/simple-commonjs.js"></script><% }%>
+  <script>
+    require('../js/renderer')
+    require('../js/renderer-<%= target %>')
+  </script>
+  <style>
+    dl { margin-left: 2em; }
+  </style>
+</head>

@@ -10,7 +10,7 @@
             "request": "launch",
             "name": "Electron Main",
             "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron",
-            "program": "${workspaceRoot}/main.js",
+            "program": "${workspaceRoot}/js/main.js",
             "protocol": "inspector",
             "timeout": 60000
         }
