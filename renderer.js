@@ -427,16 +427,10 @@ exports.loadUrl = loadUrl;
 function commit(content, name) {
     if (jkp.sharedObj().commit == null)
         return;
-    jkp.sharedObj().commit(content, name, null);
+    jkp.sharedObj().commit(content, name);
 }
 exports.commit = commit;
-function authenticate(func, error) {
-    if (error == null)
-        $('#auth-alert').css('display', 'none');
-    else {
-        $('#auth-alert').text(error);
-        $('#auth-alert').css('display', 'block');
-    }
+function authenticate(func) {
     $('#auth-edit').modal({});
     $('#auth-apply').off();
     $('#auth-apply').click(function () {

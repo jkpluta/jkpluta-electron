@@ -436,16 +436,10 @@ export function commit(content: string, name: string): void
     if (jkp.sharedObj().commit == null) 
         return;
 
-    jkp.sharedObj().commit(content, name, null);
+    jkp.sharedObj().commit(content, name);
 }
-export function authenticate(func: (username: string, password: string) => void, error)
+export function authenticate(func: (username: string, password: string) => void)
 {
-    if (error == null)
-        $('#auth-alert').css('display', 'none');
-    else {
-        $('#auth-alert').text(error);
-        $('#auth-alert').css('display', 'block');
-    }
     $('#auth-edit').modal({});
     $('#auth-apply').off();
     $('#auth-apply').click(function () {

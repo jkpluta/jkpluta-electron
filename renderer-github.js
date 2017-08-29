@@ -13,36 +13,26 @@ function writeToSettings(name, value) {
         return;
     jkp.sharedObj().writeToSettings(name, value);
 }
-function authenticate(func, error) {
+function authenticate(func) {
     if (jkp.sharedObj().authenticate == null)
         return;
-    jkp.sharedObj().authenticate(func, error);
+    jkp.sharedObj().authenticate(func);
 }
 function showAlert(text, kind) {
     if (jkp.sharedObj().showAlert == null)
         return;
     jkp.sharedObj().showAlert(text, kind);
 }
-function decodeError(err) {
-    if (err == null)
-        return "";
-    if (typeof err === 'object') {
-        var pattern = /"?message"?: *"([^"]*)"/i;
-        var match = pattern.exec(err.toString());
-        if (match != null && match.length == 2)
-            err = match[1];
-    }
-    return err.toString();
-}
-function commit(content, name, error) {
+function commit(content, name) {
+    showAlert("Przygotowanie...", "info");
     var github = null;
     var auth_token = readFromSettings("auth_token");
     if (auth_token == null) {
         authenticate(function (username, password) {
-            if (username === '')
-                username = '---';
-            if (password === '')
-                password = '---';
+            if (username === '' || password === '') {
+                showAlert("Nie wprowadzono nazwy użytkownika lub hasła", "danger");
+                return;
+            }
             $.ajax({
                 url: 'https://api.github.com/authorizations',
                 method: "POST",
@@ -59,25 +49,32 @@ function commit(content, name, error) {
                 success: function (data) {
                     auth_token = data.token;
                     writeToSettings("auth_token", auth_token);
-                    commit(content, name, null);
+                    commit(content, name);
                 },
                 error: function (jqXHR, status, error) {
-                    commit(content, name, decodeError(error));
+                    if (jqXHR.status == 401)
+                        showAlert("Błędna nazwa użytkownika lub hasło", "danger");
+                    else
+                        showAlert(status + ': ' + jqXHR.status.toString() + ' "' + error + '"', "danger");
+                    return;
                 }
             });
-        }, error);
+        });
     }
     else {
         github = new GitHub({ token: auth_token });
         var me = github.getUser();
         me.getEmails(function (error, result) {
             if (error != null) {
-                writeToSettings("auth_token", null);
-                commit(content, name, decodeError(error));
+                if (error.response != null && error.response.status == 401) {
+                    writeToSettings("auth_token", null);
+                    commit(content, name);
+                }
+                else
+                    showAlert(error, "danger");
             }
-            else {
+            else
                 gitHubCommit(github, content, name);
-            }
         });
     }
 }
@@ -85,46 +82,41 @@ exports.commit = commit;
 jkp.sharedObj().commit = commit;
 function gitHubCommit(github, content, name) {
     showAlert("GitHub...", "info");
-    try {
-        var repo = github.getRepo("jkpluta", "jkpluta.github.io");
-        repo.getRef("heads/master", function (error, result) {
-            if (error != null)
-                showAlert(decodeError(error), "error");
-            else {
-                var shaLatestCommit = result.object.sha;
-                repo.getCommit(shaLatestCommit, function (error, result) {
-                    if (error != null)
-                        showAlert(decodeError(error), "error");
-                    else {
-                        var shaBaseTree = result.sha;
-                        repo.createTree([{ "path": name, "mode": "100644", "type": "blob", "content": content }], shaBaseTree, function (error, result) {
-                            if (error != null)
-                                showAlert(decodeError(error), "error");
-                            else {
-                                var shaNewTree = result.sha;
-                                repo.commit(shaLatestCommit, shaNewTree, "jkpluta-electron", function (error, result) {
-                                    if (error != null)
-                                        showAlert(decodeError(error), "error");
-                                    else {
-                                        var shaNewCommit = result.sha;
-                                        repo.updateHead("heads/master", shaNewCommit, true, function (error, result) {
-                                            if (error != null)
-                                                showAlert(decodeError(error), "error");
-                                            else
-                                                showAlert("GitHub - Zmiany zostały zapisane", "success");
-                                        });
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });
-            }
-        });
-    }
-    catch (err) {
-        showAlert(err, "error");
-    }
+    var repo = github.getRepo("jkpluta", "jkpluta.github.io");
+    repo.getRef("heads/master", function (error, result) {
+        if (error != null)
+            showAlert(error, "danger");
+        else {
+            var shaLatestCommit = result.object.sha;
+            repo.getCommit(shaLatestCommit, function (error, result) {
+                if (error != null)
+                    showAlert(error, "danger");
+                else {
+                    var shaBaseTree = result.sha;
+                    repo.createTree([{ "path": name, "mode": "100644", "type": "blob", "content": content }], shaBaseTree, function (error, result) {
+                        if (error != null)
+                            showAlert(error, "danger");
+                        else {
+                            var shaNewTree = result.sha;
+                            repo.commit(shaLatestCommit, shaNewTree, "jkpluta-electron", function (error, result) {
+                                if (error != null)
+                                    showAlert(error, "danger");
+                                else {
+                                    var shaNewCommit = result.sha;
+                                    repo.updateHead("heads/master", shaNewCommit, true, function (error, result) {
+                                        if (error != null)
+                                            showAlert(error, "danger");
+                                        else
+                                            showAlert("GitHub - Zmiany zostały zapisane", "success");
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    });
 }
 exports.gitHubCommit = gitHubCommit;
 //# sourceMappingURL=renderer-github.js.map
