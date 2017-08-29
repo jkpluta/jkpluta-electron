@@ -13,11 +13,19 @@ function writeToSettings(name, value) {
         return;
     jkp.sharedObj().writeToSettings(name, value);
 }
-function authenticate(func) {
-    if (jkp.sharedObj().authenticate == null)
-        return;
-    jkp.sharedObj().authenticate(func);
+function authenticate(title, func) {
+    $('#auth-title').text(title);
+    $('#auth-edit').modal({});
+    $('#auth-apply').off();
+    $('#auth-apply').click(function () {
+        var username = $('#auth-username').val();
+        var password = $('#auth-password').val();
+        func(username.toString(), password.toString());
+        return true;
+    });
 }
+exports.authenticate = authenticate;
+jkp.sharedObj().authenticate = authenticate;
 function showAlert(text, kind) {
     if (jkp.sharedObj().showAlert == null)
         return;
@@ -28,7 +36,7 @@ function commit(content, name) {
     var github = null;
     var auth_token = readFromSettings("auth_token");
     if (auth_token == null) {
-        authenticate(function (username, password) {
+        authenticate('Logowanie do GitHubb', function (username, password) {
             if (username === '' || password === '') {
                 showAlert("Nie wprowadzono nazwy użytkownika lub hasła", "danger");
                 return;

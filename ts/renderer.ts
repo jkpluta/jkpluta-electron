@@ -438,8 +438,9 @@ export function commit(content: string, name: string): void
 
     jkp.sharedObj().commit(content, name);
 }
-export function authenticate(func: (username: string, password: string) => void)
+export function authenticate(title: string, func: (username: string, password: string) => void)
 {
+    $('#auth-title').text(title);
     $('#auth-edit').modal({});
     $('#auth-apply').off();
     $('#auth-apply').click(function () {

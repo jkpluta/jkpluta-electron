@@ -430,7 +430,8 @@ function commit(content, name) {
     jkp.sharedObj().commit(content, name);
 }
 exports.commit = commit;
-function authenticate(func) {
+function authenticate(title, func) {
+    $('#auth-title').text(title);
     $('#auth-edit').modal({});
     $('#auth-apply').off();
     $('#auth-apply').click(function () {
