@@ -130,7 +130,7 @@ gulp.task('www', function() {
     .pipe(rename("favicon.ico"))
     .pipe(gulp.dest("www"));
 
-    ejsToHtml('node', 'www')
+    ejsToHtml('www', 'www')
     
     webpack(require('./webpack.config.www.js'), function (err, stats) {
         if (err)

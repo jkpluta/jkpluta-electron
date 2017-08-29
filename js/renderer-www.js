@@ -18,4 +18,4 @@ exports.writeToSettings = writeToSettings;
 jkp.sharedObj().loadUrl = loadUrl;
 jkp.sharedObj().readFromSettings = readFromSettings;
 jkp.sharedObj().writeToSettings = writeToSettings;
-//# sourceMappingURL=renderer-node.js.map
+//# sourceMappingURL=renderer-www.js.map

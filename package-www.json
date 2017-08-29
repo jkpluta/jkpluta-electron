@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": "http-server -a localhost -p 60080"
+    "start": "http-server -a localhost -p 60080 -o"
   },
   "devDependencies": {
     "http-server": "^0.10.0"
