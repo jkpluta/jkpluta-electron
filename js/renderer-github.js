@@ -25,7 +25,7 @@ function authorize(title, func) {
     });
 }
 exports.authorize = authorize;
-jkp.sharedObj().authenticate = authorize;
+jkp.sharedObj().authorize = authorize;
 function showAlert(text, kind) {
     if (jkp.sharedObj().showAlert == null)
         return;

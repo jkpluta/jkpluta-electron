@@ -26,7 +26,7 @@ export function authorize(title: string, func: (username: string, password: stri
     });
 
 }
-jkp.sharedObj().authenticate = authorize
+jkp.sharedObj().authorize = authorize
 function showAlert(text: string, kind?: string): void
 {
     if (jkp.sharedObj().showAlert == null)
