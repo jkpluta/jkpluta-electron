@@ -56,6 +56,7 @@
     "gulp": "^3.9.1",
     "gulp-ejs": "^3.0.1",
     "gulp-rename": "^1.2.2",
+    "gulp-sass": "^3.1.0",
     "webpack": "^3.5.5"
   }
 }

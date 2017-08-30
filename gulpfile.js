@@ -2,6 +2,8 @@ var gulp = require('gulp');
 var gutil = require('gulp-util');
 var rename = require('gulp-rename');
 var ejs = require("gulp-ejs");
+var sass = require('gulp-sass');
+
 var fs = require('fs');
 var webpack = require('webpack')
 
@@ -22,6 +24,11 @@ function ejsToHtml(target, dst) {
 
 gulp.task('default', function() {
 
+    return gulp.src('./sass/*.scss')
+    .pipe(sass.sync().on('error', sass.logError))
+    .pipe(gulp.dest('./css'));
+
+    /*
     gulp.src("electron_modules/bootstrap/dist/css/*.min.css")
     .pipe(gulp.dest("css"));
     
@@ -30,6 +37,7 @@ gulp.task('default', function() {
     
     gulp.src("electron_modules/font-awesome/fonts/*")
     .pipe(gulp.dest("fonts"));
+    */
     
     /*
     webpack(require('./webpack.config.js'), function (err, stats) {
