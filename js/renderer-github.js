@@ -59,7 +59,7 @@ function commit(content, name) {
     showAlert("Przygotowanie...", "info");
     var github = null;
     var auth_token = readFromSettings("auth_token");
-    if (auth_token == null) {
+    if (auth_token == null || auth_token == 'null') {
         clearAlert();
         authorize('Logowanie do GitHub', function (username, password, token) {
             if (token !== '') {
