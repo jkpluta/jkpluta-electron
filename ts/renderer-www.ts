@@ -6,14 +6,24 @@ export function loadUrl(url: string): boolean
 }
 export function readFromSettings(name: string): any 
 {
-    if (jkp.sharedObj().settings == null)
-        jkp.sharedObj().settings = {};
-    return jkp.sharedObj().settings[name];
+    if (typeof(Storage) !== "undefined") {
+        return localStorage.getItem(name);
+    }
+    else {
+        if (jkp.sharedObj().settings == null)
+            jkp.sharedObj().settings = {};
+        return jkp.sharedObj().settings[name];
+    }
 }
 export function writeToSettings(name: string, value: any) {
-    if (jkp.sharedObj().settings == null)
-        jkp.sharedObj().settings = {};
-    (<any>window).settings[name] = value
+    if (typeof(Storage) !== "undefined") {
+        localStorage.setItem(name, value);
+    }
+    else {
+        if (jkp.sharedObj().settings == null)
+            jkp.sharedObj().settings = {};
+        jkp.sharedObj().settings[name] = value;
+    }
 }
 jkp.sharedObj().loadUrl = loadUrl
 jkp.sharedObj().readFromSettings = readFromSettings

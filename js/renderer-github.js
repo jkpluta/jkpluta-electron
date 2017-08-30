@@ -20,7 +20,8 @@ function authorize(title, func) {
     $('#auth-apply').click(function () {
         var username = $('#auth-username').val();
         var password = $('#auth-password').val();
-        func(username.toString(), password.toString());
+        var token = $('#auth-token').val();
+        func(username.toString(), password.toString(), token.toString());
         return true;
     });
 }
@@ -60,36 +61,46 @@ function commit(content, name) {
     var auth_token = readFromSettings("auth_token");
     if (auth_token == null) {
         clearAlert();
-        authorize('Logowanie do GitHub', function (username, password) {
-            if (username === '' || password === '') {
-                showError("Nie wprowadzono nazwy użytkownika lub hasła");
-                return;
+        authorize('Logowanie do GitHub', function (username, password, token) {
+            if (token !== '') {
+                writeToSettings("auth_token", token);
+                commit(content, name);
             }
-            $.ajax({
-                url: 'https://api.github.com/authorizations',
-                method: "POST",
-                dataType: "json",
-                crossDomain: true,
-                contentType: "application/json; charset=utf-8",
-                data: JSON.stringify({ "scopes": ["user", "repo", "gist"], "note": "jkpluta-electron-".concat(new Date().toISOString()) }),
-                cache: false,
-                beforeSend: function (xhr) {
-                    xhr.setRequestHeader("Authorization", "Basic " + jsBase.Base64.encode(username + ':' + password));
-                    xhr.setRequestHeader("X-Mobile", "false");
-                    xhr.setRequestHeader("X-GitHub-OTP", "two-factor-code");
-                },
-                success: function (data) {
-                    auth_token = data.token;
-                    writeToSettings("auth_token", auth_token);
-                    commit(content, name);
-                },
-                error: function (jqXHR, status, error) {
-                    if (jqXHR.status == 401)
-                        showError("Błędna nazwa użytkownika lub hasło");
-                    else
-                        showError(status.substring(0, 1).toUpperCase() + status.substring(1) + ': ' + jqXHR.status.toString() + ' "' + error + '"');
+            else {
+                if (username === '' || password === '') {
+                    showError("Nie wprowadzono nazwy użytkownika lub hasła");
+                    return;
                 }
-            });
+                $.ajax({
+                    url: 'https://api.github.com/authorizations',
+                    method: "POST",
+                    dataType: "json",
+                    crossDomain: true,
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify({ "scopes": ["user", "repo", "gist"], "note": "jkpluta-electron-".concat(new Date().toISOString()) }),
+                    cache: false,
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("Authorization", "Basic " + jsBase.Base64.encode(username + ':' + password));
+                        xhr.setRequestHeader("X-Mobile", "false");
+                        xhr.setRequestHeader("X-GitHub-OTP", "two-factor-code");
+                    },
+                    success: function (data) {
+                        auth_token = data.token;
+                        writeToSettings("auth_token", auth_token);
+                        commit(content, name);
+                    },
+                    error: function (jqXHR, status, error) {
+                        if (jqXHR.status == 0) {
+                            github = new GitHub({ username: username, password: password });
+                            gitHubCommit(github, content, name);
+                        }
+                        else if (jqXHR.status == 401)
+                            showError("Błędna nazwa użytkownika lub hasło");
+                        else
+                            showError(status.substring(0, 1).toUpperCase() + status.substring(1) + ': ' + jqXHR.status.toString() + ' "' + error + '"');
+                    }
+                });
+            }
         });
     }
     else {

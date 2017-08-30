@@ -7,15 +7,25 @@ function loadUrl(url) {
 }
 exports.loadUrl = loadUrl;
 function readFromSettings(name) {
-    if (jkp.sharedObj().settings == null)
-        jkp.sharedObj().settings = {};
-    return jkp.sharedObj().settings[name];
+    if (typeof (Storage) !== "undefined") {
+        return localStorage.getItem(name);
+    }
+    else {
+        if (jkp.sharedObj().settings == null)
+            jkp.sharedObj().settings = {};
+        return jkp.sharedObj().settings[name];
+    }
 }
 exports.readFromSettings = readFromSettings;
 function writeToSettings(name, value) {
-    if (jkp.sharedObj().settings == null)
-        jkp.sharedObj().settings = {};
-    window.settings[name] = value;
+    if (typeof (Storage) !== "undefined") {
+        localStorage.setItem(name, value);
+    }
+    else {
+        if (jkp.sharedObj().settings == null)
+            jkp.sharedObj().settings = {};
+        jkp.sharedObj().settings[name] = value;
+    }
 }
 exports.writeToSettings = writeToSettings;
 jkp.sharedObj().loadUrl = loadUrl;
