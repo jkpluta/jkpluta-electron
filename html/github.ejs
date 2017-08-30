@@ -1,6 +1,11 @@
-<script>
-  require('../js/renderer-github');
-</script>
+<%if (target === 'www') { %>  
+  <script src="../js/renderer-github.js"></script>
+<% } else { %>
+  <script>
+    require('../js/renderer-github');
+  </script>
+<% }%>
+
   <div class="modal fade" id="auth-edit" role="dialog">
     <div class="modal-dialog">
     

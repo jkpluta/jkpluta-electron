@@ -123,9 +123,6 @@ gulp.task('www', function() {
     gulp.src("build/*")
     .pipe(gulp.dest("www/build"));
 
-    gulp.src("simple-commonjs.js")
-    .pipe(gulp.dest("www/js"));
-
     gulp.src("./img/icon.ico")
     .pipe(rename("favicon.ico"))
     .pipe(gulp.dest("www"));
