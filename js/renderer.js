@@ -103,10 +103,6 @@ function prepareBookmark(element) {
 exports.prepareBookmark = prepareBookmark;
 function prepareBookmarks(element) {
     element.find('a').attr('draggable', "false");
-    element.find('a').click(function () {
-        // loadURL($(this).attr('href'))
-        return false;
-    });
     $('dt').off();
     $('dt').attr('draggable', "true");
     $('dt').on('dragover', function (e) {
@@ -174,9 +170,27 @@ function prepareBookmarks(element) {
     element.find('a[icon_uri]').each(function () {
         prepareBookmark($(this));
     });
+    element.find('a').off();
+    element.find('a').click(function () {
+        var link = $(this);
+        $('#link-name').val(link.text());
+        $('#link-address').val(link.attr('href'));
+        $('#link-edit').modal({});
+        $('#link-apply').off();
+        $('#link-apply').click(function () {
+            $('#link-apply').off();
+            link.attr('href', $('#link-address').val().toString());
+            if ($("#link-favicon").is(":visible"))
+                link.attr('icon_uri', $('#link-favicon').attr('src'));
+            link.text($('#link-name').val().toString());
+            prepareBookmark(link);
+            return true;
+        });
+        return false;
+    });
     element.find('h1').after('<button title="Zmień..." class="jkp edit-folder btn btn-sm btn-outline-primary"><span class="fa fa-pencil-square-o"></span></button><button title="Odśwież folder..." class="jkp refresh-folder btn btn-sm btn-outline-warning"><span class="fa fa-check-square-o"></span></button> <button title="Dodaj folder..." class="jkp add-folder btn btn-sm btn-outline-success"><span class="fa fa-plus-square-o"></span></button>');
     element.find('h3').after('<button title="Zmień..." class="jkp edit-folder btn btn-sm btn-outline-primary"><span class="fa fa-pencil-square-o"></span></button> <button title="Usuń folder" class="jkp remove-folder btn btn-sm btn-outline-danger"><span class="fa fa-times-rectangle-o"></span></button> <button title="Dodaj folder..." class="jkp create-folder btn btn-sm btn-outline-success"><span class="fa fa-plus-square-o"></span></button><button title="Odśwież folder..." class="jkp refresh-folder btn btn-sm btn-outline-warning"><span class="fa fa-check-square-o"></span></button> <button title="Dodaj zakładkę..." class="jkp add-link btn btn-sm btn-outline-success"><span class="fa fa-plus"></span></button>');
-    element.find('a').after(' <button title="Zmień..." class="jkp edit-link btn btn-sm btn-outline-primary"><span class="fa fa-pencil"></span></button> <button title="Usuń zakładkę" class="jkp remove-link btn btn-sm btn-outline-danger"><span class="fa fa-times"></span></button> <button title="Dodaj zakładkę..." class="jkp create-link btn btn-sm btn-outline-success"><span class="fa fa-plus"></span></button>');
+    element.find('a').after(' <button title="Usuń zakładkę" class="jkp remove-link btn btn-sm btn-outline-danger"><span class="fa fa-times"></span></button> <button title="Dodaj zakładkę..." class="jkp create-link btn btn-sm btn-outline-success"><span class="fa fa-plus"></span></button>');
     element.find('dd, hr').after(' <button title="Usuń element" class="jkp remove-tag btn btn-sm btn-outline-danger"><span class="fa fa-times-circle"></span></button>');
     element.find('.edit-folder').click(function () {
         var folder = $(this).siblings('h1,h3:first');
@@ -239,22 +253,6 @@ function prepareBookmarks(element) {
                 link.attr('icon_uri', $('#link-favicon').attr('src'));
             link.text($('#link-name').val().toString());
             prepareBookmarks(link.parent());
-            return true;
-        });
-    });
-    element.find('.edit-link').click(function () {
-        var link = $(this).siblings('a').first();
-        $('#link-name').val(link.text());
-        $('#link-address').val(link.attr('href'));
-        $('#link-edit').modal({});
-        $('#link-apply').off();
-        $('#link-apply').click(function () {
-            $('#link-apply').off();
-            link.attr('href', $('#link-address').val().toString());
-            if ($("#link-favicon").is(":visible"))
-                link.attr('icon_uri', $('#link-favicon').attr('src'));
-            link.text($('#link-name').val().toString());
-            prepareBookmark(link);
             return true;
         });
     });

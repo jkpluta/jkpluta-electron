@@ -70,7 +70,9 @@ $theme-colors: (
 $body-bg: $gray-900; // $white;
 $body-color: $gray-100; // $gray-900;
 $link-color: $color-primary-0; //theme-color("primary");
+$link-decoration: none;
 $link-hover-color: $color-primary-1;//darken($link-color, 15%);
+$link-hover-decoration: none;
 $modal-content-bg: $gray-700; //$white !default;
 $close-color: $white; //$black !default;
 
