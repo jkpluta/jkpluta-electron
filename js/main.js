@@ -39,7 +39,7 @@ function createWindow() {
     };
     // Create the browser window.
     mainWindow = new BrowserWindow({ width: 900, height: 620, title: 'jkp', icon: path.join(__dirname, icon) });
-    loadPage('main');
+    loadPage('index');
     // Open the DevTools.
     // mainWindow.webContents.openDevTools()
     // Emitted when the window is closed.
@@ -89,7 +89,7 @@ function createWindow() {
             submenu: [
                 {
                     label: 'Główna',
-                    click: function () { loadPage('main'); }
+                    click: function () { loadPage('index'); }
                 },
                 {
                     label: 'Informacje',
