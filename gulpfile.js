@@ -7,17 +7,18 @@ var sass = require('gulp-sass');
 var fs = require('fs');
 var webpack = require('webpack')
 
-function ejsToHtml(target, dst) {
+function ejsToHtml(target, base, dst) {
     var ejsPages = JSON.parse(fs.readFileSync('./html/ejs.json', 'utf8'));
     var opts = { cache: false };
     for(var ejsName in ejsPages) {
         var ejsPage = ejsPages[ejsName];
         if (ejsPage.target == null || ejsPage.target === target) {
             ejsPage.target = target;
+            ejsPage.base = base;
             gulp.src('./html/' + ejsPage.template + '.ejs')
             .pipe(ejs(ejsPage, opts))
             .pipe(rename(ejsName + '.html'))
-            .pipe(gulp.dest(dst + '/html'))
+            .pipe(gulp.dest(dst))
         }
     }
 }
@@ -69,7 +70,7 @@ gulp.task('app', function() {
     gulp.src("build/*")
     .pipe(gulp.dest("app/build"));
 
-    ejsToHtml('electron', 'app')
+    ejsToHtml('electron', '..', 'app/html')
     
     webpack(require('./webpack.config.app.js'), function (err, stats) {
         if (err)
@@ -104,22 +105,22 @@ gulp.task('www', function() {
     fs.writeFileSync('www/package.json', JSON.stringify(www), { encoding: 'utf8'})
       
     gulp.src("css/*")
-    .pipe(gulp.dest("www/css"));
+    .pipe(gulp.dest("www/public/css"));
     
     gulp.src("fonts/*")
-    .pipe(gulp.dest("www/fonts"));
+    .pipe(gulp.dest("www/public/fonts"));
     
     gulp.src("img/*")
-    .pipe(gulp.dest("www/img"));
+    .pipe(gulp.dest("www/public/img"));
 
     gulp.src("build/*")
     .pipe(gulp.dest("www/build"));
 
     gulp.src("./img/icon.ico")
     .pipe(rename("favicon.ico"))
-    .pipe(gulp.dest("www"));
+    .pipe(gulp.dest("www/public"));
 
-    ejsToHtml('www', 'www')
+    ejsToHtml('www', '.', 'www/public')
     
     webpack(require('./webpack.config.www.js'), function (err, stats) {
         if (err)

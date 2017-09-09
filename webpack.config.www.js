@@ -8,7 +8,7 @@ module.exports = {
     },
     target: 'web',
     output: {
-        path: path.resolve(__dirname, './www/js'),
+        path: path.resolve(__dirname, './www/public/js'),
         filename: '[name].js'
     }
 }

@@ -1,8 +1,8 @@
 <%if (target === 'www') { %>  
-  <script src="../js/renderer-github.js"></script>
+  <script src="<%- base %>/js/renderer-github.js"></script>
 <% } else { %>
   <script>
-    require('../js/renderer-github');
+    require('<%- base %>/js/renderer-github');
   </script>
 <% }%>
 

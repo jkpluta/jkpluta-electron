@@ -162,7 +162,8 @@ function renderPage(browserWindow, name) {
         ejsElectron.data({
             title: ejsPage.title,
             data: ejsPage.data,
-            target: "electron"
+            base: "..",
+            target: "electron",
         });
         pageName = '../html/' + ejsPage.template + '.ejs';
     }
