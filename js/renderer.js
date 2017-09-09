@@ -23,8 +23,12 @@ function startAjax(sel, spnr, base, href, func) {
             func(sel, base, html);
         },
         error: function (xhr, status, error) {
-            if (spnr != null)
-                $(spnr).html('<img src="../img/error.png"> <b>' + status + '</b> <i>' + error + "</i>");
+            if (spnr != null) {
+                if (xhr.status == 0)
+                    $(spnr).html('');
+                else
+                    $(spnr).html('<img src="../img/error.png"> <b>' + status + '</b> <i>' + error + '</i>');
+            }
         }
     });
 }
@@ -41,7 +45,7 @@ function start(sel, spnr, href, func) {
         },
         error: function (xhr, status, error) {
             if (spnr != null)
-                $(spnr).html('<img src="../img/error.png"> <b>' + status + '</b> <i>' + error + "</i>");
+                $(spnr).html('<img src="../img/error.png"> <b>' + status + '</b> <i>' + error + '</i>');
         }
     });
 }
