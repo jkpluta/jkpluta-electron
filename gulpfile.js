@@ -28,32 +28,16 @@ gulp.task('default', function() {
     .pipe(sass.sync().on('error', sass.logError))
     .pipe(gulp.dest('./css'));
 
-    /*
-    gulp.src("electron_modules/bootstrap/dist/css/*.min.css")
-    .pipe(gulp.dest("css"));
-    
-    gulp.src("electron_modules/font-awesome/css/*.min.css")
-    .pipe(gulp.dest("css"));
-    
     gulp.src("electron_modules/font-awesome/fonts/*")
     .pipe(gulp.dest("fonts"));
-    */
-    
-    /*
-    webpack(require('./webpack.config.js'), function (err, stats) {
-        if (err)
-            throw new gutil.PluginError('webpack', err);
-        gutil.log('[webpack] Completed\n' + stats.toString({
-            assets: true,
-            chunks: false,
-            chunkModules: false,
-            colors: true,
-            hash: false,
-            timings: false,
-            version: false
-        }));
-    });
-    */
+
+});
+
+gulp.task('io', function() {
+
+    return gulp.src('./sass/*.scss')
+    .pipe(sass.sync().on('error', sass.logError))
+    .pipe(gulp.dest('../jkpluta.github.io/css'));
 
 });
 

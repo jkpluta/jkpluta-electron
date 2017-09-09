@@ -56,7 +56,7 @@ $color-primary-3: #667A14;
 $color-primary-4: #415200;
 
 $theme-colors: (
-  primary: $color-primary-0, //#556B2F,
+  primary: $color-primary-3, //#556B2F,
   secondary: $gray-600,
   success: $green,
   info: $cyan,
@@ -67,36 +67,15 @@ $theme-colors: (
 );
 
 
-// Body
-//
-// Settings for the `<body>` element.
-
 $body-bg: $gray-900; // $white;
 $body-color: $gray-100; // $gray-900;
-
-// Links
-//
-// Style anchor elements.
-
 $link-color: $color-primary-0; //theme-color("primary");
-$link-decoration: none;
-$link-hover-color: lighten($link-color, 15%);//darken($link-color, 15%);
-$link-hover-decoration: underline;
-
+$link-hover-color: $color-primary-1;//darken($link-color, 15%);
 $modal-content-bg: $gray-700; //$white !default;
 $close-color: $white; //$black !default;
 
 $font-family-sans-serif: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !default;
 $font-family-monospace:  "Source Code Pro", "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !default;
 
-.navbar {
-  background-color: $color-primary-4;
-  margin-bottom: 2px; 
-}
-
-@import "./node_modules/bootstrap/scss/bootstrap";
-@import "./node_modules/bootstrap/scss/bootstrap-grid";
-@import "./node_modules/bootstrap/scss/bootstrap-reboot";
 @import "./node_modules/bootstrap/scss/bootstrap";
 @import "./node_modules/font-awesome/scss/font-awesome";
-
