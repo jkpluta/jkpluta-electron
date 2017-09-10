@@ -138,3 +138,41 @@ gulp.task('www', function() {
 
 });
 
+gulp.task('cordova', function() {
+
+    var package = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+    var www = JSON.parse(fs.readFileSync('../jkpluta-cordova/package.json', 'utf8'));
+    www.name = package.name;
+    www.version = package.version;
+    www.description = package.description;
+    www.author = package.author;
+    www.license = package.license;
+    fs.writeFileSync('../jkpluta-cordova/package.json', JSON.stringify(www), { encoding: 'utf8'})
+      
+    gulp.src("css/*")
+    .pipe(gulp.dest("../jkpluta-cordova/www/css"));
+    
+    gulp.src("fonts/*")
+    .pipe(gulp.dest("../jkpluta-cordova/www/fonts"));
+    
+    gulp.src("img/*")
+    .pipe(gulp.dest("../jkpluta-cordova/www/img"));
+
+    ejsToHtml('www', '.', '../jkpluta-cordova/www')
+    
+    webpack(require('./webpack.config.cordova.js'), function (err, stats) {
+        if (err)
+            throw new gutil.PluginError('webpack', err);
+        gutil.log('[webpack] Completed\n' + stats.toString({
+            assets: true,
+            chunks: false,
+            chunkModules: false,
+            colors: true,
+            hash: false,
+            timings: false,
+            version: false
+        }));
+    });
+
+});
+
