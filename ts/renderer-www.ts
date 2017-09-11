@@ -1,7 +1,10 @@
 import * as jkp from "./jkp-utils"
 export function loadUrl(url: string): boolean
 {
-    (<any>window).location = "./" + url.substring(1) + ".html";
+    if (url.substring(0, 1) === '#')
+        (<any>window).location = "./" + url.substring(1) + ".html";
+    else
+        (<any>window).location = url;
     return true;
 }
 export function readFromSettings(name: string): any 
