@@ -3,17 +3,40 @@
 <body>
 <div class="container">
   <% include nav.ejs %>
-  <div class="row">
-    <div id="spnnr" class="col">
+  <div id="top" class="row">
+    <div class="col">
+      <p>
+        <em>Eksperymentalna</em> strona startowa <a href="https://github.com/jkpluta" target="_blank">github.com/jkpluta</a>.
+      </p>          
+      <p>
+        <form action="http://www.google.com/search" class="form-inline" method="get" name="search-form" target="_blank">
+          <input id="google" autocomplete="on" class="form-control col-9 col-md-8 col-lg-6 ml-auto" name="q" placeholder="Google" required="required" type="text">
+          <button class="btn btn-primary form-control col-3 col-md-2 mr-auto" type="submit">Szukaj</button>
+        </form>
+      </p>
     </div>
   </div>
+
+  <div id="main" class="row">
+    <div id="info" class="col">
+    </div>
+  </div>
+
+  <div id="icons" class="row">
+    <div id="icns" class="col">
+    </div>
+  </div>
+
+  <div id="bks" class="row">
+    <div id="bke" class="col">
+    </div>
+  </div>
+
 </div>
-<div id="main">
-</div>
-</body>
-<script>
+<script type="text/javascript">
 $(document).ready(function() {
   startMain("/index.html");
 });
 </script>
+</body>
 </html>
