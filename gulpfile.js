@@ -26,16 +26,9 @@ function ejsToHtml(target, theme, base, dst) {
 
 gulp.task('default', function() {
 
-    gulp.src('./sass/bootstrap-material-design.scss')
-    .pipe(sass.sync().on('error', sass.logError))
-    .pipe(rename('style.css'))
-    .pipe(gulp.dest('./css'));
-
-    /*
     gulp.src('./sass/style.scss')
     .pipe(sass.sync().on('error', sass.logError))
     .pipe(gulp.dest('./css'));
-    */
 
     gulp.src("electron_modules/font-awesome/fonts/*")
     .pipe(gulp.dest("fonts"));

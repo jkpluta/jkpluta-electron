@@ -1,5 +1,5 @@
 <% if (theme.indexOf('material-design')!==-1) { %>
-  <nav id="header" class="navbar fixed-top navbar-expand navbar-dark bg-faded">
+  <nav id="header" class="navbar navbar-expand navbar-dark fixed-top bg-dark">
     <a href="#index" class="navbar-brand">
       <img src="<%- base %>/img/icon.png" class="d-inline-block align-top" alt="">
     </a>
@@ -18,15 +18,13 @@
       </ul>
   </nav>
   <style>
-    body { 
-      padding-top: 56px; 
-    }
-    nav { 
-      background-color: black; 
-    }  
+    body {
+      min-height: 75rem;
+      padding-top: 4.5rem;
+    }   
   </style>
 <% } else { %>
-  <nav id="header" class="navbar navbar-expand-sm navbar-light bg-faded" style="background-color: #8DA336; margin-bottom: 2px;">
+  <nav id="header" class="navbar navbar-expand-sm navbar-light fixed-top bg-faded" style="background-color: #8DA336; margin-bottom: 2px;">
     <a href="#index" class="navbar-brand">
       <img src="<%- base %>/img/icon.png" class="d-inline-block align-top" alt="">
       Jan K. Pluta
@@ -48,6 +46,12 @@
       </ul>
     </div>
   </nav>
+  <style>
+    body {
+      min-height: 75rem;
+      padding-top: 4.5rem;
+    }   
+  </style>
 <% } %>
 
   <div class="row" style="display: none;">
