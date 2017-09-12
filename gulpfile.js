@@ -26,7 +26,11 @@ function ejsToHtml(target, theme, base, dst) {
 
 gulp.task('default', function() {
 
-    gulp.src('./sass/style.scss')
+    gulp.src('./sass/dark.scss')
+    .pipe(sass.sync().on('error', sass.logError))
+    .pipe(gulp.dest('./css'));
+
+    gulp.src('./sass/bootstrap.scss')
     .pipe(sass.sync().on('error', sass.logError))
     .pipe(gulp.dest('./css'));
 
@@ -37,8 +41,9 @@ gulp.task('default', function() {
 
 gulp.task('io', function() {
 
-    return gulp.src('./sass/*.scss')
+    return gulp.src('./sass/dark.scss')
     .pipe(sass.sync().on('error', sass.logError))
+    .pipe(rename('style.css'))
     .pipe(gulp.dest('../jkpluta.github.io/css'));
 
 });
@@ -59,9 +64,10 @@ gulp.task('app', function() {
     app.license = package.license;
     fs.writeFileSync('app/package.json', JSON.stringify(app), { encoding: 'utf8'})
       
-    gulp.src("css/*")
-    .pipe(gulp.dest("app/css"));
-    
+    gulp.src('./sass/dark.scss')
+    .pipe(sass.sync().on('error', sass.logError))
+    .pipe(gulp.dest('app/css'));
+
     gulp.src("fonts/*")
     .pipe(gulp.dest("app/fonts"));
     
@@ -105,9 +111,10 @@ gulp.task('www', function() {
     www.license = package.license;
     fs.writeFileSync('www/package.json', JSON.stringify(www), { encoding: 'utf8'})
       
-    gulp.src("css/*")
-    .pipe(gulp.dest("www/public/css"));
-    
+    gulp.src('./sass/bootstrap.scss')
+    .pipe(sass.sync().on('error', sass.logError))
+    .pipe(gulp.dest('www/public/css'));
+
     gulp.src("fonts/*")
     .pipe(gulp.dest("www/public/fonts"));
     
@@ -121,7 +128,7 @@ gulp.task('www', function() {
     .pipe(rename("favicon.ico"))
     .pipe(gulp.dest("www/public"));
 
-    ejsToHtml('www', 'dark', '.', 'www/public')
+    ejsToHtml('www', 'bootstrap', '.', 'www/public')
     
     webpack(require('./webpack.config.www.js'), function (err, stats) {
         if (err)
