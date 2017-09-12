@@ -1,6 +1,8 @@
 import * as jkp from "./jkp-utils"
 export function loadUrl(url: string): boolean
 {
+    if (url == null || url === '' || url === '#')
+        return false;
     if (url.substring(0, 1) === '#')
         (<any>window).location = "./" + url.substring(1) + ".html";
     else

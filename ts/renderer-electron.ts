@@ -1,4 +1,4 @@
-import * as electron from  "electron";
+import * as electron from "electron";
 import * as jkp from "./jkp-utils"
 export function loadUrl(url: string): boolean 
 {

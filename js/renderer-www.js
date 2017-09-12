@@ -2,6 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var jkp = require("./jkp-utils");
 function loadUrl(url) {
+    if (url == null || url === '' || url === '#')
+        return false;
     if (url.substring(0, 1) === '#')
         window.location = "./" + url.substring(1) + ".html";
     else

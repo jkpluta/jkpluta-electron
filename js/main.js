@@ -166,6 +166,7 @@ function renderPage(browserWindow, name) {
             data: ejsPage.data,
             base: "..",
             target: "electron",
+            theme: "dark"
         });
         pageName = '../html/' + ejsPage.template + '.ejs';
     }

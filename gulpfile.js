@@ -7,13 +7,14 @@ var sass = require('gulp-sass');
 var fs = require('fs');
 var webpack = require('webpack')
 
-function ejsToHtml(target, base, dst) {
+function ejsToHtml(target, theme, base, dst) {
     var ejsPages = JSON.parse(fs.readFileSync('./html/ejs.json', 'utf8'));
     var opts = { cache: false };
     for(var ejsName in ejsPages) {
         var ejsPage = ejsPages[ejsName];
         if (ejsPage.target == null || ejsPage.target === target) {
             ejsPage.target = target;
+            ejsPage.theme = theme;
             ejsPage.base = base;
             gulp.src('./html/' + ejsPage.template + '.ejs')
             .pipe(ejs(ejsPage, opts))
@@ -77,7 +78,7 @@ gulp.task('app', function() {
     gulp.src("build/*")
     .pipe(gulp.dest("app/build"));
 
-    ejsToHtml('electron', '..', 'app/html')
+    ejsToHtml('electron', 'dark', '..', 'app/html')
     
     webpack(require('./webpack.config.app.js'), function (err, stats) {
         if (err)
@@ -127,7 +128,7 @@ gulp.task('www', function() {
     .pipe(rename("favicon.ico"))
     .pipe(gulp.dest("www/public"));
 
-    ejsToHtml('www', '.', 'www/public')
+    ejsToHtml('www', 'dark', '.', 'www/public')
     
     webpack(require('./webpack.config.www.js'), function (err, stats) {
         if (err)
@@ -156,7 +157,9 @@ gulp.task('cordova', function() {
     www.license = package.license;
     fs.writeFileSync('../jkpluta-cordova/package.json', JSON.stringify(www), { encoding: 'utf8'})
       
-    gulp.src("css/*")
+    gulp.src('./sass/bootstrap-material-design.scss')
+    .pipe(sass.sync().on('error', sass.logError))
+    .pipe(rename('style.css'))
     .pipe(gulp.dest("../jkpluta-cordova/www/css"));
     
     gulp.src("fonts/*")
@@ -165,7 +168,7 @@ gulp.task('cordova', function() {
     gulp.src("img/*")
     .pipe(gulp.dest("../jkpluta-cordova/www/img"));
 
-    ejsToHtml('www', '.', '../jkpluta-cordova/www')
+    ejsToHtml('www', 'bootstrap-material-design', '.', '../jkpluta-cordova/www')
     
     webpack(require('./webpack.config.cordova.js'), function (err, stats) {
         if (err)
