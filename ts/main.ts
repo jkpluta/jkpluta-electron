@@ -26,6 +26,12 @@ storage.get('settings', function (error, data) {
     if (typeof data.auth_token !== "undefined")
         settings.auth_token = data.auth_token;
 });
+let theme = 'dark'
+for (var idx in process.argv) {
+    var arg = process.argv[idx];
+    if (arg.substring(0, 8) === '--theme=')
+        theme = arg.substring(8);
+}
 var icon = '../img/icon.png';
 if (process.platform === 'win32')
     icon = '../img/icon.ico';
@@ -164,7 +170,7 @@ function renderPage(browserWindow, name) {
             data: ejsPage.data,
             base: "..",
             target: "electron",
-            theme: "dark"
+            theme: theme
         });
         pageName = '../html/' + ejsPage.template + '.ejs';
     }

@@ -30,6 +30,10 @@ gulp.task('default', function() {
     .pipe(sass.sync().on('error', sass.logError))
     .pipe(gulp.dest('./css'));
 
+    gulp.src('./sass/light.scss')
+    .pipe(sass.sync().on('error', sass.logError))
+    .pipe(gulp.dest('./css'));
+
     gulp.src('./sass/bootstrap.scss')
     .pipe(sass.sync().on('error', sass.logError))
     .pipe(gulp.dest('./css'));
