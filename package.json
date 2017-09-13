@@ -26,6 +26,9 @@
   },
   "scripts": {
     "start": "electron .",
+    "start-bootstrap": "electron . --theme=bootstrap",
+    "start-dark": "electron . --theme=dark",
+    "start-light": "electron . --theme=light",
     "gulp": "gulp",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
