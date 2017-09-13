@@ -5,7 +5,9 @@ var ejs = require("gulp-ejs");
 var sass = require('gulp-sass');
 
 var fs = require('fs');
-var webpack = require('webpack')
+var webpack = require('webpack');
+
+var defaultTheme = 'bootstrap';
 
 function ejsToHtml(target, theme, base, dst) {
     var ejsPages = JSON.parse(fs.readFileSync('./html/ejs.json', 'utf8'));
@@ -68,7 +70,7 @@ gulp.task('app', function() {
     app.license = package.license;
     fs.writeFileSync('app/package.json', JSON.stringify(app), { encoding: 'utf8'})
       
-    gulp.src('./sass/dark.scss')
+    gulp.src('./sass/' + defaultTheme + '.scss')
     .pipe(sass.sync().on('error', sass.logError))
     .pipe(gulp.dest('app/css'));
 
@@ -81,7 +83,7 @@ gulp.task('app', function() {
     gulp.src("build/*")
     .pipe(gulp.dest("app/build"));
 
-    ejsToHtml('electron', 'dark', '..', 'app/html')
+    ejsToHtml('electron', defaultTheme, '..', 'app/html')
     
     webpack(require('./webpack.config.app.js'), function (err, stats) {
         if (err)
@@ -115,7 +117,7 @@ gulp.task('www', function() {
     www.license = package.license;
     fs.writeFileSync('www/package.json', JSON.stringify(www), { encoding: 'utf8'})
       
-    gulp.src('./sass/bootstrap.scss')
+    gulp.src('./sass/' + defaultTheme + '.scss')
     .pipe(sass.sync().on('error', sass.logError))
     .pipe(gulp.dest('www/public/css'));
 
@@ -129,7 +131,7 @@ gulp.task('www', function() {
     .pipe(rename("favicon.ico"))
     .pipe(gulp.dest("www/public"));
 
-    ejsToHtml('www', 'bootstrap', '.', 'www/public')
+    ejsToHtml('www', defaultTheme, '.', 'www/public')
     
     webpack(require('./webpack.config.www.js'), function (err, stats) {
         if (err)
@@ -191,9 +193,10 @@ gulp.task('nginx', function() {
 
     var dir = '/var/www/html';
 
-    gulp.src("css/*")
-    .pipe(gulp.dest(dir + "/css"));
-    
+    gulp.src('./sass/' + defaultTheme + '.scss')
+    .pipe(sass.sync().on('error', sass.logError))
+    .pipe(gulp.dest(dir + '/css'));
+
     gulp.src("fonts/*")
     .pipe(gulp.dest(dir + "/fonts"));
     
@@ -204,7 +207,7 @@ gulp.task('nginx', function() {
     .pipe(rename("favicon.ico"))
     .pipe(gulp.dest(dir));
 
-    ejsToHtml('www', 'dark', '.', dir)
+    ejsToHtml('www', defaultTheme, '.', dir)
     
     webpack(require('./webpack.config.nginx.js'), function (err, stats) {
         if (err)
