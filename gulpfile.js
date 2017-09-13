@@ -114,9 +114,6 @@ gulp.task('www', function() {
     gulp.src("img/*")
     .pipe(gulp.dest("www/public/img"));
 
-    gulp.src("build/*")
-    .pipe(gulp.dest("www/build"));
-
     gulp.src("./img/icon.ico")
     .pipe(rename("favicon.ico"))
     .pipe(gulp.dest("www/public"));
@@ -164,6 +161,41 @@ gulp.task('cordova', function() {
     ejsToHtml('www', 'bootstrap-material-design', '.', '../jkpluta-cordova/www')
     
     webpack(require('./webpack.config.cordova.js'), function (err, stats) {
+        if (err)
+            throw new gutil.PluginError('webpack', err);
+        gutil.log('[webpack] Completed\n' + stats.toString({
+            assets: true,
+            chunks: false,
+            chunkModules: false,
+            colors: true,
+            hash: false,
+            timings: false,
+            version: false
+        }));
+    });
+
+});
+
+gulp.task('nginx', function() {
+
+    var dir = '/var/www/html';
+
+    gulp.src("css/*")
+    .pipe(gulp.dest(dir + "/css"));
+    
+    gulp.src("fonts/*")
+    .pipe(gulp.dest(dir + "/fonts"));
+    
+    gulp.src("img/*")
+    .pipe(gulp.dest(dir + "/img"));
+
+    gulp.src("./img/icon.ico")
+    .pipe(rename("favicon.ico"))
+    .pipe(gulp.dest(dir));
+
+    ejsToHtml('www', 'dark', '.', dir)
+    
+    webpack(require('./webpack.config.nginx.js'), function (err, stats) {
         if (err)
             throw new gutil.PluginError('webpack', err);
         gutil.log('[webpack] Completed\n' + stats.toString({
