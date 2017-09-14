@@ -3,10 +3,12 @@ var gutil = require('gulp-util');
 var rename = require('gulp-rename');
 var ejs = require("gulp-ejs");
 var sass = require('gulp-sass');
+var source = require('vinyl-source-stream');
 
 var fs = require('fs');
 var webpack = require('webpack');
-
+var browserify = require('browserify');
+ 
 var defaultTheme = 'bootstrap';
 
 function ejsToHtml(target, theme, base, dst) {
@@ -24,6 +26,22 @@ function ejsToHtml(target, theme, base, dst) {
             .pipe(gulp.dest(dst))
         }
     }
+}
+
+function browserifyToJs(dst) {
+
+    browserify('./js/renderer.js').bundle()
+    .pipe(source('renderer.js'))
+    .pipe(gulp.dest(dst));
+
+    browserify('./js/renderer-www.js').bundle()
+    .pipe(source('renderer-www.js'))
+    .pipe(gulp.dest(dst));
+
+    browserify('./js/renderer-github.js').bundle()
+    .pipe(source('renderer-github.js'))
+    .pipe(gulp.dest(dst));
+
 }
 
 gulp.task('default', function() {
@@ -131,22 +149,10 @@ gulp.task('www', function() {
     .pipe(rename("favicon.ico"))
     .pipe(gulp.dest("www/public"));
 
-    ejsToHtml('www', defaultTheme, '.', 'www/public')
-    
-    webpack(require('./webpack.config.www.js'), function (err, stats) {
-        if (err)
-            throw new gutil.PluginError('webpack', err);
-        gutil.log('[webpack] Completed\n' + stats.toString({
-            assets: true,
-            chunks: false,
-            chunkModules: false,
-            colors: true,
-            hash: false,
-            timings: false,
-            version: false
-        }));
-    });
+    ejsToHtml('www', defaultTheme, '.', 'www/public');
 
+    browserifyToJs('www/public/js');
+    
 });
 
 gulp.task('cordova', function() {
@@ -173,20 +179,8 @@ gulp.task('cordova', function() {
 
     ejsToHtml('www', 'bootstrap-material-design', '.', '../jkpluta-cordova/www')
     
-    webpack(require('./webpack.config.cordova.js'), function (err, stats) {
-        if (err)
-            throw new gutil.PluginError('webpack', err);
-        gutil.log('[webpack] Completed\n' + stats.toString({
-            assets: true,
-            chunks: false,
-            chunkModules: false,
-            colors: true,
-            hash: false,
-            timings: false,
-            version: false
-        }));
-    });
-
+    browserifyToJs('../jkpluta-cordova/www/js');
+    
 });
 
 gulp.task('nginx', function() {
@@ -209,19 +203,7 @@ gulp.task('nginx', function() {
 
     ejsToHtml('www', defaultTheme, '.', dir)
     
-    webpack(require('./webpack.config.nginx.js'), function (err, stats) {
-        if (err)
-            throw new gutil.PluginError('webpack', err);
-        gutil.log('[webpack] Completed\n' + stats.toString({
-            assets: true,
-            chunks: false,
-            chunkModules: false,
-            colors: true,
-            hash: false,
-            timings: false,
-            version: false
-        }));
-    });
-
+    browserifyToJs(dir + '/js');
+    
 });
 

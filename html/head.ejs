@@ -5,14 +5,14 @@
   <meta name="description" content="Jan K. Pluta">
   <link rel="stylesheet" href="<%- base %>/css/<%- theme %>.css">
   <title><%= title %></title>
-<% if (target === 'www') { %>  
-  <script src="<%- base %>/js/renderer.js"></script>
-  <script src="<%- base %>/js/renderer-<%= target %>.js"></script>
-<% } else { %>
+<% if (target === 'electron') { %>  
   <script>
     require('<%- base %>/js/renderer')
     require('<%- base %>/js/renderer-<%= target %>')
   </script>
+<% } else { %>
+  <script src="<%- base %>/js/renderer.js"></script>
+  <script src="<%- base %>/js/renderer-<%= target %>.js"></script>
 <% }%>
   <style>
     dl { margin-left: 2em; }
