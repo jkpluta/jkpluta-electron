@@ -9,9 +9,35 @@ var fs = require('fs');
 var webpack = require('webpack');
 var browserify = require('browserify');
  
-var defaultTheme = 'bootstrap';
+function gCopy(src, dst) {
+    gulp.src(src)
+    .pipe(gulp.dest(dst));
+}
 
-function ejsToHtml(target, theme, base, dst) {
+function gCopyRen(src, name, dst) {
+    gulp.src(src)
+    .pipe(rename(name))
+    .pipe(gulp.dest(dst));
+}
+
+function gMkDir(dst) {
+    try {
+        fs.mkdirSync(dst);
+    } catch (err) {
+    }
+}
+
+function gCpDir(dir, dst) {
+    gulp.src(dir + "/*")
+    .pipe(gulp.dest(dst + "/" + dir));
+}
+
+function gCpDirs(dirs, dst) {
+    for(idx in dirs)
+        gCpDir(dirs[idx], dst);
+}
+
+function gEjs(target, theme, base, dst) {
     var ejsPages = JSON.parse(fs.readFileSync('./html/ejs.json', 'utf8'));
     var opts = { cache: false };
     for(var ejsName in ejsPages) {
@@ -28,81 +54,60 @@ function ejsToHtml(target, theme, base, dst) {
     }
 }
 
-function browserifyToJs(dst) {
-
-    browserify('./js/renderer.js').bundle()
-    .pipe(source('renderer.js'))
+function gBrowserify(name, dst) {
+    browserify('./js/' + name).bundle()
+    .pipe(source(name))
     .pipe(gulp.dest(dst));
+}
 
-    browserify('./js/renderer-www.js').bundle()
-    .pipe(source('renderer-www.js'))
+function gBrowserifyAll(dst) {
+    gBrowserify('renderer.js', dst);
+    gBrowserify('renderer-www.js', dst);
+    gBrowserify('renderer-github.js', dst);
+}
+
+function gSass(theme, dst) {
+    gulp.src('./sass/' + theme + '.scss')
+    .pipe(sass.sync().on('error', sass.logError))
     .pipe(gulp.dest(dst));
+}
 
-    browserify('./js/renderer-github.js').bundle()
-    .pipe(source('renderer-github.js'))
-    .pipe(gulp.dest(dst));
+function gJson(src, dst) {
+    var package = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+    var data = JSON.parse(fs.readFileSync(src, 'utf8'));
+    data.name = package.name;
+    data.version = package.version;
+    data.description = package.description;
+    data.author = package.author;
+    data.license = package.license;
+    fs.writeFileSync(dst + '/package.json', JSON.stringify(data), { encoding: 'utf8'})
+}
 
+function gPages(target, theme, dst) {
+    gSass(theme, dst + '/css')
+    gCpDirs(['fonts', 'img'], dst);
+    gCopyRen("img/icon.ico", "favicon.ico", dst);
+    gEjs(target, theme, '.', dst);
+    gBrowserifyAll(dst + '/js');
 }
 
 gulp.task('default', function() {
-
-    gulp.src('./sass/dark.scss')
-    .pipe(sass.sync().on('error', sass.logError))
-    .pipe(gulp.dest('./css'));
-
-    gulp.src('./sass/light.scss')
-    .pipe(sass.sync().on('error', sass.logError))
-    .pipe(gulp.dest('./css'));
-
-    gulp.src('./sass/bootstrap.scss')
-    .pipe(sass.sync().on('error', sass.logError))
-    .pipe(gulp.dest('./css'));
-
-    gulp.src("electron_modules/font-awesome/fonts/*")
-    .pipe(gulp.dest("fonts"));
-
+    gSass('dark', './css');
+    gSass('light', './css');
+    gSass('bootstrap', './css');
+    gCopy("node_modules/font-awesome/fonts/*", "./fonts");
 });
 
 gulp.task('io', function() {
-
-    return gulp.src('./sass/dark.scss')
-    .pipe(sass.sync().on('error', sass.logError))
-    .pipe(rename('style.css'))
-    .pipe(gulp.dest('../jkpluta.github.io/css'));
-
+    gSass('dark', '../jkpluta.github.io/css');
 });
 
 gulp.task('app', function() {
-
-    try {
-        fs.mkdirSync('app');
-    } catch (err) {
-    }
-    
-    var package = JSON.parse(fs.readFileSync('package.json', 'utf8'));
-    var app = JSON.parse(fs.readFileSync('package-app.json', 'utf8'));
-    app.name = package.name;
-    app.version = package.version;
-    app.description = package.description;
-    app.author = package.author;
-    app.license = package.license;
-    fs.writeFileSync('app/package.json', JSON.stringify(app), { encoding: 'utf8'})
-      
-    gulp.src('./sass/' + defaultTheme + '.scss')
-    .pipe(sass.sync().on('error', sass.logError))
-    .pipe(gulp.dest('app/css'));
-
-    gulp.src("fonts/*")
-    .pipe(gulp.dest("app/fonts"));
-    
-    gulp.src("img/*")
-    .pipe(gulp.dest("app/img"));
-
-    gulp.src("build/*")
-    .pipe(gulp.dest("app/build"));
-
-    ejsToHtml('electron', defaultTheme, '..', 'app/html')
-    
+    gMkDir('app');
+    gJson('package-app.json', 'app')
+    gSass('light', 'app/css')
+    gCpDirs(['fonts', 'img', 'build'], 'app')
+    gEjs('electron', 'light', '..', 'app/html')
     webpack(require('./webpack.config.app.js'), function (err, stats) {
         if (err)
             throw new gutil.PluginError('webpack', err);
@@ -120,90 +125,17 @@ gulp.task('app', function() {
 });
 
 gulp.task('www', function() {
-
-    try {
-        fs.mkdirSync('www');
-    } catch (err) {
-    }
-    
-    var package = JSON.parse(fs.readFileSync('package.json', 'utf8'));
-    var www = JSON.parse(fs.readFileSync('package-www.json', 'utf8'));
-    www.name = package.name;
-    www.version = package.version;
-    www.description = package.description;
-    www.author = package.author;
-    www.license = package.license;
-    fs.writeFileSync('www/package.json', JSON.stringify(www), { encoding: 'utf8'})
-      
-    gulp.src('./sass/' + defaultTheme + '.scss')
-    .pipe(sass.sync().on('error', sass.logError))
-    .pipe(gulp.dest('www/public/css'));
-
-    gulp.src("fonts/*")
-    .pipe(gulp.dest("www/public/fonts"));
-    
-    gulp.src("img/*")
-    .pipe(gulp.dest("www/public/img"));
-
-    gulp.src("./img/icon.ico")
-    .pipe(rename("favicon.ico"))
-    .pipe(gulp.dest("www/public"));
-
-    ejsToHtml('www', defaultTheme, '.', 'www/public');
-
-    browserifyToJs('www/public/js');
-    
+    gMkDir('www');
+    gJson('package-www.json', 'www');
+    gPages('www', 'bootstrap', 'www/public');
 });
 
 gulp.task('cordova', function() {
-
-    var package = JSON.parse(fs.readFileSync('package.json', 'utf8'));
-    var www = JSON.parse(fs.readFileSync('../jkpluta-cordova/package.json', 'utf8'));
-    www.name = package.name;
-    www.version = package.version;
-    www.description = package.description;
-    www.author = package.author;
-    www.license = package.license;
-    fs.writeFileSync('../jkpluta-cordova/package.json', JSON.stringify(www), { encoding: 'utf8'})
-      
-    gulp.src('./sass/bootstrap-material-design.scss')
-    .pipe(sass.sync().on('error', sass.logError))
-    .pipe(rename('style.css'))
-    .pipe(gulp.dest("../jkpluta-cordova/www/css"));
-    
-    gulp.src("fonts/*")
-    .pipe(gulp.dest("../jkpluta-cordova/www/fonts"));
-    
-    gulp.src("img/*")
-    .pipe(gulp.dest("../jkpluta-cordova/www/img"));
-
-    ejsToHtml('www', 'bootstrap-material-design', '.', '../jkpluta-cordova/www')
-    
-    browserifyToJs('../jkpluta-cordova/www/js');
-    
+    gJson('../jkpluta-cordova/package.json', '../jkpluta-cordova/package.json');
+    gPages('cordova', 'bootstrap-material-design', '../jkpluta-cordova/www');
 });
 
 gulp.task('nginx', function() {
-
-    var dir = '/var/www/html';
-
-    gulp.src('./sass/' + defaultTheme + '.scss')
-    .pipe(sass.sync().on('error', sass.logError))
-    .pipe(gulp.dest(dir + '/css'));
-
-    gulp.src("fonts/*")
-    .pipe(gulp.dest(dir + "/fonts"));
-    
-    gulp.src("img/*")
-    .pipe(gulp.dest(dir + "/img"));
-
-    gulp.src("./img/icon.ico")
-    .pipe(rename("favicon.ico"))
-    .pipe(gulp.dest(dir));
-
-    ejsToHtml('www', defaultTheme, '.', dir)
-    
-    browserifyToJs(dir + '/js');
-    
+    gPages('cordova', 'bootstrap', '/var/www/html');
 });
 
