@@ -131,11 +131,11 @@ gulp.task('www', function() {
 });
 
 gulp.task('cordova', function() {
-    gJson('../jkpluta-cordova/package.json', '../jkpluta-cordova/package.json');
+    gJson('../jkpluta-cordova/package.json', '../jkpluta-cordova');
     gPages('cordova', 'bootstrap-material-design', '../jkpluta-cordova/www');
 });
 
 gulp.task('nginx', function() {
-    gPages('cordova', 'bootstrap', '/var/www/html');
+    gPages('www', 'bootstrap', '/var/www/html');
 });
 

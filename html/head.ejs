@@ -8,11 +8,11 @@
 <% if (target === 'electron') { %>  
   <script>
     require('<%- base %>/js/renderer')
-    require('<%- base %>/js/renderer-<%= target %>')
+    require('<%- base %>/js/renderer-electron')
   </script>
 <% } else { %>
   <script src="<%- base %>/js/renderer.js"></script>
-  <script src="<%- base %>/js/renderer-<%= target %>.js"></script>
+  <script src="<%- base %>/js/renderer-www.js"></script>
 <% }%>
   <style>
     dl { margin-left: 2em; }
