@@ -8,7 +8,8 @@ var source = require('vinyl-source-stream');
 var fs = require('fs');
 var webpack = require('webpack');
 var browserify = require('browserify');
- 
+var libxmljs = require("libxmljs");
+
 function gCopy(src, dst) {
     gulp.src(src)
     .pipe(gulp.dest(dst));
@@ -84,6 +85,22 @@ function gJson(src, dst) {
     fs.writeFileSync(dst + '/package.json', JSON.stringify(data), { encoding: 'utf8'})
 }
 
+function gXml(src) {
+    var package = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+    var xml = fs.readFileSync(src, 'utf8');
+    var data = libxmljs.parseXmlString(xml);
+    var descriptionElement = data.get('//xmlns:description', { 'xmlns': 'http://www.w3.org/ns/widgets' });
+    if (descriptionElement != null)
+        descriptionElement.text(package.description);
+    var authorElement = data.get('//xmlns:author', { 'xmlns': 'http://www.w3.org/ns/widgets' });
+    if (authorElement != null) {
+        authorElement.text(package.author.name);
+        authorElement.attr('email', package.author.email);
+        authorElement.attr('href', package.author.url);
+    }
+    fs.writeFileSync(src, data.toString(), { encoding: 'utf8'})
+}
+
 function gPages(target, theme, dst) {
     gSass(theme, dst + '/css')
     gCpDirs(['fonts', 'img'], dst);
@@ -133,6 +150,7 @@ gulp.task('www', function() {
 
 gulp.task('cordova', function() {
     gJson('../jkpluta-cordova/package.json', '../jkpluta-cordova');
+    gXml('../jkpluta-cordova/config.xml');
     gPages('cordova', 'bootstrap-material-design', '../jkpluta-cordova/www');
 });
 
