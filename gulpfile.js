@@ -77,6 +77,7 @@ function gJson(src, dst) {
     var data = JSON.parse(fs.readFileSync(src, 'utf8'));
     data.name = package.name;
     data.version = package.version;
+    data.homepage = package.homepage;
     data.description = package.description;
     data.author = package.author;
     data.license = package.license;
@@ -105,9 +106,9 @@ gulp.task('io', function() {
 gulp.task('app', function() {
     gMkDir('app');
     gJson('package-app.json', 'app')
-    gSass('light', 'app/css')
+    gSass('dark', 'app/css')
     gCpDirs(['fonts', 'img', 'build'], 'app')
-    gEjs('electron', 'light', '..', 'app/html')
+    gEjs('electron', 'dark', '..', 'app/html')
     webpack(require('./webpack.config.app.js'), function (err, stats) {
         if (err)
             throw new gutil.PluginError('webpack', err);
