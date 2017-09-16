@@ -81,7 +81,7 @@ function gJson(src, dst) {
     data.description = package.description;
     data.author = package.author;
     data.license = package.license;
-    fs.writeFileSync(dst + '/package.json', JSON.stringify(data), { encoding: 'utf8'})
+    fs.writeFileSync(dst + '/package.json', JSON.stringify(data, null, "  "), { encoding: 'utf8'})
 }
 
 function gPages(target, theme, dst) {
