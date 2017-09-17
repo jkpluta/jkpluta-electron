@@ -39,6 +39,7 @@ function gCpDirs(dirs, dst) {
 }
 
 function gEjs(target, theme, base, dst) {
+    var package = JSON.parse(fs.readFileSync('package.json', 'utf8'));
     var ejsPages = JSON.parse(fs.readFileSync('./html/ejs.json', 'utf8'));
     var opts = { cache: false };
     for(var ejsName in ejsPages) {
@@ -47,6 +48,7 @@ function gEjs(target, theme, base, dst) {
             ejsPage.target = target;
             ejsPage.theme = theme;
             ejsPage.base = base;
+            ejsPage.version = package.version
             gulp.src('./html/' + ejsPage.template + '.ejs')
             .pipe(ejs(ejsPage, opts))
             .pipe(rename(ejsName + '.html'))

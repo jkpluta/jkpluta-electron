@@ -167,6 +167,7 @@ function renderPage(browserWindow, name) {
         var ejsPage = ejsPages[name];
         ejsElectron.data({
             title: ejsPage.title,
+            version: process.version,
             data: ejsPage.data,
             base: "..",
             target: "electron",
