@@ -37,6 +37,7 @@
     "app-dist-rpm": "gulp app && cd app && electron-builder --linux rpm",
     "app-dist-x64": "gulp app && cd app && electron-builder --win --x64",
     "app-dist-ia32": "gulp app && cd app && electron-builder --win --ia32",
+    "app-pack": "gulp app && cd app && electron-packager .",
     "www": "gulp www && cd www && http-server -a localhost -p 60080 -o"
   },
   "dependencies": {
@@ -60,6 +61,7 @@
     "browserify": "^14.4.0",
     "electron": "^1.7.5",
     "electron-builder": "^19.22.4",
+    "electron-packager": "^9.1.0",
     "gulp": "^3.9.1",
     "gulp-ejs": "^3.0.1",
     "gulp-rename": "^1.2.2",
