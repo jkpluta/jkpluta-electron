@@ -127,9 +127,9 @@ gulp.task('io', function() {
 gulp.task('app', function() {
     gMkDir('app');
     gJson('package-app.json', 'app')
-    gSass('dark', 'app/css')
+    gSass('light', 'app/css')
     gCpDirs(['fonts', 'img', 'build'], 'app')
-    gEjs('electron', 'dark', '..', 'app/html')
+    gEjs('electron', 'light', '..', 'app/html')
     webpack(require('./webpack.config.app.js'), function (err, stats) {
         if (err)
             throw new gutil.PluginError('webpack', err);
@@ -147,9 +147,7 @@ gulp.task('app', function() {
 });
 
 gulp.task('www', function() {
-    gMkDir('www');
-    gJson('package-www.json', 'www');
-    gPages('www', 'bootstrap', 'www/public');
+    gPages('www', 'light', 'www/public');
 });
 
 gulp.task('cordova', function() {

@@ -9,18 +9,5 @@
             "artifactName": "${name}-${version}-${arch}-setup.${ext}",
             "oneClick": true
         }
-    },
-    "scripts": {
-        "start": "electron .",
-        "pack": "electron-builder --dir",
-        "dist": "electron-builder",
-        "dist-win64": "electron-builder --win --x64",
-        "dist-win32": "electron-builder --win --ia32",
-        "dist-deb": "electron-builder --linux deb",
-        "dist-rpm": "electron-builder --linux rpm"
-    },
-    "devDependencies": {
-        "electron": "^1.7.5",
-        "electron-builder": "^19.22.4"
     }
 }
