@@ -91,10 +91,12 @@ function gXml(src) {
     var package = JSON.parse(fs.readFileSync('package.json', 'utf8'));
     var xml = fs.readFileSync(src, 'utf8');
     var data = libxmljs.parseXmlString(xml);
-    var descriptionElement = data.get('//xmlns:description', { 'xmlns': 'http://www.w3.org/ns/widgets' });
+    var ns = { 'xmlns': 'http://www.w3.org/ns/widgets' };
+    data.root().attr('version', package.version);
+    var descriptionElement = data.get('//xmlns:description', ns);
     if (descriptionElement != null)
         descriptionElement.text(package.description);
-    var authorElement = data.get('//xmlns:author', { 'xmlns': 'http://www.w3.org/ns/widgets' });
+    var authorElement = data.get('//xmlns:author', ns);
     if (authorElement != null) {
         authorElement.text(package.author.name);
         authorElement.attr('email', package.author.email);
