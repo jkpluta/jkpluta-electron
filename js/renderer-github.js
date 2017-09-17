@@ -80,6 +80,7 @@ function commit(content, name) {
                     data: JSON.stringify({ "scopes": ["user", "repo", "gist"], "note": "jkpluta-electron-".concat(new Date().toISOString()) }),
                     cache: false,
                     beforeSend: function (xhr) {
+                        xhr.setRequestHeader("Accept", "application/vnd.github.v3+json");
                         xhr.setRequestHeader("Authorization", "Basic " + jsBase.Base64.encode(username + ':' + password));
                         xhr.setRequestHeader("X-Mobile", "false");
                         xhr.setRequestHeader("X-GitHub-OTP", "two-factor-code");
