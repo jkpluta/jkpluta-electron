@@ -78,7 +78,6 @@ function gSass(theme, dst) {
 function gJson(src, dst) {
     var package = JSON.parse(fs.readFileSync('package.json', 'utf8'));
     var data = JSON.parse(fs.readFileSync(src, 'utf8'));
-    data.name = package.name;
     data.version = package.version;
     data.homepage = package.homepage;
     data.description = package.description;
