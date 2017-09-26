@@ -218,6 +218,15 @@ export function prepareBookmarks(element: JQuery<HTMLElement>): void
         var link = $(this);
         $('#link-name').val(link.text());
         $('#link-address').val(link.attr('href'));
+        var group = link.parent().parent().parent().find('h3').text();
+        var gridx = -1
+        $('#link-group').html('');
+        $("h3").each(function(idx, elmnt) {
+            $('#link-group').append($("<option></option>").attr("value", idx).text(elmnt.innerText));
+            if (elmnt.innerText === group) gridx = idx;
+        });
+        $('#link-group').val(gridx);
+        $('#div-group').show();
         $('#link-edit').modal({});
         $('#link-apply').off();
         $('#link-apply').click(function () {
@@ -226,6 +235,10 @@ export function prepareBookmarks(element: JQuery<HTMLElement>): void
             if ($("#link-favicon").is(":visible"))
                 link.attr('icon_uri', $('#link-favicon').attr('src'));
             link.text($('#link-name').val().toString());
+            var idx = <number>$('#link-group').val()
+            if (idx !== gridx && idx >= 0) {
+                $('h3').eq(idx).parent().children('dl:first').append(link.parent());
+            }
             prepareBookmark(link);
             return true;
         });
@@ -286,6 +299,7 @@ export function prepareBookmarks(element: JQuery<HTMLElement>): void
         var parent = $(this).parent();
         $('#link-name').val('');
         $('#link-address').val('');
+        $('#div-group').hide();
         $('#link-edit').modal({});
         $('#link-apply').off();
         $('#link-apply').click(function () {
@@ -306,6 +320,7 @@ export function prepareBookmarks(element: JQuery<HTMLElement>): void
         var parent = $(this).parent();
         $('#link-name').val('');
         $('#link-address').val('');
+        $('#div-group').hide();
         $('#link-edit').modal({});
         $('#link-apply').off();
         $('#link-apply').click(function () {
