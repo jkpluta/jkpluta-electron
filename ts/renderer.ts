@@ -221,7 +221,7 @@ export function prepareBookmarks(element: JQuery<HTMLElement>): void
         var group = link.parent().parent().parent().find('h3').text();
         var gridx = -1
         $('#link-group').html('');
-        $("h3").each(function(idx, elmnt) {
+        $("#bookmarks h3").each(function(idx, elmnt) {
             $('#link-group').append($("<option></option>").attr("value", idx).text(elmnt.innerText));
             if (elmnt.innerText === group) gridx = idx;
         });
@@ -237,7 +237,7 @@ export function prepareBookmarks(element: JQuery<HTMLElement>): void
             link.text($('#link-name').val().toString());
             var idx = <number>$('#link-group').val()
             if (idx !== gridx && idx >= 0) {
-                $('h3').eq(idx).parent().children('dl:first').append(link.parent());
+                $('#bookmarks h3').eq(idx).parent().children('dl:first').append(link.parent());
             }
             prepareBookmark(link);
             return true;
