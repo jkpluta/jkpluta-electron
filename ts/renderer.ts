@@ -10,6 +10,7 @@ import Popper = require("popper.js");
 import "bootstrap";
 let markdown = require("markdown").markdown;
 let iconSize = 16;
+let draggable = null;
 const base_url = "https://jkpluta.github.io";
 export function startAjax(sel: string | JQuery<HTMLElement>, spnr: string | JQuery<HTMLElement>, base: string, href: string, func: (sel: string | JQuery<HTMLElement>, base: string, html: any) => void) 
 {
@@ -139,10 +140,55 @@ export function updateGist(sel: string | JQuery<HTMLElement>, data: any): void
 {
     if (data.type === "jkpluta.bookmark") {
         var link = $('<dt><a></a>').appendTo($(sel).find('dl:first')).children('a:first');
-        $(link).attr('href', data.url);
-        $(link).text(data.title);
-        $(link).attr('draggable', "false");
-        updateFavicon(link, data.url, '');
+        link.attr('href', data.url);
+        link.text(data.title);
+        link.attr('draggable', "false");
+        link.click(function () {
+            var link = $(this);
+            $('#link-name').val(link.text());
+            $('#link-address').val(link.attr('href'));
+            var group = link.parent().parent().parent().find('h3').text();
+            var gridx = -1
+            $('#link-group').html('');
+            $("#bookmarks h3").each(function(idx, elmnt) {
+                $('#link-group').append($("<option></option>").attr("value", idx).text(elmnt.innerText));
+                if (elmnt.innerText === group) gridx = idx;
+            });
+            $('#link-group').val(gridx);
+            $('#div-group').show();
+            $('#link-edit').modal({});
+            $('#link-apply').off();
+            $('#link-apply').click(function () {
+                $('#link-apply').off();
+                link.attr('href', $('#link-address').val().toString());
+                if ($("#link-favicon").is(":visible"))
+                    link.attr('icon_uri', $('#link-favicon').attr('src'));
+                link.text($('#link-name').val().toString());
+                var idx = <number>$('#link-group').val()
+                if (idx !== gridx && idx >= 0) {
+                    $('#bookmarks h3').eq(idx).parent().children('dl:first').append(link.parent());
+                }
+                prepareBookmark(link);
+                return true;
+            });
+            return false;
+        });
+        link.after(' <button title="Usuń zakładkę" class="jkp remove-gist btn btn-sm btn-outline-danger"><span class="fa fa-times-circle"></span></button>');
+        link.parent().find('.remove-gist').click(function () {
+            $(this).parent().remove();
+        });
+        link.parent().attr('draggable', "true");
+        link.parent().on('dragstart', function (e) {
+            e.stopPropagation();
+            if (draggable == null)
+                draggable = this;
+            clearAlert();
+        });
+        link.parent().on('dragend', function (e) {
+            e.stopPropagation();
+            draggable = null;
+        });
+        findFavicon(link, null, data.url);
     }
 }
 export function startBookmarks(href: string, size: number) : void
@@ -247,7 +293,6 @@ export function prepareBookmarks(element: JQuery<HTMLElement>): void
         e.stopPropagation();
         draggable = null;
     });
-    var draggable = null;
     element.find('a[icon_uri]').each(function () {
         prepareBookmark($(this));
     });
