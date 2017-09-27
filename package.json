@@ -1,7 +1,7 @@
 {
   "name": "jkpluta-electron",
   "homepage": "https://jkpluta.github.io",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "main": "js/main.js",
   "description": "Eksperymentalna strona startowa",
   "author": {
