@@ -182,7 +182,6 @@ export function updateGist(sel: string | JQuery<HTMLElement>, data: any): void
             e.stopPropagation();
             if (draggable == null)
                 draggable = this;
-            clearAlert();
         });
         link.parent().on('dragend', function (e) {
             e.stopPropagation();
@@ -260,8 +259,10 @@ export function prepareBookmarks(element: JQuery<HTMLElement>): void
                     $(this).children('dl').first().append($(draggable));
                 else
                     $(this).before($(draggable));
+            $(draggable).children('button').remove();
             $(draggable).css('left', '');
             $(draggable).css('top', '');
+            prepareBookmarks($(draggable));
         }
         else {
             if (oe.dataTransfer != null) {
@@ -287,7 +288,6 @@ export function prepareBookmarks(element: JQuery<HTMLElement>): void
         e.stopPropagation();
         if (draggable == null)
             draggable = this;
-        clearAlert();
     });
     $('dt').on('dragend', function (e) {
         e.stopPropagation();

@@ -183,7 +183,6 @@ function updateGist(sel, data) {
             e.stopPropagation();
             if (draggable == null)
                 draggable = this;
-            clearAlert();
         });
         link.parent().on('dragend', function (e) {
             e.stopPropagation();
@@ -261,8 +260,10 @@ function prepareBookmarks(element) {
                     $(this).children('dl').first().append($(draggable));
                 else
                     $(this).before($(draggable));
+            $(draggable).children('button').remove();
             $(draggable).css('left', '');
             $(draggable).css('top', '');
+            prepareBookmarks($(draggable));
         }
         else {
             if (oe.dataTransfer != null) {
@@ -288,7 +289,6 @@ function prepareBookmarks(element) {
         e.stopPropagation();
         if (draggable == null)
             draggable = this;
-        clearAlert();
     });
     $('dt').on('dragend', function (e) {
         e.stopPropagation();
