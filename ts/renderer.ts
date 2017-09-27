@@ -32,12 +32,31 @@ export function startAjax(sel: string | JQuery<HTMLElement>, spnr: string | JQue
         }
     });
 }
-export function start(sel: string | JQuery<HTMLElement>, spnr: string | JQuery<HTMLElement>, href: string, func: (sel: string | JQuery<HTMLElement>, html: any) => void) 
+export function startHome(sel: string | JQuery<HTMLElement>, spnr: string | JQuery<HTMLElement>, href: string, func: (sel: string | JQuery<HTMLElement>, html: any) => void) 
 {
     if (spnr != null)
         $(spnr).html('<img src="../img/spinner.gif">');
     $.ajax({
         url: base_url + href,
+        cache: false,
+        success: function (html) {
+            $(spnr).html('');
+            func(sel, html);
+        },
+        error: function (xhr, status, error) {
+            if (spnr != null)
+                $(spnr).html('<img src="../img/error.png"> <b>' + status + '</b> <i>' + error + '</i>');
+        }
+    });
+}
+export function startJson(sel: string | JQuery<HTMLElement>, spnr: string | JQuery<HTMLElement>, href: string, func: (sel: string | JQuery<HTMLElement>, html: any) => void) 
+{
+    if (spnr != null)
+        $(spnr).html('<img src="../img/spinner.gif">');
+    $.ajax({
+        url: href,
+        dataType: "json",
+        method: "GET",
         cache: false,
         success: function (html) {
             $(spnr).html('');
@@ -95,18 +114,36 @@ export function updateMainIcons(sel: string | JQuery<HTMLElement>, html: any): v
 }
 export function startMain(href: string) : void
 {
-    start('#info', '#info', '/info.html', updateMainInfo)
-    start('#icns', '#icns', '/icons.html', updateMainIcons)
-    start('#bks', '#bke', '/bookmarks.html', updateMainBookmarks)
+    startHome('#info', '#info', '/info.html', updateMainInfo)
+    startHome('#icns', '#icns', '/icons.html', updateMainIcons)
+    startHome('#bks', '#bke', '/bookmarks.html', updateMainBookmarks)
     $('#google').focus()
-
-    // start("#main", "#spnnr", href, updateMain)
 }
 (<any>window).startMain = startMain;
 export function updateBookmarks(sel: string | JQuery<HTMLElement>, html: any): void 
 {
     $(sel).html(html);
     prepareBookmarks($(sel));
+}
+export function updateGists(sel: string | JQuery<HTMLElement>, data: any): void 
+{
+    $(sel).html('<dt><h1>Gisty</h1><dl></dl></dt>');
+    var gists = <Array<any>>data;
+    for(var idx in gists) {
+        var gist = gists[idx];
+        if (gist.description === 'Zakładka')
+            startJson(sel, null, gist.files['bookmark.json'].raw_url, updateGist);
+    }
+}
+export function updateGist(sel: string | JQuery<HTMLElement>, data: any): void 
+{
+    if (data.type === "jkpluta.bookmark") {
+        var link = $('<dt><a></a>').appendTo($(sel).find('dl:first')).children('a:first');
+        $(link).attr('href', data.url);
+        $(link).text(data.title);
+        $(link).attr('draggable', "false");
+        updateFavicon(link, data.url, '');
+    }
 }
 export function startBookmarks(href: string, size: number) : void
 {
@@ -116,7 +153,7 @@ export function startBookmarks(href: string, size: number) : void
     })
     $('#refresh').click(function() {
         clearAlert();
-        start("#bookmarks", "#bookmarks", href, updateBookmarks)
+        startHome("#bookmarks", "#bookmarks", href, updateBookmarks)
     })
     $('#link-edit').on('show.bs.modal', function () {
         $('#link-favicon').removeAttr('src')
@@ -129,7 +166,8 @@ export function startBookmarks(href: string, size: number) : void
     $('#link-address').on('blur', function () {
         findFavicon('#link-favicon','#link-spinner', $('#link-address').val().toString())
     })
-    start('#bookmarks', '#bookmarks', href, updateBookmarks);
+    startHome('#bookmarks', '#bookmarks', href, updateBookmarks);
+    startJson('#gists', '#gists', 'https://api.github.com/users/jkpluta/gists', updateGists)
 }
 (<any>window).startBookmarks = startBookmarks;
 export function prepareBookmark(element: JQuery<HTMLElement>): void 
@@ -452,9 +490,9 @@ export function startInfo(href: string) : void
     });
     $('#refresh').click(function() {
         clearAlert();
-        start("#md", "#spnnr", href, updateInfo);
+        startHome("#md", "#spnnr", href, updateInfo);
     })
-    start("#md", "#spnnr", href, updateInfo);
+    startHome("#md", "#spnnr", href, updateInfo);
 }
 (<any>window).startInfo = startInfo
 export function updateInfo(sel: string | JQuery<HTMLElement>, html: any): void 

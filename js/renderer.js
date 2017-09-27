@@ -33,7 +33,7 @@ function startAjax(sel, spnr, base, href, func) {
     });
 }
 exports.startAjax = startAjax;
-function start(sel, spnr, href, func) {
+function startHome(sel, spnr, href, func) {
     if (spnr != null)
         $(spnr).html('<img src="../img/spinner.gif">');
     $.ajax({
@@ -49,7 +49,26 @@ function start(sel, spnr, href, func) {
         }
     });
 }
-exports.start = start;
+exports.startHome = startHome;
+function startJson(sel, spnr, href, func) {
+    if (spnr != null)
+        $(spnr).html('<img src="../img/spinner.gif">');
+    $.ajax({
+        url: href,
+        dataType: "json",
+        method: "GET",
+        cache: false,
+        success: function (html) {
+            $(spnr).html('');
+            func(sel, html);
+        },
+        error: function (xhr, status, error) {
+            if (spnr != null)
+                $(spnr).html('<img src="../img/error.png"> <b>' + status + '</b> <i>' + error + '</i>');
+        }
+    });
+}
+exports.startJson = startJson;
 function updateMainInfo(sel, html) {
     $('#info').html(html);
 }
@@ -95,11 +114,10 @@ function updateMainIcons(sel, html) {
 }
 exports.updateMainIcons = updateMainIcons;
 function startMain(href) {
-    start('#info', '#info', '/info.html', updateMainInfo);
-    start('#icns', '#icns', '/icons.html', updateMainIcons);
-    start('#bks', '#bke', '/bookmarks.html', updateMainBookmarks);
+    startHome('#info', '#info', '/info.html', updateMainInfo);
+    startHome('#icns', '#icns', '/icons.html', updateMainIcons);
+    startHome('#bks', '#bke', '/bookmarks.html', updateMainBookmarks);
     $('#google').focus();
-    // start("#main", "#spnnr", href, updateMain)
 }
 exports.startMain = startMain;
 window.startMain = startMain;
@@ -108,6 +126,26 @@ function updateBookmarks(sel, html) {
     prepareBookmarks($(sel));
 }
 exports.updateBookmarks = updateBookmarks;
+function updateGists(sel, data) {
+    $(sel).html('<dt><h1>Gisty</h1><dl></dl></dt>');
+    var gists = data;
+    for (var idx in gists) {
+        var gist = gists[idx];
+        if (gist.description === 'Zakładka')
+            startJson(sel, null, gist.files['bookmark.json'].raw_url, updateGist);
+    }
+}
+exports.updateGists = updateGists;
+function updateGist(sel, data) {
+    if (data.type === "jkpluta.bookmark") {
+        var link = $('<dt><a></a>').appendTo($(sel).find('dl:first')).children('a:first');
+        $(link).attr('href', data.url);
+        $(link).text(data.title);
+        $(link).attr('draggable', "false");
+        updateFavicon(link, data.url, '');
+    }
+}
+exports.updateGist = updateGist;
 function startBookmarks(href, size) {
     iconSize = size;
     $('#save').click(function () {
@@ -115,7 +153,7 @@ function startBookmarks(href, size) {
     });
     $('#refresh').click(function () {
         clearAlert();
-        start("#bookmarks", "#bookmarks", href, updateBookmarks);
+        startHome("#bookmarks", "#bookmarks", href, updateBookmarks);
     });
     $('#link-edit').on('show.bs.modal', function () {
         $('#link-favicon').removeAttr('src');
@@ -128,7 +166,8 @@ function startBookmarks(href, size) {
     $('#link-address').on('blur', function () {
         findFavicon('#link-favicon', '#link-spinner', $('#link-address').val().toString());
     });
-    start('#bookmarks', '#bookmarks', href, updateBookmarks);
+    startHome('#bookmarks', '#bookmarks', href, updateBookmarks);
+    startJson('#gists', '#gists', 'https://api.github.com/users/jkpluta/gists', updateGists);
 }
 exports.startBookmarks = startBookmarks;
 window.startBookmarks = startBookmarks;
@@ -453,9 +492,9 @@ function startInfo(href) {
     });
     $('#refresh').click(function () {
         clearAlert();
-        start("#md", "#spnnr", href, updateInfo);
+        startHome("#md", "#spnnr", href, updateInfo);
     });
-    start("#md", "#spnnr", href, updateInfo);
+    startHome("#md", "#spnnr", href, updateInfo);
 }
 exports.startInfo = startInfo;
 window.startInfo = startInfo;
