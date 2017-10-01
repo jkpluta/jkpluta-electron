@@ -128,11 +128,11 @@ function updateBookmarks(sel, html) {
 }
 exports.updateBookmarks = updateBookmarks;
 function updateGists(sel, data) {
-    $(sel).html('<dt><h1>Gisty</h1><dl></dl></dt>');
+    $(sel).html('<dt><h1>Zapiski</h1><dl></dl></dt>');
     var gists = data;
     for (var idx in gists) {
         var gist = gists[idx];
-        if (gist.description === 'Zakładka')
+        if (gist.description === 'Jan K. Pluta')
             startJson(sel, null, gist.files['bookmark.json'].raw_url, updateGist);
     }
 }

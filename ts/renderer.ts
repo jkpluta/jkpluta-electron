@@ -128,11 +128,11 @@ export function updateBookmarks(sel: string | JQuery<HTMLElement>, html: any): v
 }
 export function updateGists(sel: string | JQuery<HTMLElement>, data: any): void 
 {
-    $(sel).html('<dt><h1>Gisty</h1><dl></dl></dt>');
+    $(sel).html('<dt><h1>Zapiski</h1><dl></dl></dt>');
     var gists = <Array<any>>data;
     for(var idx in gists) {
         var gist = gists[idx];
-        if (gist.description === 'Zakładka')
+        if (gist.description === 'Jan K. Pluta')
             startJson(sel, null, gist.files['bookmark.json'].raw_url, updateGist);
     }
 }
