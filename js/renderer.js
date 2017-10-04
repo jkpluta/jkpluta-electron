@@ -114,10 +114,55 @@ function updateMainIcons(sel, html) {
     $(sel).find('a').attr('target', '_blank');
 }
 exports.updateMainIcons = updateMainIcons;
+function startJson(sel, spnr, href, func) {
+    if (spnr != null)
+        $(spnr).html('<img src="../img/spinner.gif">');
+    $.ajax({
+        url: href,
+        dataType: "json",
+        method: "GET",
+        cache: false,
+        success: function (html) {
+            $(spnr).html('');
+            func(sel, html);
+        },
+        error: function (xhr, status, error) {
+            if (spnr != null)
+                $(spnr).html('<img src="../img/error.png"> <b>' + status + '</b> <i>' + error + '</i>');
+        }
+    });
+}
+exports.startJson = startJson;
+function updateMainGists(sel, data) {
+    var gists = data;
+    if (gists.length == 0)
+        $(sel).prev().hide();
+    else
+        $(sel).prev().append('<div class="col-12"><h4>Zapiski</h4></div>');
+    for (var idx in gists) {
+        var gist = gists[idx];
+        if (gist.description === 'Jan K. Pluta')
+            startJson(sel, null, gist.files['bookmark.json'].raw_url, updateMainGist);
+    }
+}
+exports.updateMainGists = updateMainGists;
+function updateMainGist(sel, data) {
+    if (data.type === "jkpluta.bookmark") {
+        var link = $('<div class="col-sm-12 col-md-6 col-lg-4"><a></a></div>').appendTo($(sel)).children('a:first');
+        link.attr('href', data.url);
+        link.text(data.title);
+        if (data.description != null)
+            link.parent().after('<div class="col-sm-12 col-md-6 col-lg-8">' + data.description + '</div>');
+        else
+            link.parent().after('<div class="col-sm-12 col-md-6 col-lg-8"><i>Proponowana zakładka</i></div>');
+    }
+}
+exports.updateMainGist = updateMainGist;
 function startMain(href) {
     startHome('#info', '#info', '/info.html', updateMainInfo);
     startHome('#icns', '#icns', '/icons.html', updateMainIcons);
     startHome('#bks', '#bke', '/bookmarks.html', updateMainBookmarks);
+    startJson('#gists', '#gsts', 'https://api.github.com/users/jkpluta/gists', updateMainGists);
     $('#google').focus();
 }
 exports.startMain = startMain;
