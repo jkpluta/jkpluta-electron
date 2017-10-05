@@ -113,25 +113,8 @@ export function updateMainIcons(sel: string | JQuery<HTMLElement>, html: any): v
     $(sel).append('</p>');
     $(sel).find('a').attr('target', '_blank');
 }
-export function startJson(sel, spnr, href, func) {
-    if (spnr != null)
-        $(spnr).html('<img src="../img/spinner.gif">');
-    $.ajax({
-        url: href,
-        dataType: "json",
-        method: "GET",
-        cache: false,
-        success: function (html) {
-            $(spnr).html('');
-            func(sel, html);
-        },
-        error: function (xhr, status, error) {
-            if (spnr != null)
-                $(spnr).html('<img src="../img/error.png"> <b>' + status + '</b> <i>' + error + '</i>');
-        }
-    });
-}
-export function updateMainGists(sel, data) {
+export function updateMainGists(sel: string | JQuery<HTMLElement>, data: any): void 
+{
     var gists = data;
     if (gists.length == 0)
         $(sel).prev().hide();
@@ -143,9 +126,10 @@ export function updateMainGists(sel, data) {
             startJson(sel, null, gist.files['bookmark.json'].raw_url, updateMainGist);
     }
 }
-export function updateMainGist(sel, data) {
+export function updateMainGist(sel: string | JQuery<HTMLElement>, data: any): void 
+{
     if (data.type === "jkpluta.bookmark") {
-        var link = $('<div class="col-sm-12 col-md-6 col-lg-4"><a></a></div>').appendTo($(sel)).children('a:first');
+        var link = $('<div class="col-sm-12 col-md-6 col-lg-4"><a target="_blank"></a></div>').appendTo($(sel)).children('a:first');
         link.attr('href', data.url);
         link.text(data.title);
         if (data.description != null)
