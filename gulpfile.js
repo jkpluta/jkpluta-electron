@@ -156,7 +156,11 @@ gulp.task('cordova', function() {
 });
 
 gulp.task('nginx', function() {
-    gPages('www', 'bootstrap', '/var/www/html');
+    gPages('www', 'bootstrap', '/var/www/html/jkpluta');
+});
+
+gulp.task('iis', function() {
+    gPages('www', 'bootstrap', 'c:/inetpub/wwwroot/jkpluta');
 });
 
 gulp.task('intranet', function() {
