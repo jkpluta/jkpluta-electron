@@ -105,7 +105,7 @@ function gXml(src) {
 }
 
 function gPages(target, theme, dst) {
-    gSass(theme, dst + '/css')
+    gSass(theme, dst + '/css');
     gCpDirs(['fonts', 'img'], dst);
     gCopyRen("img/icon.ico", "favicon.ico", dst);
     gEjs(target, theme, '.', dst);
@@ -157,5 +157,12 @@ gulp.task('cordova', function() {
 
 gulp.task('nginx', function() {
     gPages('www', 'bootstrap', '/var/www/html');
+});
+
+gulp.task('intranet', function() {
+    var dst = '../jkpluta-intranet';
+    gSass('bootstrap', dst + '/css');
+    gCpDirs(['fonts', 'img'], dst);
+    gCopyRen("img/icon.ico", "favicon.ico", dst);
 });
 
