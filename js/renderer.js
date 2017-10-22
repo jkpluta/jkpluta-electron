@@ -197,7 +197,7 @@ function updateGist(sel, data) {
                 if ($("#link-favicon").is(":visible"))
                     link.attr('icon_uri', $('#link-favicon').attr('src'));
                 link.text($('#link-name').val().toString());
-                var idx = $('#link-group').val();
+                var idx = Number($('#link-group').val());
                 if (idx !== gridx && idx >= 0) {
                     $('#bookmarks h3').eq(idx).parent().children('dl:first').append(link.parent());
                 }
@@ -355,7 +355,7 @@ function prepareBookmarks(element) {
             if ($("#link-favicon").is(":visible"))
                 link.attr('icon_uri', $('#link-favicon').attr('src'));
             link.text($('#link-name').val().toString());
-            var idx = $('#link-group').val();
+            var idx = Number($('#link-group').val());
             if (idx !== gridx && idx >= 0) {
                 $('#bookmarks h3').eq(idx).parent().children('dl:first').append(link.parent());
             }
