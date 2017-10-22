@@ -122,14 +122,17 @@ export function updateMainGists(sel: string | JQuery<HTMLElement>, data: any): v
         $(sel).prev().append('<div class="col-12"><h4>Zapiski</h4></div>');
     for (var idx in gists) {
         var gist = gists[idx];
-        if (gist.description === 'Jan K. Pluta')
-            startJson(sel, null, gist.files['bookmark.json'].raw_url, updateMainGist);
+        if (gist.description === 'Jan K. Pluta') {
+            var dtlink = $('<div class="col-sm-12 col-md-6 col-lg-4"><a target="_blank"></a></div>').appendTo($(sel));
+            dtlink.attr('gistid', gist.id);
+            startJson(dtlink, null, gist.files['bookmark.json'].raw_url, updateMainGist);
+        }
     }
 }
 export function updateMainGist(sel: string | JQuery<HTMLElement>, data: any): void 
 {
     if (data.type === "jkpluta.bookmark") {
-        var link = $('<div class="col-sm-12 col-md-6 col-lg-4"><a target="_blank"></a></div>').appendTo($(sel)).children('a:first');
+        var link = $(sel).children('a:first');
         link.attr('href', data.url);
         link.text(data.title);
         if (data.description != null)
@@ -137,6 +140,8 @@ export function updateMainGist(sel: string | JQuery<HTMLElement>, data: any): vo
         else
             link.parent().after('<div class="col-sm-12 col-md-6 col-lg-8"><i>Proponowana zakładka</i></div>');
     }
+    else
+        $(sel).remove();
 }
 export function startMain(href: string) : void
 {
@@ -152,20 +157,26 @@ export function updateBookmarks(sel: string | JQuery<HTMLElement>, html: any): v
     $(sel).html(html);
     prepareBookmarks($(sel));
 }
+let gistids = []
 export function updateGists(sel: string | JQuery<HTMLElement>, data: any): void 
 {
+    gistids.length = 0;
     $(sel).html('<dt><h1>Zapiski</h1><dl></dl></dt>');
     var gists = <Array<any>>data;
     for(var idx in gists) {
         var gist = gists[idx];
-        if (gist.description === 'Jan K. Pluta')
-            startJson(sel, null, gist.files['bookmark.json'].raw_url, updateGist);
+        if (gist.description === 'Jan K. Pluta') {
+            var dtlink = $('<dt><a></a>').appendTo($(sel).find('dl:first'));
+            dtlink.attr('gistid', gist.id);
+            startJson(dtlink, null, gist.files['bookmark.json'].raw_url, updateGist);
+        }
     }
 }
 export function updateGist(sel: string | JQuery<HTMLElement>, data: any): void 
 {
     if (data.type === "jkpluta.bookmark") {
-        var link = $('<dt><a></a>').appendTo($(sel).find('dl:first')).children('a:first');
+        gistids.push($(sel).attr('gistid'));
+        var link = $(sel).children('a:first');
         link.attr('href', data.url);
         link.text(data.title);
         link.attr('draggable', "false");
@@ -215,6 +226,8 @@ export function updateGist(sel: string | JQuery<HTMLElement>, data: any): void
         });
         findFavicon(link, null, data.url);
     }
+    else
+        $(sel).remove();
 }
 export function startBookmarks(href: string, size: number) : void
 {
@@ -449,6 +462,14 @@ export function prepareBookmarks(element: JQuery<HTMLElement>): void
     });
 }
 export function saveBookmarks(name: string): void {
+    var gists = $('#gists').find('dt[gistid]');
+    for (var idx = 0; idx < gists.length; idx++) {
+        var gistid = gists.eq(idx).attr('gistid');
+        var gistidx = gistids.indexOf(gistid);
+        if (gistidx >= 0)
+            gistids.splice(gistidx, 1);
+    }
+    return;
     var bookmarks = $('#bookmarks').clone()
     $('.jkp', bookmarks).remove()
     bookmarks.find('[draggable]').removeAttr('draggable');
