@@ -226,11 +226,10 @@ function updateGist(sel, data) {
         $(sel).remove();
 }
 exports.updateGist = updateGist;
-function startBookmarks(name, size) {
-    var href = "/" + name;
+function startBookmarks(href, size) {
     iconSize = size;
     $('#save').click(function () {
-        saveBookmarks(name);
+        saveBookmarks(href.substring(1));
     });
     $('#refresh').click(function () {
         clearAlert();
@@ -577,7 +576,7 @@ function toHtml(md) {
 exports.toHtml = toHtml;
 function startInfo(href) {
     $('#save').click(function () {
-        saveInfo('#md');
+        saveInfo('#md', href.substring(1));
     });
     $('#refresh').click(function () {
         clearAlert();
@@ -595,10 +594,10 @@ function updateInfo(sel, html) {
         $('#md').val(match[1]);
 }
 exports.updateInfo = updateInfo;
-function saveInfo(sel) {
+function saveInfo(sel, name) {
     var md = $(sel).val().toString();
     var html = "<html>\n<head>\n  <meta charset=\"utf-8\">\n</head>\n<body>\n  " + toHtml(md) + "\n  <!--" + md + "-->\n</body>\n</html>";
-    commit(html, 'info.html', null);
+    commit(html, name, null);
 }
 exports.saveInfo = saveInfo;
 function loadUrl(url) {
