@@ -157,7 +157,7 @@ export function updateBookmarks(sel: string | JQuery<HTMLElement>, html: any): v
     $(sel).html(html);
     prepareBookmarks($(sel));
 }
-let gistids = []
+let gistids: Array<string> = []
 export function updateGists(sel: string | JQuery<HTMLElement>, data: any): void 
 {
     gistids.length = 0;
@@ -469,7 +469,6 @@ export function saveBookmarks(name: string): void {
         if (gistidx >= 0)
             gistids.splice(gistidx, 1);
     }
-    return;
     var bookmarks = $('#bookmarks').clone()
     $('.jkp', bookmarks).remove()
     bookmarks.find('[draggable]').removeAttr('draggable');
@@ -491,7 +490,7 @@ export function saveBookmarks(name: string): void {
     html = html.replace(/<\/dl>/ig, '\r\n</DL>');
     html = html.replace(/\r\s+\n/ig, '\r\n');
     html = html.replace(/(href|add_date|last_visit|folded|last_modified)=/ig, function(match) { return match.toUpperCase(); });
-    commit(html, name)
+    commit(html, name, gistids)
 }
 export function findFavicon(sel: string | JQuery<HTMLElement>, spnnr: string, href: string): void 
 {
@@ -607,7 +606,7 @@ export function saveInfo(sel: string | JQuery<HTMLElement>) : void
   <!--` + md + `-->
 </body>
 </html>`;
-    commit(html, 'info.html');
+    commit(html, 'info.html', null);
 }
 export function loadUrl(url: string): boolean 
 {
@@ -617,12 +616,12 @@ export function loadUrl(url: string): boolean
     jkp.sharedObj().loadUrl(url)
     return true;
 }
-export function commit(content: string, name: string): void 
+export function commit(content: string, name: string, gistids: Array<string>): void 
 {
     if (jkp.sharedObj().commit == null) 
         return;
 
-    jkp.sharedObj().commit(content, name);
+    jkp.sharedObj().commit(content, name, gistids);
 }
 export function authenticate(title: string, func: (username: string, password: string) => void)
 {

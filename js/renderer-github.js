@@ -55,7 +55,7 @@ function showError(error) {
     }
     showAlert(error, "danger");
 }
-function commit(content, name) {
+function commit(content, name, gistids) {
     showAlert("Przygotowanie...", "info");
     var github = null;
     var auth_token = readFromSettings("auth_token");
@@ -64,7 +64,7 @@ function commit(content, name) {
         authorize('Logowanie do GitHub', function (username, password, token) {
             if (token !== '') {
                 writeToSettings("auth_token", token);
-                commit(content, name);
+                commit(content, name, gistids);
             }
             else {
                 if (username === '' || password === '') {
@@ -88,12 +88,12 @@ function commit(content, name) {
                     success: function (data) {
                         auth_token = data.token;
                         writeToSettings("auth_token", auth_token);
-                        commit(content, name);
+                        commit(content, name, gistids);
                     },
                     error: function (jqXHR, status, error) {
                         if (jqXHR.status == 0) {
                             github = new GitHub({ username: username, password: password });
-                            gitHubCommit(github, content, name);
+                            gitHubCommit(github, content, name, gistids);
                         }
                         else if (jqXHR.status == 401)
                             showError("Błędna nazwa użytkownika lub hasło");
@@ -106,13 +106,18 @@ function commit(content, name) {
     }
     else {
         github = new GitHub({ token: auth_token });
-        gitHubCommit(github, content, name);
+        gitHubCommit(github, content, name, gistids);
     }
 }
 exports.commit = commit;
 jkp.sharedObj().commit = commit;
-function gitHubCommit(github, content, name) {
+function gitHubCommit(github, content, name, gistids) {
     showAlert("GitHub...", "info");
+    if (gistids != null) {
+        for (var idx = 0; idx < gistids.length; idx++) {
+            github.getGist(gistids[idx]).delete();
+        }
+    }
     var repo = github.getRepo("jkpluta", "jkpluta.github.io");
     repo.getRef("heads/master", function (error, result) {
         if (error != null)

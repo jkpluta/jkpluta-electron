@@ -472,7 +472,6 @@ function saveBookmarks(name) {
         if (gistidx >= 0)
             gistids.splice(gistidx, 1);
     }
-    return;
     var bookmarks = $('#bookmarks').clone();
     $('.jkp', bookmarks).remove();
     bookmarks.find('[draggable]').removeAttr('draggable');
@@ -494,7 +493,7 @@ function saveBookmarks(name) {
     html = html.replace(/<\/dl>/ig, '\r\n</DL>');
     html = html.replace(/\r\s+\n/ig, '\r\n');
     html = html.replace(/(href|add_date|last_visit|folded|last_modified)=/ig, function (match) { return match.toUpperCase(); });
-    commit(html, name);
+    commit(html, name, gistids);
 }
 exports.saveBookmarks = saveBookmarks;
 function findFavicon(sel, spnnr, href) {
@@ -602,7 +601,7 @@ exports.updateInfo = updateInfo;
 function saveInfo(sel) {
     var md = $(sel).val().toString();
     var html = "<html>\n<head>\n  <meta charset=\"utf-8\">\n</head>\n<body>\n  " + toHtml(md) + "\n  <!--" + md + "-->\n</body>\n</html>";
-    commit(html, 'info.html');
+    commit(html, 'info.html', null);
 }
 exports.saveInfo = saveInfo;
 function loadUrl(url) {
@@ -612,10 +611,10 @@ function loadUrl(url) {
     return true;
 }
 exports.loadUrl = loadUrl;
-function commit(content, name) {
+function commit(content, name, gistids) {
     if (jkp.sharedObj().commit == null)
         return;
-    jkp.sharedObj().commit(content, name);
+    jkp.sharedObj().commit(content, name, gistids);
 }
 exports.commit = commit;
 function authenticate(title, func) {

@@ -59,7 +59,7 @@ function showError(error: any) : void
     }
     showAlert(error, "danger");
 }
-export function commit(content: string, name: string): void 
+export function commit(content: string, name: string, gistids: Array<string>): void 
 {
     showAlert("Przygotowanie...", "info")
     var github = null;
@@ -69,7 +69,7 @@ export function commit(content: string, name: string): void
         authorize('Logowanie do GitHub', function (username, password, token) {
             if (token !== '') {
                 writeToSettings("auth_token", token);
-                commit(content, name);
+                commit(content, name, gistids);
             } 
             else {
                 if (username === '' || password === '') {
@@ -93,12 +93,12 @@ export function commit(content: string, name: string): void
                     success: function (data) {
                         auth_token = data.token;
                         writeToSettings("auth_token", auth_token);
-                        commit(content, name);
+                        commit(content, name, gistids);
                     },
                     error: function (jqXHR, status, error) {
                         if (jqXHR.status == 0) {
                             github = new GitHub({ username: username, password: password });
-                            gitHubCommit(github, content, name);
+                            gitHubCommit(github, content, name, gistids);
                         }
                         else if (jqXHR.status == 401)
                             showError("Błędna nazwa użytkownika lub hasło");
@@ -111,13 +111,18 @@ export function commit(content: string, name: string): void
     }
     else {
         github = new GitHub({ token: auth_token });
-        gitHubCommit(github, content, name);
+        gitHubCommit(github, content, name, gistids);
     }
 }
 jkp.sharedObj().commit = commit
-export function gitHubCommit(github: any, content: string, name: string): void 
+export function gitHubCommit(github: any, content: string, name: string, gistids: Array<string>): void 
 {
     showAlert("GitHub...", "info")
+    if (gistids != null) {
+        for (var idx = 0; idx < gistids.length; idx++) {
+            github.getGist(gistids[idx]).delete();
+        }
+    }
     var repo = github.getRepo("jkpluta", "jkpluta.github.io");
     repo.getRef("heads/master", function(error, result) {
         if (error != null)
