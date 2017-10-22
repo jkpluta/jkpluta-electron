@@ -113,7 +113,7 @@ export function updateMainIcons(sel: string | JQuery<HTMLElement>, html: any): v
     $(sel).append('</p>');
     $(sel).find('a').attr('target', '_blank');
 }
-export function updateMainGists(sel: string | JQuery<HTMLElement>, data: any): void 
+export function updateMainGists(sel: string | JQuery<HTMLElement>, data: any): void
 {
     var gists = data;
     if (gists.length == 0)
@@ -122,17 +122,14 @@ export function updateMainGists(sel: string | JQuery<HTMLElement>, data: any): v
         $(sel).prev().append('<div class="col-12"><h4>Zapiski</h4></div>');
     for (var idx in gists) {
         var gist = gists[idx];
-        if (gist.description === 'Jan K. Pluta') {
-            var dtlink = $('<div class="col-sm-12 col-md-6 col-lg-4"><a target="_blank"></a></div>').appendTo($(sel));
-            dtlink.attr('gistid', gist.id);
-            startJson(dtlink, null, gist.files['bookmark.json'].raw_url, updateMainGist);
-        }
+        if (gist.description === 'Jan K. Pluta')
+            startJson(sel, null, gist.files['bookmark.json'].raw_url, updateMainGist);
     }
 }
-export function updateMainGist(sel: string | JQuery<HTMLElement>, data: any): void 
+export function updateMainGist(sel: string | JQuery<HTMLElement>, data: any): void
 {
     if (data.type === "jkpluta.bookmark") {
-        var link = $(sel).children('a:first');
+        var link = $('<div class="col-sm-12 col-md-6 col-lg-4"><a target="_blank"></a></div>').appendTo($(sel)).children('a:first');
         link.attr('href', data.url);
         link.text(data.title);
         if (data.description != null)
@@ -140,8 +137,6 @@ export function updateMainGist(sel: string | JQuery<HTMLElement>, data: any): vo
         else
             link.parent().after('<div class="col-sm-12 col-md-6 col-lg-8"><i>Proponowana zakładka</i></div>');
     }
-    else
-        $(sel).remove();
 }
 export function startMain(href: string) : void
 {
@@ -229,15 +224,17 @@ export function updateGist(sel: string | JQuery<HTMLElement>, data: any): void
     else
         $(sel).remove();
 }
-export function startBookmarks(href: string, size: number) : void
+export function startBookmarks(name: string, size: number) : void
 {
+    var href = "/" + name;
     iconSize = size;
     $('#save').click(function() {
-        saveBookmarks('<%- data %>');
+        saveBookmarks(name);
     })
     $('#refresh').click(function() {
         clearAlert();
         startHome("#bookmarks", "#bookmarks", href, updateBookmarks)
+        startJson('#gists', '#gists', 'https://api.github.com/users/jkpluta/gists', updateGists)
     })
     $('#link-edit').on('show.bs.modal', function () {
         $('#link-favicon').removeAttr('src')

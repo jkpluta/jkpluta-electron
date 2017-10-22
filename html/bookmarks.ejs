@@ -93,7 +93,7 @@
 <% include github.ejs %>
 <script type="text/javascript">
   $(document).ready(function() {
-    startBookmarks("/<%- data %>", <% if (data === 'icons.html') { %>32<% } else { %>16<% } %>);
+    startBookmarks("<%- data %>", <% if (data === 'icons.html') { %>32<% } else { %>16<% } %>);
   });
 </script>
 </body>
