@@ -126,9 +126,9 @@ gulp.task('io', function() {
 gulp.task('app', function() {
     gMkDir('app');
     gJson('package-app.json', 'app')
-    gSass('light', 'app/css')
+    gSass('dark', 'app/css')
     gCpDirs(['fonts', 'img', 'build'], 'app')
-    gEjs('electron', 'light', '..', 'app/html')
+    gEjs('electron', 'dark', '..', 'app/html')
     webpack(require('./webpack.config.app.js'), function (err, stats) {
         if (err)
             throw new gutil.PluginError('webpack', err);
