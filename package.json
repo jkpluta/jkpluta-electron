@@ -35,6 +35,7 @@
     "app-dist": "gulp app && cd app && electron-builder",
     "app-dist-deb": "gulp app && cd app && electron-builder --linux deb",
     "app-dist-rpm": "gulp app && cd app && electron-builder --linux rpm",
+    "app-dist-win": "gulp app && cd app && electron-builder --win --x64 --ia32",
     "app-dist-x64": "gulp app && cd app && electron-builder --win --x64",
     "app-dist-ia32": "gulp app && cd app && electron-builder --win --ia32",
     "app-pack": "gulp app && cd app && electron-packager .",
