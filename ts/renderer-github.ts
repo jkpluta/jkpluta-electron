@@ -118,11 +118,6 @@ jkp.sharedObj().commit = commit
 export function gitHubCommit(github: any, content: string, name: string, gistids: Array<string>): void 
 {
     showAlert("GitHub...", "info")
-    if (gistids != null) {
-        for (var idx = 0; idx < gistids.length; idx++) {
-            github.getGist(gistids[idx]).delete();
-        }
-    }
     var repo = github.getRepo("jkpluta", "jkpluta.github.io");
     repo.getRef("heads/master", function(error, result) {
         if (error != null)
@@ -147,8 +142,15 @@ export function gitHubCommit(github: any, content: string, name: string, gistids
                                     repo.updateHead("heads/master", shaNewCommit , true, function(error, result) {
                                         if (error != null)
                                             showError(error);
-                                        else 
+                                        else {
+                                            if (gistids != null && gistids.length > 0) {
+                                                showAlert("GitHub - Zmiany zostały zapisane", "info")
+                                                for (var idx = 0; idx < gistids.length; idx++) {
+                                                    github.getGist(gistids[idx]).delete();
+                                                }
+                                            }
                                             showAlert("GitHub - Zmiany zostały zapisane", "success")
+                                        }
                                     });
                                 }
                             });

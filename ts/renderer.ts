@@ -199,8 +199,10 @@ export function updateGist(sel: string | JQuery<HTMLElement>, data: any): void
                 var idx = Number($('#link-group').val())
                 if (idx !== gridx && idx >= 0) {
                     $('#bookmarks h3').eq(idx).parent().children('dl:first').append(link.parent());
-                }
-                prepareBookmark(link);
+                    link.parent().children('button').remove();
+                    prepareBookmarks($(link.parent()));
+                } else
+                    prepareBookmark(link);
                 return true;
             });
             return false;
@@ -486,7 +488,8 @@ export function saveBookmarks(name: string): void {
     html = html.replace(/<\/dl>/ig, '\r\n</DL>');
     html = html.replace(/\r\s+\n/ig, '\r\n');
     html = html.replace(/(href|add_date|last_visit|folded|last_modified)=/ig, function(match) { return match.toUpperCase(); });
-    commit(html, name, gistids)
+    window.scrollTo(0, 0);
+    commit(html, name, gistids);
 }
 export function findFavicon(sel: string | JQuery<HTMLElement>, spnnr: string, href: string): void 
 {
@@ -602,6 +605,7 @@ export function saveInfo(sel: string | JQuery<HTMLElement>, name: string) : void
   <!--` + md + `-->
 </body>
 </html>`;
+    window.scrollTo(0, 0);
     commit(html, name, null);
 }
 export function loadUrl(url: string): boolean 

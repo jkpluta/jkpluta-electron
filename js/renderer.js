@@ -200,8 +200,11 @@ function updateGist(sel, data) {
                 var idx = Number($('#link-group').val());
                 if (idx !== gridx && idx >= 0) {
                     $('#bookmarks h3').eq(idx).parent().children('dl:first').append(link.parent());
+                    link.parent().children('button').remove();
+                    prepareBookmarks($(link.parent()));
                 }
-                prepareBookmark(link);
+                else
+                    prepareBookmark(link);
                 return true;
             });
             return false;
@@ -489,6 +492,7 @@ function saveBookmarks(name) {
     html = html.replace(/<\/dl>/ig, '\r\n</DL>');
     html = html.replace(/\r\s+\n/ig, '\r\n');
     html = html.replace(/(href|add_date|last_visit|folded|last_modified)=/ig, function (match) { return match.toUpperCase(); });
+    window.scrollTo(0, 0);
     commit(html, name, gistids);
 }
 exports.saveBookmarks = saveBookmarks;
@@ -597,6 +601,7 @@ exports.updateInfo = updateInfo;
 function saveInfo(sel, name) {
     var md = $(sel).val().toString();
     var html = "<html>\n<head>\n  <meta charset=\"utf-8\">\n</head>\n<body>\n  " + toHtml(md) + "\n  <!--" + md + "-->\n</body>\n</html>";
+    window.scrollTo(0, 0);
     commit(html, name, null);
 }
 exports.saveInfo = saveInfo;
