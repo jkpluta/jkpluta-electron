@@ -123,7 +123,7 @@ gulp.task('io', function() {
     gSass('dark', '../jkpluta.github.io/css');
 });
 
-gulp.task('app', function() {
+gulp.task('app', function(done) {
     gMkDir('app');
     gJson('package-app.json', 'app')
     gSass('dark', 'app/css')
@@ -142,7 +142,7 @@ gulp.task('app', function() {
             version: false
         }));
     });
-
+    done();
 });
 
 gulp.task('www', function() {
