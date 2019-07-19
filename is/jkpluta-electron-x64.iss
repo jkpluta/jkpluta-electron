@@ -1,6 +1,6 @@
 ﻿[Setup]
 AppName=Jan K. Pluta
-SourceDir=..\app\dist\jkpluta-electron-win32-ia32\
+SourceDir=..\app\dist\jkpluta-electron-win32-x64\
 DefaultDirName={pf}\jkpluta-electron
 DefaultGroupName=JKP
 UninstallDisplayIcon={app}\jkpluta-electron.exe
@@ -13,7 +13,8 @@ VersionInfoProductName=Jan K. Pluta
 VersionInfoVersion={#AppVersion}
 VersionInfoCopyright=Copyright © 2017-2019 by Jan K. Pluta
 VersionInfoCompany=JKP
-OutputBaseFilename=setup-jkpluta-electron
+OutputBaseFilename=setup-jkpluta-electron-x64
+ArchitecturesInstallIn64BitMode=x64
 ShowLanguageDialog=no
 DisableWelcomePage=no
 DisableDirPage=auto
