@@ -10,6 +10,7 @@
     "url": "https://jkpluta.github.io"
   },
   "license": "MIT",
+  "productName": "Jan K. Pluta",
   "repository": {
     "type": "git",
     "url": "https://github.com/jkpluta/jkpluta-electron.git"
@@ -39,6 +40,7 @@
     "app-dist-x64": "gulp app && cd app && electron-builder --win --x64",
     "app-dist-ia32": "gulp app && cd app && electron-builder --win --ia32",
     "app-pack": "gulp app && cd app && electron-packager .",
+    "app-setup": "electron-installer-windows --src app/jkpluta-electron-win32-x64/ --dest dist --icon build/icon.ico",
     "www": "gulp www && cd www && http-server -a localhost -p 60080 -o -c-1",
     "cordova": "gulp cordova",
     "intranet": "gulp intranet",
@@ -46,33 +48,35 @@
     "nginx": "sudo gulp nginx"
   },
   "dependencies": {
-    "bluebird": "^3.5.0",
-    "bootstrap": "^4.0.0-beta",
+    "bluebird": "^3.5.5",
+    "bootstrap": "^4.3.1",
     "bootstrap-material-design": "4.0.0-beta.3",
-    "ejs": "^2.5.7",
-    "ejs-electron": "^2.0.0",
+    "ejs": "^2.6.2",
+    "ejs-electron": "^2.0.3",
     "electron-json-storage": "^3.0.7",
     "font-awesome": "^4.7.0",
     "github": "^9.2.0",
-    "github-api": "^3.0.0",
-    "jquery": "^3.2.1",
+    "github-api": "^3.2.2",
+    "jquery": "^3.4.1",
     "markdown": "^0.5.0",
-    "popper.js": "^1.12.3"
+    "popper.js": "^1.15.0"
   },
   "devDependencies": {
-    "@types/bootstrap": "^3.3.35",
-    "@types/ejs": "^2.3.33",
-    "@types/jquery": "^3.2.11",
+    "@types/bootstrap": "^3.4.0",
+    "@types/ejs": "^2.6.3",
+    "@types/jquery": "^3.3.30",
     "browserify": "^14.4.0",
-    "electron": "^1.7.5",
-    "electron-builder": "^19.22.4",
+    "electron": "^1.8.8",
+    "electron-builder": "^19.56.2",
+    "electron-installer-windows": "^2.0.0",
     "electron-packager": "^9.1.0",
+    "electron-winstaller": "^3.0.4",
     "gulp": "^3.9.1",
-    "gulp-ejs": "^3.0.1",
-    "gulp-rename": "^1.2.2",
-    "gulp-sass": "^3.1.0",
-    "libxmljs": "^0.18.7",
-    "vinyl-source-stream": "^1.1.0",
-    "webpack": "^3.5.5"
+    "gulp-ejs": "^3.3.0",
+    "gulp-rename": "^1.4.0",
+    "gulp-sass": "^3.2.1",
+    "libxmljs": "^0.18.8",
+    "vinyl-source-stream": "^1.1.2",
+    "webpack": "^3.12.0"
   }
 }

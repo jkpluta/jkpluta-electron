@@ -132,7 +132,7 @@ gulp.task('app', function() {
     webpack(require('./webpack.config.app.js'), function (err, stats) {
         if (err)
             throw new gutil.PluginError('webpack', err);
-        gutil.log('[webpack] Completed\n' + stats.toString({
+        gutil.log('[webpack] Completed\\n' + stats.toString({
             assets: true,
             chunks: false,
             chunkModules: false,
