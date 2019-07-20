@@ -35,9 +35,7 @@ Name: "desktopicon"; Description: "Ikona na &pulpicie"; GroupDescription: "Dodat
 Name: "{app}\css"
 
 [Files]
-Source: "*.*"; DestDir: "{app}"
-Source: "locales\*.*"; DestDir: "{app}\locales"
-Source: "resources\*.*"; DestDir: "{app}\resources"
+Source: "*.*"; DestDir: "{app}"; Flags: recursesubdirs;
 
 [Icons]
 Name: "{group}\Jan K. Pluta"; Filename: "{app}\jkpluta-electron.exe"
