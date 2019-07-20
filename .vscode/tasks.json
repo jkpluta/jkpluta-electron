@@ -15,6 +15,31 @@
                 "kind": "build",
                 "isDefault": true
             }
+        },
+        {
+            "type": "npm",
+            "script": "start",
+            "problemMatcher": []
+        },
+        {
+            "type": "npm",
+            "script": "gulp",
+            "problemMatcher": []
+        },
+        {
+            "type": "npm",
+            "script": "app",
+            "problemMatcher": []
+        },
+        {
+            "type": "npm",
+            "script": "www",
+            "problemMatcher": []
+        },
+        {
+            "type": "gulp",
+            "task": "www",
+            "problemMatcher": []
         }
     ]
 }

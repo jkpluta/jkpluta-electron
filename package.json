@@ -1,7 +1,7 @@
 {
   "name": "jkpluta-electron",
   "homepage": "https://jkpluta.github.io",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "main": "js/main.js",
   "description": "Eksperymentalna strona startowa",
   "author": {
@@ -49,10 +49,10 @@
   "dependencies": {
     "bluebird": "^3.5.5",
     "bootstrap": "^4.3.1",
-    "bootstrap-material-design": "4.0.0-beta.3",
+    "bootstrap-material-design": "4.1.2",
     "ejs": "^2.6.2",
     "ejs-electron": "^2.0.3",
-    "electron-json-storage": "^3.2.0",
+    "electron-json-storage": "^4.0.0",
     "font-awesome": "^4.7.0",
     "github": "^14.0.0",
     "github-api": "^3.2.2",
@@ -74,7 +74,7 @@
     "gulp-rename": "^1.4.0",
     "gulp-sass": "^3.2.1",
     "libxmljs": "^0.18.8",
-    "vinyl-source-stream": "^1.1.2",
+    "vinyl-source-stream": "^2.0.0",
     "webpack": "^3.12.0"
   }
 }

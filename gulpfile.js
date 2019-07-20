@@ -112,11 +112,12 @@ function gPages(target, theme, dst) {
     gBrowserifyAll(dst + '/js');
 }
 
-gulp.task('default', function() {
+gulp.task('default', function(done) {
     gSass('dark', './css');
     gSass('light', './css');
     gSass('bootstrap', './css');
     gCopy("node_modules/font-awesome/fonts/*", "./fonts");
+    return done();
 });
 
 gulp.task('io', function() {
@@ -145,8 +146,9 @@ gulp.task('app', function(done) {
     done();
 });
 
-gulp.task('www', function() {
+gulp.task('www', function(done) {
     gPages('www', 'light', 'www/public');
+    return done();
 });
 
 gulp.task('cordova', function() {

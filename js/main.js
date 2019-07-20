@@ -44,10 +44,10 @@ function createWindow() {
         mainWindowWriteToSettings: mainWindowWriteToSettings,
     };
     // Create the browser window.
-    mainWindow = new BrowserWindow({ 
-        width: 900, 
-        height: 620, 
-        title: 'jkp', 
+    mainWindow = new BrowserWindow({
+        width: 900,
+        height: 620,
+        title: 'jkp',
         icon: path.join(__dirname, icon),
         webPreferences: {
             nodeIntegration: true
@@ -65,7 +65,7 @@ function createWindow() {
     });
     var template = [
         {
-            role: 'file',
+            role: 'fileMenu',
             label: 'Plik',
             submenu: [
                 { role: 'quit', label: "Zakończ" }
@@ -194,12 +194,12 @@ function renderPage(browserWindow, name) {
 }
 function loadPage(name) {
     if (name === "about") {
-        var dialog = new BrowserWindow({ 
-            width: 600, 
-            height: 200, 
-            frame: false, 
-            modal: true, 
-            skipTaskbar: true, 
+        var dialog = new BrowserWindow({
+            width: 600,
+            height: 200,
+            frame: false,
+            modal: true,
+            skipTaskbar: true,
             webPreferences: {
                 nodeIntegration: true
             }

@@ -42,7 +42,15 @@ function createWindow() {
         mainWindowWriteToSettings: mainWindowWriteToSettings,
     };
     // Create the browser window.
-    mainWindow = new BrowserWindow({ width: 900, height: 620, title: 'jkp', icon: path.join(__dirname, icon) });
+    mainWindow = new BrowserWindow({ 
+        width: 900, 
+        height: 620, 
+        title: 'jkp', 
+        icon: path.join(__dirname, icon),
+        webPreferences: {
+            nodeIntegration: true
+        }
+    });
     loadPage('index');
     // Open the DevTools.
     // mainWindow.webContents.openDevTools()
@@ -55,7 +63,7 @@ function createWindow() {
     });
     var template: Electron.MenuItemConstructorOptions[] = [
         {
-            role: 'file',
+            role: 'fileMenu',
             label: 'Plik',
             submenu: [
                 { role: 'quit', label: "Zakończ" }
@@ -184,7 +192,16 @@ function renderPage(browserWindow, name) {
 }
 function loadPage(name) {
     if (name === "about") {
-        var dialog = new BrowserWindow({ width: 600, height: 200, frame: false, modal: true, skipTaskbar: true, });
+        var dialog = new BrowserWindow({ 
+            width: 600, 
+            height: 200, 
+            frame: false, 
+            modal: true, 
+            skipTaskbar: true, 
+            webPreferences: {
+                nodeIntegration: true
+            }
+        });
         dialog.on('blur', function () {
             dialog.close();
         });
