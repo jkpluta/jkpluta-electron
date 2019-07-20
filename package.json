@@ -25,7 +25,6 @@
     "app-setup": "electron-installer-windows --src app/dist/jkpluta-electron-win32-x64/ --dest dist --icon build/icon.ico",
     "www": "gulp www && cd www && http-server -a localhost -p 60080 -o -c-1",
     "cordova": "gulp cordova",
-    "intranet": "gulp intranet",
     "iis": "gulp iis",
     "nginx": "sudo gulp nginx"
   },

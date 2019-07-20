@@ -46,5 +46,10 @@
             "script": "app-pack",
             "problemMatcher": []
         },
+        {
+            "type": "npm",
+            "script": "iis",
+            "problemMatcher": []
+        }
     ]
 }

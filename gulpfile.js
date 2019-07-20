@@ -120,8 +120,9 @@ gulp.task('default', function(done) {
     return done();
 });
 
-gulp.task('io', function() {
+gulp.task('io', function(done) {
     gSass('dark', '../jkpluta.github.io/css');
+    return done();
 });
 
 gulp.task('app', function(done) {
@@ -143,7 +144,7 @@ gulp.task('app', function(done) {
             version: false
         }));
     });
-    done();
+    return done();
 });
 
 gulp.task('www', function(done) {
@@ -151,24 +152,20 @@ gulp.task('www', function(done) {
     return done();
 });
 
-gulp.task('cordova', function() {
+gulp.task('cordova', function(done) {
     gJson('../jkpluta-cordova/package.json', '../jkpluta-cordova');
     gXml('../jkpluta-cordova/config.xml');
     gPages('cordova', 'bootstrap-material-design', '../jkpluta-cordova/www');
+    return done();
 });
 
-gulp.task('nginx', function() {
+gulp.task('nginx', function(done) {
     gPages('www', 'bootstrap', '/var/www/html/jkpluta');
+    return done();
 });
 
-gulp.task('iis', function() {
+gulp.task('iis', function(done) {
     gPages('www', 'bootstrap', 'c:/inetpub/wwwroot/jkpluta');
-});
-
-gulp.task('intranet', function() {
-    var dst = '../jkpluta-intranet';
-    gSass('bootstrap', dst + '/css');
-    gCpDirs(['fonts', 'img'], dst);
-    gCopyRen("img/icon.ico", "favicon.ico", dst);
+    return done();
 });
 
