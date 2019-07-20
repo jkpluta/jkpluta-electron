@@ -40,6 +40,11 @@
             "type": "gulp",
             "task": "www",
             "problemMatcher": []
-        }
+        },
+        {
+            "type": "npm",
+            "script": "app-pack",
+            "problemMatcher": []
+        },
     ]
 }
