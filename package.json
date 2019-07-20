@@ -65,7 +65,7 @@
     "@types/ejs": "^2.6.3",
     "@types/jquery": "^3.3.30",
     "browserify": "^14.4.0",
-    "electron": "^1.8.8",
+    "electron": "^5.0.0",
     "electron-builder": "^19.56.2",
     "electron-installer-windows": "^2.0.0",
     "electron-packager": "^12.1.0",
